@@ -19,7 +19,9 @@ The contract is the stable interface between two parties who never coordinate di
 
 - **Vendors** write an SDK once, coding against a finite set of **purpose-named semantic
   tokens** (e.g. `color.action.primary`, `typography.body`, `space.md`). They never reference
-  a host's raw colors or component names.
+  a host's raw colors or component names. A vendor may build a **new** SDK directly against the
+  contract, **or retrofit an existing/already-shipped SDK** by feeding it the contract's
+  resolved token values — both are first-class adoption modes (see User Story 6 / FR-018).
 - **Financial institutions (FIs)** express their design system as a **DTCG token file** —
   primitives, semantic aliases, optional component overrides, and theme modes — that conforms
   to this contract's schema.
@@ -156,6 +158,36 @@ rename/removal as a major-version breaking change.
 
 ---
 
+### User Story 6 — Existing vendor SDK adopts the contract without a rewrite (Priority: P2)
+
+A vendor already ships an SDK with its own styling. Rather than rebuilding it, they wrap it so
+it consumes the contract's **resolved token values** — replacing hard-coded styles (or
+populating their existing theme layer) with semantic tokens incrementally, screen by screen.
+The SDK works *in conjunction with* Polymorph rather than being rewritten on top of it.
+
+**Why this priority**: Most real-world adoption is brownfield. If Polymorph only serves
+greenfield SDKs it cannot meet the goal of working "inside or in conjunction with any SDK, new
+or already provided." P2 because the greenfield path (US1) proves the thesis first, but
+retrofit must be a *designed* path, not an afterthought.
+
+**Independent Test**: Take a small existing themed component that hard-codes colors/spacing;
+without changing its structure, back its style values with the resolved semantic token map and
+confirm it re-skins across both mock banks with no further changes.
+
+**Acceptance Scenarios**:
+
+1. **Given** an existing component that resolves style values at runtime, **When** it is
+   supplied the resolved semantic token map, **Then** it renders themed without any change to
+   its component structure.
+2. **Given** a vendor SDK with its own theme object/styling API, **When** that theme object is
+   populated from resolved contract values via an adapter shim, **Then** the SDK restyles per
+   host with no change to the SDK's component code.
+3. **Given** a retrofit integration, **When** the SDK is audited, **Then** all themed values
+   trace to semantic tokens — retrofit does not reach around the contract to host primitives
+   (Constitution Principle I still holds).
+
+---
+
 ### Edge Cases
 
 - **Alias cycles**: a semantic token that (transitively) references itself MUST be rejected
@@ -209,6 +241,24 @@ rename/removal as a major-version breaking change.
   actions, text inputs with focus/error/disabled states, validation messaging, a step
   indicator, and disclosure text) **without reference to primitive tokens**. (This is verified
   empirically against Spec D; see Constitution Principle III.)
+
+### Functional Requirements — SDK adoption modes & interop
+
+- **FR-018**: The contract MUST support two adoption modes without privileging either:
+  (a) **contract-native** — a new SDK codes directly against semantic tokens; (b) **retrofit** —
+  an existing/already-shipped SDK consumes the contract's resolved values to back its current
+  styling. Both MUST route through the **semantic layer** (Constitution Principle I); retrofit
+  does not permit reaching around the contract to host primitives.
+- **FR-019**: The contract's consumable output (`ResolvedTheme`, FR-014) MUST be a **plain,
+  framework- and component-model-neutral** data structure (semantic ID → concrete value) so an
+  existing SDK can read token values **without** adopting any particular component framework,
+  styling library, or the SDK-owned component set.
+- **FR-020**: The contract MUST be expressible as a **flat, namespaced key set** suitable for
+  feeding common theme-interop targets (a JS theme object, CSS custom properties, or a platform
+  theme structure), so a retrofit **shim** can map resolved tokens onto an existing SDK's theme
+  API. The concrete per-platform interop surface (context, exported token objects, CSS vars) is
+  realized in the adapter (Spec C); this spec only requires the output be neutral enough to
+  enable it.
 
 ### Functional Requirements — component tokens
 
@@ -282,6 +332,10 @@ rename/removal as a major-version breaking change.
 - **SC-005**: The required semantic vocabulary is small enough that the count of **required**
   tokens an FI must supply for a single-mode theme is documented and bounded (target: a theme
   author can complete a minimal valid `light` theme by filling a single documented checklist).
+- **SC-006**: An **existing** themed component (one that did not originally know about
+  Polymorph) can be re-skinned across both mock banks **solely** by feeding it the resolved
+  token map — with no change to its component structure — demonstrating the retrofit mode
+  (verified against a brownfield fixture in the conformance suite, Spec E).
 
 ---
 
@@ -298,6 +352,10 @@ rename/removal as a major-version breaking change.
   explicitly when desired.
 - The contract defines data and rules only. The resolver, linter, loaders, and CLI that act on
   it are specified in Spec B; the React Native interpretation is Spec C.
+- Polymorph targets **both** new SDKs (built against the contract) and existing/already-shipped
+  vendor SDKs (retrofitted to consume resolved tokens). The retrofit interop surface is defined
+  per platform in Spec C plus a docs adoption guide; this spec only requires the contract's
+  output be neutral enough to enable it (FR-019/FR-020).
 
 ---
 
@@ -314,6 +372,10 @@ rename/removal as a major-version breaking change.
 4. **State modeling**: encode interactive states (hover/pressed/disabled/focus) as token
    sub-IDs (`color.action.primary.pressed`) vs. a separate states convention — Appendix A
    currently assumes sub-IDs.
+5. **Retrofit interop surface**: is the existing-SDK adoption surface (exported token objects,
+   CSS custom properties, framework theme shims, a "theme → existing theme object" mapper) big
+   enough to warrant its **own spec**, or does it fold into Spec C (adapter) plus a docs
+   adoption guide? Decide before Spec C planning.
 
 ---
 
