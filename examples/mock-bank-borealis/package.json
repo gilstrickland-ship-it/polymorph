@@ -1,0 +1,7 @@
+{
+  "name": "@polymorph/example-mock-bank-borealis",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Mock bank B: a distinct DTCG design-system token set + host React Native shell.",
+  "license": "Apache-2.0"
+}

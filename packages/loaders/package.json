@@ -1,0 +1,14 @@
+{
+  "name": "@polymorph/loaders",
+  "version": "0.0.0",
+  "description": "Polymorph theme loaders: ThemeLoader interface + Inline / RemoteManifest / Bundled.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}

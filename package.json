@@ -1,0 +1,22 @@
+{
+  "name": "polymorph",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Design-System-Adaptive SDK Framework — one SDK build, N design systems.",
+  "license": "Apache-2.0",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "nx run-many -t build",
+    "test": "nx run-many -t test",
+    "lint": "nx run-many -t lint",
+    "conformance": "nx run-many -t conformance",
+    "typecheck": "nx run-many -t typecheck"
+  },
+  "devDependencies": {
+    "nx": "22.7.4",
+    "typescript": "5.7.3"
+  }
+}

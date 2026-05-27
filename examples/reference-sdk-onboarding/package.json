@@ -1,0 +1,7 @@
+{
+  "name": "@polymorph/example-reference-sdk-onboarding",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Reference vendor SDK: account-opening / onboarding flow, coded against the contract only.",
+  "license": "Apache-2.0"
+}

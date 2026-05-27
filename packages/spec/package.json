@@ -1,0 +1,14 @@
+{
+  "name": "@polymorph/spec",
+  "version": "0.0.0",
+  "description": "Polymorph theme contract: DTCG-extended schema, semantic vocabulary, JSON Schema.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "schema"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}
