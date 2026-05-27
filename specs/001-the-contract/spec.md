@@ -18,17 +18,43 @@ spec; the contract must stabilize before any adapter is built.
 The contract is the stable interface between two parties who never coordinate directly:
 
 - **Vendors** write an SDK once, coding against a finite set of **purpose-named semantic
-  tokens** (e.g. `color.action.primary`, `typography.body`, `space.md`). They never reference
-  a host's raw colors or component names. A vendor may build a **new** SDK directly against the
-  contract, **or retrofit an existing/already-shipped SDK** by feeding it the contract's
-  resolved token values — both are first-class adoption modes (see User Story 6 / FR-018).
+  tokens** (e.g. `pm.color.action.primary`, `pm.typography.body`, `pm.space.md`). They never
+  reference a host's raw colors or component names. A vendor may build a **new** SDK directly
+  against the contract, **or retrofit an existing/already-shipped SDK** by feeding it the
+  contract's resolved token values — both are first-class adoption modes (see User Story 6 /
+  FR-018).
 - **Financial institutions (FIs)** express their design system as a **DTCG token file** —
   primitives, semantic aliases, optional component overrides, and theme modes — that conforms
   to this contract's schema.
 
+**Polymorph is a reusable framework and open contract that vendors *adopt* — not a set of SDKs
+we build for vendors.** The framework is the `@polymorph/*` packages (contract, core, loaders,
+adapter, conformance, CLI); the `reference-sdk-onboarding` example is a *demonstration* that
+exercises the framework end-to-end to prove the adoption process, not a product shipped to any
+vendor.
+
 Because both sides target the same contract, re-skinning the SDK for a new FI is a *data change
 only* (Constitution Principle IV). This spec defines the data shape and the rules; it does not
 implement the resolver, loaders, or any adapter (those are Specs B and C).
+
+## Clarifications
+
+### Session 2026-05-27
+
+- Q: How are light / dark / highContrast modes encoded in a theme file? → A: **Parallel
+  per-mode token sets** — each declared mode contains the full required semantic set; primitives
+  are shared. No dependency on the DTCG modes module.
+- Q: Namespace for contract IDs? → A: **Reserved `pm` prefix** — all semantic and component
+  token IDs live under `pm.*` (e.g. `pm.color.surface.base`) and alias to FI primitives;
+  eliminates collision with an FI's own token names.
+- Q: How rich is the typography composite? → A: **Constrained subset** — `fontFamily`,
+  `fontWeight`, `fontSize`, `lineHeight`, `letterSpacing` only.
+- Q: How are interactive states modeled? → A: **Flat state sub-IDs** (e.g.
+  `pm.color.action.primary.pressed`).
+- Q: Is the existing-SDK (retrofit) interop surface its own spec? → A: **No.** Polymorph is a
+  reusable framework + open contract that vendors adopt; we do not build SDKs for vendors, and
+  the reference SDK is a demonstration only. The retrofit interop surface folds into the adapter
+  (Spec C) plus a docs adoption guide.
 
 ---
 
@@ -222,6 +248,15 @@ confirm it re-skins across both mock banks with no further changes.
 - **FR-003**: The SDK-facing surface MUST be the **semantic layer only**. The contract MUST
   document that SDK code references semantic (and optionally component) tokens, never
   primitives.
+- **FR-003a** (namespace): All contract-defined semantic and component token IDs MUST live
+  under the **reserved `pm` namespace** (e.g. `pm.color.surface.base`, `pm.button.primary.radius`).
+  FI primitive tokens MUST NOT use the `pm` prefix; the validator MUST reject FI tokens that
+  collide with the reserved namespace. This guarantees contract IDs never clash with an FI's own
+  token names.
+- **FR-003b** (modes): A theme file MUST encode modes as **parallel per-mode token sets** — each
+  declared mode (`light`, and optionally `dark` / `highContrast`) is a complete set of the
+  semantic aliases; primitive tokens are shared across modes. (Resolves the mode-encoding open
+  question; see FR-011/FR-012.)
 
 ### Functional Requirements — the semantic vocabulary
 
@@ -231,8 +266,10 @@ confirm it re-skins across both mock banks with no further changes.
   borders, focus, typography roles, a spacing scale, radii, border widths, elevation, opacity,
   motion (duration + easing), and control/target sizing.
 - **FR-005**: Each semantic token MUST declare its **expected DTCG `$type`** (e.g.
-  `color.text.body` → `color`; `space.md` → `dimension`; `typography.body` → `typography`
-  composite) so themes can be type-checked against the role.
+  `pm.color.text.body` → `color`; `pm.space.md` → `dimension`; `pm.typography.body` →
+  `typography` composite) so themes can be type-checked against the role. The `typography`
+  composite is a **constrained subset**: exactly `fontFamily`, `fontWeight`, `fontSize`,
+  `lineHeight`, `letterSpacing` (each sub-property required for a valid composite).
 - **FR-006**: The contract MUST mark each semantic token as **required** or **optional**. A
   conformant theme MUST provide every required token (in its default mode, and in every mode it
   declares).
@@ -274,9 +311,8 @@ confirm it re-skins across both mock banks with no further changes.
 - **FR-011**: A theme MUST declare at least a **`light`** mode, which is the default when no
   mode is selected.
 - **FR-012**: `dark` and `highContrast` modes MUST be optional; when present, each MUST define
-  the full required semantic set (FR-006). The contract MUST define how a value is expressed
-  per mode (mode-keyed values vs. per-mode token sets — to be fixed in `/speckit-plan`; see
-  Open Questions).
+  the full required semantic set (FR-006) as its own **per-mode token set** (FR-003b). Primitive
+  tokens are shared across modes; only the semantic aliases differ per mode.
 
 ### Functional Requirements — validation & resolution semantics
 
@@ -359,23 +395,21 @@ confirm it re-skins across both mock banks with no further changes.
 
 ---
 
-## Open Questions (for `/speckit-clarify` → `/speckit-plan`)
+## Resolved Decisions
 
-1. **Mode encoding**: represent modes as DTCG `$extensions` mode-keyed values on a single token
-   set, vs. parallel per-mode token sets, vs. DTCG Theme/`$modes` if the module has stabilized.
-   Needs a check of current W3C DTCG module status during `/speckit-plan`.
-2. **Composite typography**: adopt the DTCG `typography` composite type wholesale, or define a
-   constrained subset (family/weight/size/lineHeight/letterSpacing) to keep adapters simple?
-3. **Reserved namespace**: confirm the reserved prefix for semantic/component IDs (e.g. a
-   `polymorph`/`pm` namespace vs. bare `color.*`) so FI primitives can never collide with
-   contract IDs.
-4. **State modeling**: encode interactive states (hover/pressed/disabled/focus) as token
-   sub-IDs (`color.action.primary.pressed`) vs. a separate states convention — Appendix A
-   currently assumes sub-IDs.
-5. **Retrofit interop surface**: is the existing-SDK adoption surface (exported token objects,
-   CSS custom properties, framework theme shims, a "theme → existing theme object" mapper) big
-   enough to warrant its **own spec**, or does it fold into Spec C (adapter) plus a docs
-   adoption guide? Decide before Spec C planning.
+All clarify-phase open questions are resolved in **Clarifications (Session 2026-05-27)** and
+folded into the requirements above:
+
+- Mode encoding → **parallel per-mode token sets** (FR-003b, FR-012).
+- Namespace → **reserved `pm` prefix** (FR-003a).
+- Typography → **constrained composite subset** (FR-005).
+- Interactive states → **flat state sub-IDs** (Appendix A conventions).
+- Retrofit interop scope → folds into **Spec C + a docs adoption guide**; no separate spec
+  (Clarifications; Assumptions; FR-018–FR-020).
+
+Deferred to `/speckit-plan` (not blocking this spec): verify current W3C DTCG module status for
+the `typography`, `shadow`, `cubicBezier`, and `duration` `$type`s, and pin the exact DTCG draft
+the JSON Schema targets.
 
 ---
 
@@ -383,6 +417,12 @@ confirm it re-skins across both mock banks with no further changes.
 
 Purpose-named tokens the SDK codes against. `R` = required for a conformant theme, `O` =
 optional. Types are DTCG `$type`.
+
+> **Conventions** (per Clarifications): all IDs below carry the reserved **`pm.`** prefix (e.g.
+> `pm.color.surface.base`) — omitted in the tables for brevity. Interactive states are flat
+> **sub-IDs** (e.g. `pm.color.action.primary.pressed`). The `typography` type is the
+> **constrained subset** (`fontFamily`, `fontWeight`, `fontSize`, `lineHeight`,
+> `letterSpacing`).
 
 ### Color — surfaces & text
 
