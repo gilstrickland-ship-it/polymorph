@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://polymorph.dev/schema/dtcg-types.schema.json",
+  "title": "Polymorph accepted DTCG 2025.10 $type subset",
+  "description": "Reusable token definitions. A token $value may be a concrete value or a DTCG alias reference '{group.path}'.",
+  "$defs": {
+    "alias": {
+      "type": "string",
+      "pattern": "^\\{[A-Za-z0-9_][A-Za-z0-9_.-]*\\}$"
+    },
+    "tokenMeta": {
+      "$description": { "type": "string" },
+      "$extensions": { "type": "object" }
+    },
+    "color": {
+      "type": "object",
+      "properties": {
+        "$type": { "const": "color" },
+        "$value": { "type": "string" },
+        "$description": { "type": "string" },
+        "$extensions": { "type": "object" }
+      },
+      "required": ["$type", "$value"],
+      "additionalProperties": false
+    },
+    "dimension": {
+      "type": "object",
+      "properties": {
+        "$type": { "const": "dimension" },
+        "$value": {
+          "oneOf": [
+            { "$ref": "#/$defs/alias" },
+            {
+              "type": "object",
+              "properties": {
+                "value": { "type": "number" },
+                "unit": { "enum": ["px", "rem"] }
+              },
+              "required": ["value", "unit"],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "$description": { "type": "string" },
+        "$extensions": { "type": "object" }
+      },
+      "required": ["$type", "$value"],
+      "additionalProperties": false
+    },
+    "duration": {
+      "type": "object",
+      "properties": {
+        "$type": { "const": "duration" },
+        "$value": {
+          "oneOf": [
+            { "$ref": "#/$defs/alias" },
+            {
+              "type": "object",
+              "properties": {
+                "value": { "type": "number" },
+                "unit": { "enum": ["ms", "s"] }
+              },
+              "required": ["value", "unit"],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "$description": { "type": "string" },
+        "$extensions": { "type": "object" }
+      },
+      "required": ["$type", "$value"],
+      "additionalProperties": false
+    },
+    "number": {
+      "type": "object",
+      "properties": {
+        "$type": { "const": "number" },
+        "$value": { "oneOf": [{ "$ref": "#/$defs/alias" }, { "type": "number" }] },
+        "$description": { "type": "string" },
+        "$extensions": { "type": "object" }
+      },
+      "required": ["$type", "$value"],
+      "additionalProperties": false
+    },
+    "cubicBezier": {
+      "type": "object",
+      "properties": {
+        "$type": { "const": "cubicBezier" },
+        "$value": {
+          "oneOf": [
+            { "$ref": "#/$defs/alias" },
+            { "type": "array", "items": { "type": "number" }, "minItems": 4, "maxItems": 4 }
+          ]
+        },
+        "$description": { "type": "string" },
+        "$extensions": { "type": "object" }
+      },
+      "required": ["$type", "$value"],
+      "additionalProperties": false
+    },
+    "typography": {
+      "type": "object",
+      "properties": {
+        "$type": { "const": "typography" },
+        "$value": {
+          "oneOf": [
+            { "$ref": "#/$defs/alias" },
+            {
+              "type": "object",
+              "properties": {
+                "fontFamily": { "type": ["string", "array"] },
+                "fontWeight": { "type": ["string", "number"] },
+                "fontSize": {
+                  "oneOf": [
+                    { "$ref": "#/$defs/alias" },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "value": { "type": "number" },
+                        "unit": { "enum": ["px", "rem"] }
+                      },
+                      "required": ["value", "unit"],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "lineHeight": { "type": "number" },
+                "letterSpacing": {
+                  "oneOf": [
+                    { "$ref": "#/$defs/alias" },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "value": { "type": "number" },
+                        "unit": { "enum": ["px", "rem", "em"] }
+                      },
+                      "required": ["value", "unit"],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "required": ["fontFamily", "fontWeight", "fontSize", "lineHeight", "letterSpacing"],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "$description": { "type": "string" },
+        "$extensions": { "type": "object" }
+      },
+      "required": ["$type", "$value"],
+      "additionalProperties": false
+    },
+    "shadow": {
+      "type": "object",
+      "properties": {
+        "$type": { "const": "shadow" },
+        "$value": {
+          "oneOf": [
+            { "$ref": "#/$defs/alias" },
+            { "$ref": "#/$defs/shadowValue" },
+            { "type": "array", "items": { "$ref": "#/$defs/shadowValue" } }
+          ]
+        },
+        "$description": { "type": "string" },
+        "$extensions": { "type": "object" }
+      },
+      "required": ["$type", "$value"],
+      "additionalProperties": false
+    },
+    "shadowValue": {
+      "type": "object",
+      "properties": {
+        "color": { "type": "string" },
+        "offsetX": { "$ref": "#/$defs/lengthOrAlias" },
+        "offsetY": { "$ref": "#/$defs/lengthOrAlias" },
+        "blur": { "$ref": "#/$defs/lengthOrAlias" },
+        "spread": { "$ref": "#/$defs/lengthOrAlias" },
+        "inset": { "type": "boolean" }
+      },
+      "required": ["color", "offsetX", "offsetY", "blur", "spread"],
+      "additionalProperties": false
+    },
+    "lengthOrAlias": {
+      "oneOf": [
+        { "$ref": "#/$defs/alias" },
+        {
+          "type": "object",
+          "properties": {
+            "value": { "type": "number" },
+            "unit": { "enum": ["px", "rem"] }
+          },
+          "required": ["value", "unit"],
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

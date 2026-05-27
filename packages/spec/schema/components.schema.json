@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://polymorph.dev/schema/components.schema.json",
+  "title": "Polymorph optional component-token overrides (closed v0 role set)",
+  "$defs": {
+    "button": {
+      "type": "object",
+      "properties": {
+        "primary": {
+          "type": "object",
+          "properties": {
+            "background": {
+              "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/color"
+            },
+            "foreground": {
+              "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/color"
+            },
+            "radius": {
+              "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/dimension"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "secondary": {
+          "type": "object",
+          "properties": {
+            "background": {
+              "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/color"
+            },
+            "border": {
+              "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/color"
+            },
+            "foreground": {
+              "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/color"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "danger": {
+          "type": "object",
+          "properties": {
+            "background": {
+              "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/color"
+            },
+            "foreground": {
+              "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/color"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "input": {
+      "type": "object",
+      "properties": {
+        "background": {
+          "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/color"
+        },
+        "border": {
+          "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/color"
+        },
+        "borderFocus": {
+          "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/color"
+        },
+        "foreground": {
+          "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/color"
+        },
+        "radius": {
+          "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/dimension"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "card": {
+      "type": "object",
+      "properties": {
+        "background": {
+          "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/color"
+        },
+        "radius": {
+          "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/dimension"
+        },
+        "elevation": {
+          "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/shadow"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "stepIndicator": {
+      "type": "object",
+      "properties": {
+        "activeColor": {
+          "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/color"
+        },
+        "inactiveColor": {
+          "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/color"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "disclosure": {
+      "type": "object",
+      "properties": {
+        "foreground": {
+          "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/color"
+        },
+        "typography": {
+          "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/typography"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  }
+}

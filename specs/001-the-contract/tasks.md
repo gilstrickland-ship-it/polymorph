@@ -31,9 +31,9 @@ The executing runtime validator/resolver (cycle + alias-resolution checks) lives
 
 **Purpose**: Tooling and directory structure for `packages/spec`.
 
-- [ ] T001 Add dev tooling + scripts to `packages/spec/package.json`: devDependencies `vitest`, `ajv`, `ajv-formats`, `tsd` (or `vitest` type-testing); scripts `test` (`vitest run`), `test:watch`, `typecheck` (`tsc --noEmit -p tsconfig.json`); keep zero runtime dependencies.
-- [ ] T002 [P] Create the `packages/spec` skeleton dirs with `.gitkeep`: `manifest/`, `schema/`, `docs/`, `tests/fixtures/valid/`, `tests/fixtures/invalid/`, `scripts/`, `src/generated/`.
-- [ ] T003 [P] Add `packages/spec/vitest.config.ts` (node environment; include `tests/**/*.test.ts` and type-tests `tests/**/*.test-d.ts`).
+- [x] T001 Add dev tooling + scripts to `packages/spec/package.json`: devDependencies `vitest`, `ajv`, `ajv-formats`, `tsd` (or `vitest` type-testing); scripts `test` (`vitest run`), `test:watch`, `typecheck` (`tsc --noEmit -p tsconfig.json`); keep zero runtime dependencies.
+- [x] T002 [P] Create the `packages/spec` skeleton dirs with `.gitkeep`: `manifest/`, `schema/`, `docs/`, `tests/fixtures/valid/`, `tests/fixtures/invalid/`, `scripts/`, `src/generated/`.
+- [x] T003 [P] Add `packages/spec/vitest.config.ts` (node environment; include `tests/**/*.test.ts` and type-tests `tests/**/*.test-d.ts`).
 
 ---
 
@@ -44,12 +44,12 @@ that every user story builds on.
 
 **⚠️ CRITICAL**: No user-story work begins until this phase is complete.
 
-- [ ] T004 Add the canonical vocabulary manifest at `packages/spec/manifest/semantic-vocabulary.v0.json` (port from `specs/001-the-contract/contracts/semantic-vocabulary.v0.json`; 68 tokens / 41 required, 7 component roles).
-- [ ] T005 [P] Add `packages/spec/scripts/generate-types.ts` that reads the manifest and emits `packages/spec/src/generated/contract-ids.ts` (the `SemanticTokenId` string-literal union, `ComponentRole` union, and `REQUIRED_TOKEN_IDS` const). Depends on T004.
-- [ ] T006 [P] Implement `packages/spec/src/version.ts`: `CONTRACT_VERSION` constant and semver compare/compatibility helpers (no diff logic yet — that is US5).
-- [ ] T007 Implement `packages/spec/src/types.ts`: `ThemeMode`, `ResolvedToken`, `ResolvedTheme`, `ComponentRole`, and `ThemeFile` shapes per `data-model.md` and `contracts/resolved-theme.contract.md`, importing ids from `src/generated/contract-ids.ts`. Depends on T005.
-- [ ] T008 Implement `packages/spec/src/vocabulary.ts`: load the manifest and expose typed accessors — `requiredTokenIds()`, `typeOf(id)`, `isSemanticTokenId(x)`, `componentRoles()`, `modeSensitiveIds()`. Depends on T004.
-- [ ] T009 Wire `packages/spec/src/index.ts` public API: re-export types, vocabulary accessors, version, and the resolvable paths to `schema/` and `manifest/`. Depends on T006, T007, T008.
+- [x] T004 Add the canonical vocabulary manifest at `packages/spec/manifest/semantic-vocabulary.v0.json` (port from `specs/001-the-contract/contracts/semantic-vocabulary.v0.json`; 68 tokens / 41 required, 7 component roles).
+- [x] T005 [P] Add `packages/spec/scripts/generate-types.ts` that reads the manifest and emits `packages/spec/src/generated/contract-ids.ts` (the `SemanticTokenId` string-literal union, `ComponentRole` union, and `REQUIRED_TOKEN_IDS` const). Depends on T004.
+- [x] T006 [P] Implement `packages/spec/src/version.ts`: `CONTRACT_VERSION` constant and semver compare/compatibility helpers (no diff logic yet — that is US5).
+- [x] T007 Implement `packages/spec/src/types.ts`: `ThemeMode`, `ResolvedToken`, `ResolvedTheme`, `ComponentRole`, and `ThemeFile` shapes per `data-model.md` and `contracts/resolved-theme.contract.md`, importing ids from `src/generated/contract-ids.ts`. Depends on T005.
+- [x] T008 Implement `packages/spec/src/vocabulary.ts`: load the manifest and expose typed accessors — `requiredTokenIds()`, `typeOf(id)`, `isSemanticTokenId(x)`, `componentRoles()`, `modeSensitiveIds()`. Depends on T004.
+- [x] T009 Wire `packages/spec/src/index.ts` public API: re-export types, vocabulary accessors, version, and the resolvable paths to `schema/` and `manifest/`. Depends on T006, T007, T008.
 
 **Checkpoint**: Manifest, generated ids, types, and accessors compile (`pnpm --filter @polymorph/spec typecheck`).
 
@@ -61,8 +61,8 @@ that every user story builds on.
 
 **Independent Test**: Typecheck passes; indexing `ResolvedTheme.tokens` by a `pm.*` id type-checks, and referencing a non-`pm` id is a type error.
 
-- [ ] T010 [P] [US1] Add type-level test `packages/spec/tests/types.test-d.ts`: `ResolvedTheme.tokens` indexing accepts a known `pm.*` id and rejects a primitive/unknown id; `SemanticTokenId` union is non-empty.
-- [ ] T011 [P] [US1] Author `packages/spec/docs/vocabulary.md` — the semantic vocabulary reference (grouped table) derived from the manifest; document that SDK code references `pm.*` only, never primitives.
+- [x] T010 [P] [US1] Add type-level test `packages/spec/tests/types.test-d.ts`: `ResolvedTheme.tokens` indexing accepts a known `pm.*` id and rejects a primitive/unknown id; `SemanticTokenId` union is non-empty.
+- [x] T011 [P] [US1] Author `packages/spec/docs/vocabulary.md` — the semantic vocabulary reference (grouped table) derived from the manifest; document that SDK code references `pm.*` only, never primitives.
 
 **Checkpoint**: A vendor-style consumption sample compiles against `@polymorph/spec` using only semantic ids.
 
@@ -74,11 +74,11 @@ that every user story builds on.
 
 **Independent Test**: A complete `light` theme validates; each malformed fixture fails with an error naming the offending id/path.
 
-- [ ] T012 [US2] Author `packages/spec/schema/dtcg-types.schema.json` (JSON Schema 2020-12): the accepted DTCG `$type` subset and value shapes per research R2 — `color` (string), `dimension`/`duration` as `{value,unit}` objects, `typography` constrained composite (the 5 sub-properties), `shadow`, `cubicBezier` 4-tuple, `number`, and the alias-reference string pattern `^\{[A-Za-z0-9_.-]+\}$`.
-- [ ] T013 [US2] Author `packages/spec/schema/theme.schema.json` (2020-12): top-level `contractVersion`, the reserved `pm` group structure, `pm.modes.light` carrying the full **required** mode-sensitive set, mode-invariant required tokens under `pm.*`, type-per-role via `$ref` to `dtcg-types.schema.json`, and rejection of unknown `pm.*` paths. Depends on T012, T004.
-- [ ] T014 [P] [US2] Author valid fixture `packages/spec/tests/fixtures/valid/minimal-light.tokens.json` — FI primitives + all 41 required tokens, `light` only.
-- [ ] T015 [P] [US2] Author invalid fixtures in `packages/spec/tests/fixtures/invalid/`: `missing-required.tokens.json`, `type-mismatch.tokens.json`, `pm-collision.tokens.json` (FI token under `pm`), `unknown-pm-id.tokens.json`.
-- [ ] T016 [US2] Write `packages/spec/tests/schema.test.ts` (Ajv + ajv-formats): valid fixture passes; each invalid fixture fails; assert the reported error includes the offending `instancePath`/id. Depends on T013, T014, T015.
+- [x] T012 [US2] Author `packages/spec/schema/dtcg-types.schema.json` (JSON Schema 2020-12): the accepted DTCG `$type` subset and value shapes per research R2 — `color` (string), `dimension`/`duration` as `{value,unit}` objects, `typography` constrained composite (the 5 sub-properties), `shadow`, `cubicBezier` 4-tuple, `number`, and the alias-reference string pattern `^\{[A-Za-z0-9_.-]+\}$`.
+- [x] T013 [US2] Author `packages/spec/schema/theme.schema.json` (2020-12): top-level `contractVersion`, the reserved `pm` group structure, `pm.modes.light` carrying the full **required** mode-sensitive set, mode-invariant required tokens under `pm.*`, type-per-role via `$ref` to `dtcg-types.schema.json`, and rejection of unknown `pm.*` paths. Depends on T012, T004.
+- [x] T014 [P] [US2] Author valid fixture `packages/spec/tests/fixtures/valid/minimal-light.tokens.json` — FI primitives + all 41 required tokens, `light` only.
+- [x] T015 [P] [US2] Author invalid fixtures in `packages/spec/tests/fixtures/invalid/`: `missing-required.tokens.json`, `type-mismatch.tokens.json`, `pm-collision.tokens.json` (FI token under `pm`), `unknown-pm-id.tokens.json`.
+- [x] T016 [US2] Write `packages/spec/tests/schema.test.ts` (Ajv + ajv-formats): valid fixture passes; each invalid fixture fails; assert the reported error includes the offending `instancePath`/id. Depends on T013, T014, T015.
 
 **Checkpoint**: `pnpm --filter @polymorph/spec test` validates themes and reports located failures — the validation MVP.
 
@@ -90,10 +90,10 @@ that every user story builds on.
 
 **Independent Test**: A no-component theme passes; a valid override passes; an unknown role fails.
 
-- [ ] T017 [P] [US3] Author `packages/spec/schema/components.schema.json`: optional `pm.<role>.<property>` overrides constrained to the closed role set (from the manifest `componentRoles`); unknown role → fail.
-- [ ] T018 [US3] Add an optional `$ref`/`allOf` to `components.schema.json` from `packages/spec/schema/theme.schema.json`. Depends on T013, T017.
-- [ ] T019 [P] [US3] Fixtures: `tests/fixtures/valid/with-components.tokens.json` and `tests/fixtures/invalid/unknown-role.tokens.json`.
-- [ ] T020 [US3] Write `packages/spec/tests/components.test.ts`: no-components passes; valid override passes; unknown role fails naming the role. Depends on T018, T019.
+- [x] T017 [P] [US3] Author `packages/spec/schema/components.schema.json`: optional `pm.<role>.<property>` overrides constrained to the closed role set (from the manifest `componentRoles`); unknown role → fail.
+- [x] T018 [US3] Add an optional `$ref`/`allOf` to `components.schema.json` from `packages/spec/schema/theme.schema.json`. Depends on T013, T017.
+- [x] T019 [P] [US3] Fixtures: `tests/fixtures/valid/with-components.tokens.json` and `tests/fixtures/invalid/unknown-role.tokens.json`.
+- [x] T020 [US3] Write `packages/spec/tests/components.test.ts`: no-components passes; valid override passes; unknown role fails naming the role. Depends on T018, T019.
 
 **Checkpoint**: Component layer is optional and the closed role set is enforced.
 
@@ -105,8 +105,8 @@ that every user story builds on.
 
 **Independent Test**: `light`-only passes; `light`+`dark` passes; a `dark` missing a required mode-sensitive token fails naming the missing id for that mode.
 
-- [ ] T021 [P] [US4] Fixtures: `tests/fixtures/valid/light-dark.tokens.json` (complete `light`+`dark`) and `tests/fixtures/invalid/partial-dark.tokens.json` (`dark` missing a required mode-sensitive token).
-- [ ] T022 [US4] Write `packages/spec/tests/modes.test.ts` against the per-mode completeness rules in `theme.schema.json` (T013): light-only and light+dark pass; partial-dark fails naming the missing mode/id. Depends on T013, T021.
+- [x] T021 [P] [US4] Fixtures: `tests/fixtures/valid/light-dark.tokens.json` (complete `light`+`dark`) and `tests/fixtures/invalid/partial-dark.tokens.json` (`dark` missing a required mode-sensitive token).
+- [x] T022 [US4] Write `packages/spec/tests/modes.test.ts` against the per-mode completeness rules in `theme.schema.json` (T013): light-only and light+dark pass; partial-dark fails naming the missing mode/id. Depends on T013, T021.
 
 **Checkpoint**: Mode completeness validates per the `pm.modes.<mode>` convention.
 
@@ -118,8 +118,8 @@ that every user story builds on.
 
 **Independent Test**: `ResolvedTheme` type-test confirms a plain, framework-free record; the retrofit doc references only neutral shapes.
 
-- [ ] T023 [P] [US6] Add type-level test `packages/spec/tests/resolved-theme.test-d.ts`: `ResolvedTheme` is a plain record (no React/RN/Flutter/styling-library types), keys are `pm.*` only.
-- [ ] T024 [P] [US6] Author `packages/spec/docs/adoption-retrofit.md`: how an existing SDK consumes `ResolvedTheme` via a thin shim into its current theme object/style API (per-platform shim is Spec C); reaffirm Principle I (no reaching around to primitives).
+- [x] T023 [P] [US6] Add type-level test `packages/spec/tests/resolved-theme.test-d.ts`: `ResolvedTheme` is a plain record (no React/RN/Flutter/styling-library types), keys are `pm.*` only.
+- [x] T024 [P] [US6] Author `packages/spec/docs/adoption-retrofit.md`: how an existing SDK consumes `ResolvedTheme` via a thin shim into its current theme object/style API (per-platform shim is Spec C); reaffirm Principle I (no reaching around to primitives).
 
 **Checkpoint**: Neutral output contract is type-enforced and documented for brownfield adoption.
 
@@ -131,9 +131,9 @@ that every user story builds on.
 
 **Independent Test**: A manifest diff classifies additive changes as MINOR and breaking ones as MAJOR; a v0-valid theme stays valid under an additive bump.
 
-- [ ] T025 [US5] Implement `diffManifests(prev, next)` in `packages/spec/src/version.ts` → `{ bump, addedOptional, addedRequired, removedOrRenamed }` applying FR-016 rules. Depends on T006.
-- [ ] T026 [P] [US5] Write `packages/spec/tests/versioning.test.ts`: added optional token/role → MINOR (and a v0 valid fixture still validates); added required → MAJOR; rename/remove → MAJOR.
-- [ ] T027 [P] [US5] Author `packages/spec/docs/versioning.md`: the stability policy (additions-only safe path; breaking → major + migration note) per FR-017 / Principle III.
+- [x] T025 [US5] Implement `diffManifests(prev, next)` in `packages/spec/src/version.ts` → `{ bump, addedOptional, addedRequired, removedOrRenamed }` applying FR-016 rules. Depends on T006.
+- [x] T026 [P] [US5] Write `packages/spec/tests/versioning.test.ts`: added optional token/role → MINOR (and a v0 valid fixture still validates); added required → MAJOR; rename/remove → MAJOR.
+- [x] T027 [P] [US5] Author `packages/spec/docs/versioning.md`: the stability policy (additions-only safe path; breaking → major + migration note) per FR-017 / Principle III.
 
 **Checkpoint**: Versioning is computable and documented.
 
@@ -141,10 +141,10 @@ that every user story builds on.
 
 ## Phase 9: Polish & Cross-Cutting Concerns
 
-- [ ] T028 [P] Write `packages/spec/tests/manifest.test.ts`: consistency — every required manifest id is required in `theme.schema.json`; every manifest id has a generated `SemanticTokenId`; `componentRoles` match `components.schema.json`; all `defaultsFrom` reference real ids.
-- [ ] T029 [P] Update `packages/spec/README.md` to point at `schema/`, `manifest/`, and `docs/`, with a minimal usage snippet.
-- [ ] T030 Add an `exports` map to `packages/spec/package.json` exposing `.` (types), `./schema/*`, and `./manifest/*`; include `schema` and `manifest` in `files`. (Same file as T001 — sequential.)
-- [ ] T031 Run quickstart validation: `pnpm --filter @polymorph/spec build && pnpm --filter @polymorph/spec typecheck && pnpm --filter @polymorph/spec test` all green; confirm the manifest parses and counts match (68/41).
+- [x] T028 [P] Write `packages/spec/tests/manifest.test.ts`: consistency — every required manifest id is required in `theme.schema.json`; every manifest id has a generated `SemanticTokenId`; `componentRoles` match `components.schema.json`; all `defaultsFrom` reference real ids.
+- [x] T029 [P] Update `packages/spec/README.md` to point at `schema/`, `manifest/`, and `docs/`, with a minimal usage snippet.
+- [x] T030 Add an `exports` map to `packages/spec/package.json` exposing `.` (types), `./schema/*`, and `./manifest/*`; include `schema` and `manifest` in `files`. (Same file as T001 — sequential.)
+- [x] T031 Run quickstart validation: `pnpm --filter @polymorph/spec build && pnpm --filter @polymorph/spec typecheck && pnpm --filter @polymorph/spec test` all green; confirm the manifest parses and counts match (68/41).
 
 ---
 

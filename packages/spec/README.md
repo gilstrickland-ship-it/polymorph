@@ -1,16 +1,47 @@
 # @polymorph/spec
 
-The Polymorph theme **contract** — the open standard at the heart of the framework.
+The Polymorph theme **contract** — the open standard at the heart of the framework. Data + rules
+only; the resolver/validator engine lives in `@polymorph/core` (Spec B). **Zero runtime
+dependencies.**
 
-Defines, as DTCG-extended JSON:
+## What ships
 
-- **Primitive tokens** — raw palette, type scale, spacing, radii, durations (FI-specific; the SDK never references these directly).
-- **Semantic / alias tokens** — the contract. Purpose-named, stable, finite vocabulary the SDK codes against (e.g. `color.surface.base`, `color.action.primary`, `typography.body`, `space.inset.md`, `radius.control`).
-- **Component tokens** — optional targeted per-role overrides that default to semantic tokens.
-- **Theme modes** — `light` / `dark` / `highContrast` variants colocated in one theme file.
+| Path | What |
+|---|---|
+| [`manifest/semantic-vocabulary.v0.json`](./manifest/semantic-vocabulary.v0.json) | Canonical vocabulary — 68 tokens (41 required), 7 component roles. The single source of truth. |
+| [`schema/theme.schema.json`](./schema/theme.schema.json) | JSON Schema 2020-12 for a full theme file (generated from the manifest). |
+| [`schema/components.schema.json`](./schema/components.schema.json) | Closed component-role override shapes (generated). |
+| [`schema/dtcg-types.schema.json`](./schema/dtcg-types.schema.json) | Accepted DTCG 2025.10 `$type` value shapes. |
+| `dist/` (TS types) | `SemanticTokenId`, `ComponentRole`, `ThemeMode`, the neutral `ResolvedTheme`, vocabulary accessors, and versioning helpers. |
 
-Also ships the JSON Schema used for validation and the explicit versioning rules for the
-semantic vocabulary (additions are the only safe change).
+## The four token layers
 
-> Implemented in **Spec A — The Contract**. This is the first and most important spec; the
-> contract must stabilize before adapters are built.
+Primitive (FI-specific) → **semantic / alias** (`pm.*`, the contract surface) → **component**
+(optional `pm.<role>.<prop>` overrides) → **theme modes** (`light` required; `dark` /
+`highContrast` optional, as parallel per-mode sets under `pm.modes.*`).
+
+See [`docs/vocabulary.md`](./docs/vocabulary.md), the DTCG conventions, retrofit guide
+([`docs/adoption-retrofit.md`](./docs/adoption-retrofit.md)), and the
+[versioning policy](./docs/versioning.md).
+
+## Usage
+
+```ts
+import { requiredTokenIds, typeOf, isSemanticTokenId, type ResolvedTheme } from "@polymorph/spec";
+
+requiredTokenIds().length;                 // 41
+typeOf("pm.radius.control");               // "dimension"
+isSemanticTokenId("pm.color.text.body");   // true
+```
+
+## Develop
+
+```bash
+pnpm --filter @polymorph/spec generate     # regenerate types + schema from the manifest
+pnpm --filter @polymorph/spec build
+pnpm --filter @polymorph/spec typecheck    # includes compile-time *.test-d.ts checks
+pnpm --filter @polymorph/spec test         # vitest: schema, components, modes, versioning, manifest consistency
+```
+
+> Edit only `manifest/semantic-vocabulary.v0.json` to change the vocabulary, then `generate`.
+> `tests/manifest.test.ts` fails if the generated types/schema drift from the manifest.
