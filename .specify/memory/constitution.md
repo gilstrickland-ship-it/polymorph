@@ -8,10 +8,12 @@ are binding on every spec and implementation.
 
 ### I. Contract-First (NON-NEGOTIABLE)
 
-The SDK is coded against a stable, semantic theme **contract** — never against any financial
-institution's primitive palette, raw values, or component names. All adaptation flows through
-the contract. Any code path that reaches around the contract to a host's primitives is a
-defect. The contract (`@polymorph/spec`) must stabilize before any adapter is built.
+The SDK consumes a stable, semantic theme **contract** — never any financial institution's
+primitive palette, raw values, or component names. This holds whether the SDK is **built new
+against the contract** or an **existing/already-shipped SDK retrofitted** to consume the
+contract's resolved values: both route all styling through the semantic layer. Any code path
+that reaches around the contract to a host's primitives is a defect — including in a retrofit.
+The contract (`@polymorph/spec`) must stabilize before any adapter is built.
 
 ### II. Standards-Based, Minimally Extended
 
@@ -31,7 +33,12 @@ real feature needs (starting with the onboarding demo).
 
 Re-skinning for a new design system must be a **token/data change only** — never a fork or
 per-FI edit of SDK source. One SDK build renders across N design systems. The v1 acceptance bar
-is literal: swapping the reference SDK between two mock banks touches zero SDK source.
+is literal: swapping the reference SDK between two mock banks touches zero SDK source. This
+applies to **new and existing SDKs alike**: adopting Polymorph in an already-shipped SDK is an
+**additive integration** — consume resolved tokens (via a thin shim into the SDK's existing
+theme/style layer), not a rewrite — and re-skinning across FIs thereafter remains a data change
+only. To make this possible, the contract's resolved output MUST stay framework- and
+component-model-neutral so any SDK can consume it.
 
 ### V. Hybrid Rendering With Escape Hatches
 
@@ -84,4 +91,9 @@ relevant spec. Amendments require updating this file with a new version and date
 semantic: MAJOR for principle removals/redefinitions, MINOR for new principles or materially
 expanded guidance, PATCH for clarifications.
 
-**Version**: 1.0.0 | **Ratified**: 2026-05-27 | **Last Amended**: 2026-05-27
+**Version**: 1.1.0 | **Ratified**: 2026-05-27 | **Last Amended**: 2026-05-27
+
+> **v1.1.0 (2026-05-27)** — Clarified Principles I and IV so the contract explicitly covers
+> **new *and* existing/already-shipped SDKs** (contract-native and retrofit adoption), and
+> required the resolved output to stay framework/component-model-neutral. Additive
+> clarification; no principle removed or redefined (MINOR).
