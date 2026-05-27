@@ -229,7 +229,22 @@ export const COMPONENT_ROLES: readonly ComponentRoleEntry[] = ${JSON.stringify(
 )} as const;
 `;
 
+// Embed all three schemas as TS objects so consumers (e.g. @polymorph/core) can import them
+// without a cross-package JSON import (RN-safe; avoids rootDir emit issues). The standalone
+// schema/*.json files remain for non-JS toolchains.
+const dtcgTypesSchema = JSON.parse(readFileSync(join(pkgRoot, "schema", "dtcg-types.schema.json"), "utf8"));
+const schemasTs = `// AUTO-GENERATED from manifest/ + schema/ — DO NOT EDIT.
+// Run \`pnpm --filter @polymorph/spec generate\` to regenerate.
+
+export const dtcgTypesSchema: Record<string, unknown> = ${JSON.stringify(dtcgTypesSchema, null, 2)};
+
+export const componentsSchema: Record<string, unknown> = ${JSON.stringify(componentsSchema, null, 2)};
+
+export const themeSchema: Record<string, unknown> = ${JSON.stringify(themeSchema, null, 2)};
+`;
+
 writeFileSync(join(pkgRoot, "src", "generated", "contract-ids.ts"), ts);
+writeFileSync(join(pkgRoot, "src", "generated", "schemas.ts"), schemasTs);
 writeFileSync(join(pkgRoot, "schema", "theme.schema.json"), JSON.stringify(themeSchema, null, 2) + "\n");
 writeFileSync(join(pkgRoot, "schema", "components.schema.json"), JSON.stringify(componentsSchema, null, 2) + "\n");
 

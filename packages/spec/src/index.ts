@@ -25,5 +25,8 @@ export {
   type ComponentRoleEntry,
 } from "./generated/contract-ids.js";
 
+// Schemas embedded as objects (generated) — for JS consumers like @polymorph/core.
+export { themeSchema, componentsSchema, dtcgTypesSchema } from "./generated/schemas.js";
+
 /** @deprecated use CONTRACT_VERSION */
 export const SPEC_VERSION = "0.0.0";

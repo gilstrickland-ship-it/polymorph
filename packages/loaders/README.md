@@ -1,10 +1,24 @@
 # @polymorph/loaders
 
-Pluggable theme **delivery** behind a single `ThemeLoader` interface. Three reference
-implementations, all returning a validated, resolved theme:
+Pluggable theme **delivery** behind a single `ThemeLoader` interface. `load()` validates once and
+returns a **handle** exposing `resolve(mode)` + `modes` (switch modes at runtime without
+reloading).
 
-- **InlineLoader** — host passes a token object at SDK init (primary, simplest).
-- **RemoteManifestLoader** — fetch a *versioned* token JSON from an FI-controlled URL/CDN; cache + validate (+ optional signature/integrity check). Enables theme updates without an app release.
-- **BundledLoader** — build-time-compiled theme package bundled into the app.
+```ts
+import { InlineLoader, RemoteManifestLoader, BundledLoader } from "@polymorph/loaders";
+
+const loaded = await new InlineLoader(themeJson).load();
+loaded.modes;            // ["light","dark", ...]
+loaded.resolve("dark");  // ResolvedTheme — deep-equal across all three loaders
+```
+
+- **InlineLoader** — host passes a token object at init (primary, simplest).
+- **RemoteManifestLoader** — `{ url, fetch?, cacheTtlMs? }`: fetch a versioned token JSON, validate,
+  and cache in memory. Typed errors: `LoaderFetchError`, `LoaderParseError`, `ThemeValidationError`.
+  Signing/integrity is deferred (roadmap).
+- **BundledLoader** — a build-time-compiled theme bundled into the app.
+
+A loader never returns an invalid theme — it rejects with `ThemeValidationError` carrying the
+located `ValidationError[]`.
 
 > Implemented in **Spec B — Core + Loaders**.

@@ -1,13 +1,21 @@
 # @polymorph/cli
 
-Command-line tooling for theme authors and CI.
+Zero-dependency command-line tooling for theme authors and CI, wrapping `@polymorph/core`.
 
-| Command | Purpose |
-|---|---|
-| `polymorph validate` | Validate a DTCG token file against the `@polymorph/spec` JSON Schema. |
-| `polymorph lint` | Run the advisory a11y linter (warn, non-blocking). |
-| `polymorph resolve` | Resolve aliases + select mode → emit a flat resolved token map. |
-| `polymorph transform` | Build-time transform to platform-native theme artifacts (wraps [Style Dictionary](https://styledictionary.com)). |
+```bash
+polymorph validate <file>                 # exit 1 + located errors if invalid, else 0
+polymorph lint <file> [--strict]          # advisory warnings; exit 0 (1 with --strict)
+polymorph resolve <file> --mode <mode>    # prints ResolvedTheme JSON to stdout
+```
 
-> Implemented in **Spec B — Core + Loaders**. The `transform` command powers post-v1 Flutter
-> and native iOS/Android adapters.
+| Command | Purpose | Exit |
+|---|---|---|
+| `validate` | Schema + graph validation, located errors. | `0` valid / `1` invalid |
+| `lint` | Advisory WCAG 2.1 warnings (non-blocking). | `0` (or `1` with `--strict` if warnings) |
+| `resolve` | Resolve aliases + select `--mode` → `ResolvedTheme` JSON. | `0` |
+| `transform` | Post-v1 (Style Dictionary). | `1` (not yet implemented) |
+
+Flags: `--mode <light\|dark\|highContrast>`, `--strict`, `--json`. The library entry point exports
+`run(argv): Promise<number>` for in-process use.
+
+> Implemented in **Spec B — Core + Loaders**.

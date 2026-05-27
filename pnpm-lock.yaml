@@ -23,13 +23,61 @@ importers:
 
   packages/adapter-react-native: {}
 
-  packages/cli: {}
+  packages/cli:
+    dependencies:
+      '@polymorph/core':
+        specifier: workspace:*
+        version: link:../core
+      '@polymorph/loaders':
+        specifier: workspace:*
+        version: link:../loaders
+      '@polymorph/spec':
+        specifier: workspace:*
+        version: link:../spec
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.5
+        version: 22.10.5
+      vitest:
+        specifier: 2.1.8
+        version: 2.1.8(@types/node@22.10.5)
 
   packages/conformance: {}
 
-  packages/core: {}
+  packages/core:
+    dependencies:
+      '@polymorph/spec':
+        specifier: workspace:*
+        version: link:../spec
+      ajv:
+        specifier: 8.17.1
+        version: 8.17.1
+      ajv-formats:
+        specifier: 3.0.1
+        version: 3.0.1(ajv@8.17.1)
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.5
+        version: 22.10.5
+      vitest:
+        specifier: 2.1.8
+        version: 2.1.8(@types/node@22.10.5)
 
-  packages/loaders: {}
+  packages/loaders:
+    dependencies:
+      '@polymorph/core':
+        specifier: workspace:*
+        version: link:../core
+      '@polymorph/spec':
+        specifier: workspace:*
+        version: link:../spec
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.5
+        version: 22.10.5
+      vitest:
+        specifier: 2.1.8
+        version: 2.1.8(@types/node@22.10.5)
 
   packages/spec:
     devDependencies:
