@@ -4,6 +4,9 @@ build/
 coverage/
 *.tsbuildinfo
 
+# Failing-golden artifacts (CI uploads these for review; never commit).
+**/__diffs__/
+
 .nx/cache
 .nx/workspace-data
 

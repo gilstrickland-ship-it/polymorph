@@ -5,8 +5,15 @@
 export interface GoldenHarness {
   /** Render a named scenario and return its image bytes. */
   capture(name: string, tree: unknown): Promise<Uint8Array>;
-  /** Compare actual bytes against the stored baseline for `name`. */
-  compare(name: string, actual: Uint8Array): Promise<{ match: boolean; diffRatio: number }>;
+  /**
+   * Compare actual bytes against the stored baseline for `name`. When the diff exceeds the
+   * harness's threshold, implementations MAY return a `diffPng` (a visualization of the diff)
+   * so reviewers/CI can see what changed.
+   */
+  compare(
+    name: string,
+    actual: Uint8Array,
+  ): Promise<{ match: boolean; diffRatio: number; diffPng?: Uint8Array }>;
 }
 
 export class GoldenHarnessUnavailableError extends Error {

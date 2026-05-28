@@ -51,3 +51,15 @@ jobs:
 
       - name: Build · typecheck · test · conformance
         run: pnpm exec nx run-many -t build typecheck test conformance --output-style=stream
+
+      # Failing golden-screenshot tests write actual / baseline / diff PNGs under
+      # `**/__diffs__/`. Surface them as a downloadable artifact so reviewers can see
+      # exactly what changed without re-running locally.
+      - name: Upload golden diffs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: golden-diffs
+          path: packages/**/__diffs__/**
+          if-no-files-found: ignore
+          retention-days: 14
