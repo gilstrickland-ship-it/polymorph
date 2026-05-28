@@ -112,6 +112,34 @@ importers:
         specifier: 2.1.8
         version: 2.1.8(@types/node@22.10.5)
 
+  packages/adapter-web:
+    dependencies:
+      '@polymorph/core':
+        specifier: workspace:*
+        version: link:../core
+      '@polymorph/spec':
+        specifier: workspace:*
+        version: link:../spec
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.5
+        version: 22.10.5
+      '@types/react':
+        specifier: 18.3.12
+        version: 18.3.12
+      '@types/react-test-renderer':
+        specifier: 18.3.0
+        version: 18.3.0
+      react:
+        specifier: 18.3.1
+        version: 18.3.1
+      react-test-renderer:
+        specifier: 18.3.1
+        version: 18.3.1(react@18.3.1)
+      vitest:
+        specifier: 2.1.8
+        version: 2.1.8(@types/node@22.10.5)
+
   packages/cli:
     dependencies:
       '@polymorph/core':
