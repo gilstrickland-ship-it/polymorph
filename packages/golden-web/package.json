@@ -1,0 +1,35 @@
+{
+  "name": "@polymorph/golden-web",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Polymorph golden-screenshot harness for web (satori → resvg → pixelmatch). Implements @polymorph/conformance's GoldenHarness without a browser binary.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "baselines"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
+    "test": "vitest run",
+    "update-baselines": "tsx scripts/update-baselines.ts"
+  },
+  "dependencies": {
+    "@polymorph/spec": "workspace:*",
+    "@polymorph/core": "workspace:*",
+    "@polymorph/adapter-web": "workspace:*",
+    "@polymorph/conformance": "workspace:*",
+    "satori": "0.12.2",
+    "@resvg/resvg-js": "2.6.2",
+    "pixelmatch": "7.1.0",
+    "pngjs": "7.0.0",
+    "@fontsource/inter": "5.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.5",
+    "@types/pixelmatch": "5.2.6",
+    "@types/pngjs": "6.0.5",
+    "tsx": "4.19.2",
+    "vitest": "2.1.8"
+  }
+}

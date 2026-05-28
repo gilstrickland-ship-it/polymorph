@@ -24,7 +24,8 @@
       "@polymorph/adapter-web": ["packages/adapter-web/src/index.ts"],
       "@polymorph/conformance": ["packages/conformance/src/index.ts"],
       "@polymorph/cli": ["packages/cli/src/index.ts"],
-      "@polymorph/authoring": ["tooling/authoring/src/index.ts"]
+      "@polymorph/authoring": ["tooling/authoring/src/index.ts"],
+      "@polymorph/golden-web": ["packages/golden-web/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "dist"]
