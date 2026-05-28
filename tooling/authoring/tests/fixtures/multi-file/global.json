@@ -1,0 +1,11 @@
+{
+  "color": {
+    "neutral": {
+      "white": { "value": "#ffffff", "type": "color" },
+      "ink": { "value": "#0b1020", "type": "color" }
+    }
+  },
+  "spacing": {
+    "md": { "value": "16px", "type": "spacing" }
+  }
+}

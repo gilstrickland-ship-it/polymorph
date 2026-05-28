@@ -50,11 +50,30 @@ interface MappingConfig {
 
 A small `lintMapping` helper rejects misplaced ids (mode-sensitive listed under `invariant`, etc.).
 
+### Multi-file Tokens Studio exports
+
+```ts
+import { loadTokensStudioFromDirectory, consolidateTokensStudioFiles, importTokensStudio } from "@polymorph/authoring";
+
+// File-based (Node): a directory of `<set>.json` files plus `$themes.json` / `$metadata.json`.
+const exportObj = await loadTokensStudioFromDirectory("./my-bank-tokens");
+const { theme } = importTokensStudio(exportObj, mapping);
+
+// Or pure (no fs): pass an in-memory map of filename → parsed JSON.
+const consolidated = consolidateTokensStudioFiles({
+  "global.json": globalJson,
+  "$themes.json": themesJson,
+  "$metadata.json": metaJson,
+});
+```
+
+The consolidator routes `$themes.json` / `$metadata.json` into their special slots and treats
+every other `*.json` as a token set named after the file. The result feeds the same
+`importTokensStudio` API — single-file and multi-file paths share one importer.
+
 ### Out of scope (deferred)
 
-- **Multi-file Tokens Studio exports** (separate JSON per set). Coming next; the single-file API
-  is unchanged.
 - **Figma direct import**, **auto-extract from a live app**, and the **interactive theme builder**
   — separate cycles per the roadmap.
 
-> Implemented in **Spec G — Authoring: Tokens Studio import**.
+> Tokens Studio import (single-file): **Spec G**. Multi-file support: **Spec H**.

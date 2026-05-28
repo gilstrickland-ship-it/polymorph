@@ -1,0 +1,6 @@
+{
+  "color": {
+    "background": { "value": "{color.neutral.white}", "type": "color" },
+    "text": { "value": "{color.neutral.ink}", "type": "color" }
+  }
+}
