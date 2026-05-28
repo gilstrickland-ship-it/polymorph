@@ -1,7 +1,10 @@
-// @polymorph/adapter-react-native — the FIRST platform adapter (v1 vertical slice).
-//
-// Implemented in Spec C: a ThemeProvider that takes the resolved token map and exposes it
-// idiomatically via context + StyleSheet/styled primitives, plus the render-slot mechanism
-// (named host override points) and the optional role-based component-mapping registry.
+// @polymorph/adapter-react-native — ThemeProvider, render slots, component-mapping registry,
+// retrofit shim, and themed primitives. The neutral core (bridge/slots/mapping/retrofit/provider)
+// is platform-agnostic; primitives.ts is the only module that imports react-native.
 
-export const ADAPTER_RN_VERSION = "0.0.0";
+export * from "./theme-bridge.js";
+export * from "./slots.js";
+export * from "./component-map.js";
+export * from "./retrofit.js";
+export * from "./provider.js";
+export * from "./primitives.js";
