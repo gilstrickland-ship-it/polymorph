@@ -4,6 +4,7 @@
 export { validateTheme } from "./validate.js";
 export { resolveTheme, declaredModes } from "./resolve.js";
 export { lintTheme, lintAllModes } from "./lint.js";
+export { applyReducedMotion } from "./reduced-motion.js";
 export { contrastRatio, parseColor } from "./contrast.js";
 export { ResolveError } from "./errors.js";
 export type {

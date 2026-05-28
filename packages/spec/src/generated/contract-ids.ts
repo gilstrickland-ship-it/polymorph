@@ -74,6 +74,8 @@ export type SemanticTokenId =
   | "pm.motion.duration.long"
   | "pm.motion.easing.standard"
   | "pm.motion.easing.emphasized"
+  | "pm.motion.duration.reduced"
+  | "pm.motion.easing.reduced"
   | "pm.size.control.sm"
   | "pm.size.control.md"
   | "pm.size.control.lg"
@@ -175,6 +177,8 @@ export const ALL_TOKEN_IDS: readonly SemanticTokenId[] = [
   "pm.motion.duration.long",
   "pm.motion.easing.standard",
   "pm.motion.easing.emphasized",
+  "pm.motion.duration.reduced",
+  "pm.motion.easing.reduced",
   "pm.size.control.sm",
   "pm.size.control.md",
   "pm.size.control.lg",
@@ -221,6 +225,7 @@ export const REQUIRED_TOKEN_IDS: readonly SemanticTokenId[] = [
   "pm.motion.duration.short",
   "pm.motion.duration.base",
   "pm.motion.easing.standard",
+  "pm.motion.duration.reduced",
   "pm.size.control.md",
   "pm.size.touchTarget.min",
   "pm.size.icon.md",
@@ -697,6 +702,20 @@ export const TOKENS: readonly ManifestTokenEntry[] = [
   },
   {
     "id": "pm.motion.easing.emphasized",
+    "type": "cubicBezier",
+    "required": false,
+    "modeSensitive": false,
+    "group": "motion.easing"
+  },
+  {
+    "id": "pm.motion.duration.reduced",
+    "type": "duration",
+    "required": true,
+    "modeSensitive": false,
+    "group": "motion.duration"
+  },
+  {
+    "id": "pm.motion.easing.reduced",
     "type": "cubicBezier",
     "required": false,
     "modeSensitive": false,

@@ -709,10 +709,14 @@ export const themeSchema: Record<string, unknown> = {
                 },
                 "long": {
                   "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/duration"
+                },
+                "reduced": {
+                  "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/duration"
                 }
               },
               "required": [
                 "base",
+                "reduced",
                 "short"
               ],
               "additionalProperties": false
@@ -724,6 +728,9 @@ export const themeSchema: Record<string, unknown> = {
                   "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/cubicBezier"
                 },
                 "emphasized": {
+                  "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/cubicBezier"
+                },
+                "reduced": {
                   "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/cubicBezier"
                 }
               },

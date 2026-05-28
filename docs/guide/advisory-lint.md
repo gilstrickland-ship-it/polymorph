@@ -33,6 +33,7 @@ Every pairing accepts any CSS Color 4 form (`#hex`, `rgb()`, `hsl()`, `oklch()`,
 | Touch-target size | `TOUCH_TARGET_SMALL` | `pm.size.touchTarget.min` < 44px |
 | Disabled opacity | `DISABLED_OPACITY_HIGH` | `pm.opacity.disabled` > 0.6 |
 | Base motion duration | `MOTION_BASE_LONG` | `pm.motion.duration.base` > 500ms |
+| Reduced-motion clamp | `MOTION_REDUCED_EXCEEDS_SHORT` | `pm.motion.duration.reduced` > `pm.motion.duration.short` |
 
 ### Diagnostics
 
@@ -90,8 +91,5 @@ pnpm polymorph lint theme.tokens.json --json | jq '.[] | select(.code != "DISABL
 
 - **Real reading scenarios** — the linter operates on token pairs, not on rendered surfaces.
   Adapter-level golden screenshots (`@polymorph/golden-web`) cover real rendering paths.
-- **Motion-reduce media query coverage** — the contract has no `motion.duration.reduced.*`
-  family today. Hosts that need to enforce `prefers-reduced-motion` write a project-local lint
-  pass over the resolved theme.
 - **Per-locale typography** — `font-size` + `line-height` on Latin scripts is the implicit
   baseline; the linter doesn't read CJK / RTL guidance.

@@ -181,6 +181,10 @@
         "long": {
           "value": 200,
           "type": "duration"
+        },
+        "reduced": {
+          "value": 1,
+          "type": "duration"
         }
       },
       "easing": {

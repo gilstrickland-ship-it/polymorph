@@ -71,8 +71,10 @@ class AuroraThemeDark {
   static const Duration motionDurationShort = Duration(milliseconds: 120);
   static const Duration motionDurationBase = Duration(milliseconds: 220);
   static const Duration motionDurationLong = Duration(milliseconds: 400);
+  static const Duration motionDurationReduced = Duration(milliseconds: 1);
   static const Cubic motionEasingStandard = Cubic(0.4, 0.0, 0.2, 1.0);
   static const Cubic motionEasingEmphasized = Cubic(0.2, 0.0, 0.0, 1.0);
+  static const Cubic motionEasingReduced = Cubic(0.0, 0.0, 1.0, 1.0);
 
   // ---- Typography ------------------------------------------------------------
   static const TextStyle typographyDisplay = TextStyle(

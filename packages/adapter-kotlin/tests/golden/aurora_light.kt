@@ -100,8 +100,10 @@ object AuroraThemeLight {
   val motionDurationShort: Int = 120
   val motionDurationBase: Int = 220
   val motionDurationLong: Int = 400
+  val motionDurationReduced: Int = 1
   val motionEasingStandard: CubicBezierEasing = CubicBezierEasing(0.4f, 0.0f, 0.2f, 1.0f)
   val motionEasingEmphasized: CubicBezierEasing = CubicBezierEasing(0.2f, 0.0f, 0.0f, 1.0f)
+  val motionEasingReduced: CubicBezierEasing = CubicBezierEasing(0.0f, 0.0f, 1.0f, 1.0f)
   // endregion
 
   // region Typography

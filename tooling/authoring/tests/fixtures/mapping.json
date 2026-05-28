@@ -34,6 +34,7 @@
       "pm.motion.duration.short": "motion.duration.short",
       "pm.motion.duration.base": "motion.duration.base",
       "pm.motion.duration.long": "motion.duration.long",
+      "pm.motion.duration.reduced": "motion.duration.reduced",
       "pm.motion.easing.standard": "motion.easing.standard",
       "pm.motion.easing.emphasized": "motion.easing.emphasized",
       "pm.size.control.sm": "size.control.sm",

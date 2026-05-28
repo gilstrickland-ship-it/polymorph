@@ -26,6 +26,7 @@ export type LintCode =
   | "TOUCH_TARGET_SMALL"
   | "DISABLED_OPACITY_HIGH"
   | "MOTION_BASE_LONG"
+  | "MOTION_REDUCED_EXCEEDS_SHORT"
   | "CONTRAST_SKIPPED_UNPARSEABLE";
 
 /** Advisory only — never thrown, never blocks (Constitution Principle VI). */

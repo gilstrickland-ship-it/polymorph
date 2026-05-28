@@ -34,6 +34,7 @@ export default defineConfig({
             { text: "Modes & component tokens", link: "/guide/modes-and-component-tokens" },
             { text: "Loaders", link: "/guide/loaders" },
             { text: "Loader governance (signing, pinning, rollback)", link: "/guide/loader-governance" },
+            { text: "Reduced motion", link: "/guide/reduced-motion" },
             { text: "Advisory lint", link: "/guide/advisory-lint" },
           ],
         },
