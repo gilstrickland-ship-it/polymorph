@@ -36,6 +36,8 @@
       "pm.motion.duration.long": "motion.duration.long",
       "pm.motion.easing.standard": "motion.easing.standard",
       "pm.motion.easing.emphasized": "motion.easing.emphasized",
+      "pm.motion.duration.reduced": "motion.duration.reduced",
+      "pm.motion.easing.reduced": "motion.easing.reduced",
       "pm.size.control.sm": "size.control.sm",
       "pm.size.control.md": "size.control.md",
       "pm.size.control.lg": "size.control.lg",

@@ -100,8 +100,10 @@ public enum BorealisThemeLight {
   public static let motionDurationShort: TimeInterval = 0.12
   public static let motionDurationBase: TimeInterval = 0.22
   public static let motionDurationLong: TimeInterval = 0.4
+  public static let motionDurationReduced: TimeInterval = 0.001
   public static let motionEasingStandard: (Double, Double, Double, Double) = (0.4, 0.0, 0.2, 1.0)
   public static let motionEasingEmphasized: (Double, Double, Double, Double) = (0.2, 0.0, 0.0, 1.0)
+  public static let motionEasingReduced: (Double, Double, Double, Double) = (0.0, 0.0, 1.0, 1.0)
 
   // MARK: - Typography
   public static let typographyDisplay: PolymorphTextStyle = PolymorphTextStyle(

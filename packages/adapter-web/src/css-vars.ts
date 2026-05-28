@@ -3,6 +3,7 @@
 // `--pm-color-surface-base`. Typography composites expand into one variable per
 // sub-property (font-family / font-weight / font-size / line-height / letter-spacing).
 
+import { applyReducedMotion } from "@polymorph/core";
 import type { ResolvedTheme, SemanticTokenId } from "@polymorph/spec";
 
 /** `pm.color.surface.base` → `--pm-color-surface-base` */
@@ -97,11 +98,41 @@ export function toCssVariables(resolved: ResolvedTheme): Record<string, string> 
 /**
  * Render the CSS-variable record as a stylesheet body. The default selector is `:root` (global
  * theme); pass a class/id (e.g. `.aurora`) to scope a theme to a subtree.
+ *
+ * When `reducedMotion: "media"` (default), emits a sibling
+ * `@media (prefers-reduced-motion: reduce)` block that overrides every motion duration +
+ * easing variable to the reduced-motion clamp. Pass `"off"` to skip the block (orgs that
+ * apply the clamp in JS via `applyReducedMotion` don't need the CSS doubling).
  */
-export function toCssVariablesString(resolved: ResolvedTheme, selector = ":root"): string {
+export function toCssVariablesString(
+  resolved: ResolvedTheme,
+  selector: string = ":root",
+  opts: { reducedMotion?: "media" | "off" } = {},
+): string {
   const vars = toCssVariables(resolved);
   const body = Object.entries(vars)
     .map(([k, v]) => `  ${k}: ${v};`)
     .join("\n");
-  return `${selector} {\n${body}\n}`;
+  const main = `${selector} {\n${body}\n}`;
+  if ((opts.reducedMotion ?? "media") === "off") return main;
+  return `${main}\n\n${toReducedMotionMediaBlock(resolved, selector)}`;
+}
+
+/**
+ * Render just the `@media (prefers-reduced-motion: reduce)` block. The block ONLY contains
+ * the variables that change under the clamp — motion durations + easings — so the cascade
+ * stays minimal. Exposed separately so adapters that ship their own stylesheet shell can
+ * stitch it in themselves.
+ */
+export function toReducedMotionMediaBlock(resolved: ResolvedTheme, selector: string = ":root"): string {
+  const clamped = applyReducedMotion(resolved);
+  const before = toCssVariables(resolved);
+  const after = toCssVariables(clamped);
+  const diff: [string, string][] = [];
+  for (const [k, v] of Object.entries(after)) {
+    if (before[k] !== v) diff.push([k, v]);
+  }
+  if (diff.length === 0) return "";
+  const body = diff.map(([k, v]) => `    ${k}: ${v};`).join("\n");
+  return `@media (prefers-reduced-motion: reduce) {\n  ${selector} {\n${body}\n  }\n}`;
 }

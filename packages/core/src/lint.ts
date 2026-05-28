@@ -228,6 +228,32 @@ function lintMotionDuration(rt: RT, out: LintWarning[]): void {
   }
 }
 
+function durationMs(v: unknown): number | null {
+  if (!v || typeof v !== "object" || !("value" in v) || !("unit" in v)) return null;
+  const d = v as { value: unknown; unit: unknown };
+  if (typeof d.value !== "number") return null;
+  return d.unit === "s" ? d.value * 1000 : d.value;
+}
+
+function lintReducedMotionClamp(rt: RT, out: LintWarning[]): void {
+  // The reduced-motion clamp is meant to be the FASTEST available motion. If the FI authored
+  // a "reduced" duration that's longer than `pm.motion.duration.short`, the clamp can actually
+  // SLOW DOWN micro-interactions when prefers-reduced-motion is on — exactly backward. Flag
+  // advisory; the user reviews the intent.
+  const reduced = durationMs(valueAt(rt, "pm.motion.duration.reduced"));
+  if (reduced === null) return;
+  const short = durationMs(valueAt(rt, "pm.motion.duration.short"));
+  if (short !== null && reduced > short) {
+    out.push({
+      code: "MOTION_REDUCED_EXCEEDS_SHORT",
+      message: `pm.motion.duration.reduced is ${reduced}ms but pm.motion.duration.short is ${short}ms — the reduced clamp should be ≤ every other motion duration`,
+      tokenIds: ["pm.motion.duration.reduced", "pm.motion.duration.short"],
+      measured: reduced,
+      threshold: short,
+    });
+  }
+}
+
 // --- public API --------------------------------------------------------------
 
 /**
@@ -257,6 +283,7 @@ export function lintTheme(rt: RT): LintWarning[] {
   lintTouchTarget(rt, out);
   lintDisabledOpacity(rt, out);
   lintMotionDuration(rt, out);
+  lintReducedMotionClamp(rt, out);
   return out;
 }
 

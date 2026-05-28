@@ -187,10 +187,14 @@
                 },
                 "long": {
                   "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/duration"
+                },
+                "reduced": {
+                  "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/duration"
                 }
               },
               "required": [
                 "base",
+                "reduced",
                 "short"
               ],
               "additionalProperties": false
@@ -202,6 +206,9 @@
                   "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/cubicBezier"
                 },
                 "emphasized": {
+                  "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/cubicBezier"
+                },
+                "reduced": {
                   "$ref": "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/cubicBezier"
                 }
               },

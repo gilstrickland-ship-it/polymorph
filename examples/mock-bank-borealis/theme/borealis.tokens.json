@@ -689,6 +689,13 @@
             "value": 400,
             "unit": "ms"
           }
+        },
+        "reduced": {
+          "$type": "duration",
+          "$value": {
+            "value": 1,
+            "unit": "ms"
+          }
         }
       },
       "easing": {
@@ -707,6 +714,15 @@
             0.2,
             0,
             0,
+            1
+          ]
+        },
+        "reduced": {
+          "$type": "cubicBezier",
+          "$value": [
+            0,
+            0,
+            1,
             1
           ]
         }

@@ -153,9 +153,14 @@ function valueFor(tok, b, mode) {
     case "dimension":
       return px(dimFor(tok.id, b));
     case "duration":
-      return { value: tok.id.endsWith("short") ? 120 : tok.id.endsWith("long") ? 400 : 220, unit: "ms" };
+      if (tok.id.endsWith("reduced")) return { value: 1, unit: "ms" };
+      if (tok.id.endsWith("short")) return { value: 120, unit: "ms" };
+      if (tok.id.endsWith("long")) return { value: 400, unit: "ms" };
+      return { value: 220, unit: "ms" };
     case "cubicBezier":
-      return tok.id.endsWith("emphasized") ? [0.2, 0, 0, 1] : [0.4, 0, 0.2, 1];
+      if (tok.id.endsWith("reduced")) return [0, 0, 1, 1];
+      if (tok.id.endsWith("emphasized")) return [0.2, 0, 0, 1];
+      return [0.4, 0, 0.2, 1];
     case "number":
       return tok.id.endsWith("disabled") ? 0.4 : tok.id.endsWith("muted") ? 0.6 : 0.5;
     case "typography":

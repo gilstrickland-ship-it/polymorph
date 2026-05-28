@@ -77,6 +77,8 @@
     { "id": "pm.motion.duration.long", "type": "duration", "required": false, "modeSensitive": false, "group": "motion.duration", "description": "Larger transitions" },
     { "id": "pm.motion.easing.standard", "type": "cubicBezier", "required": true, "modeSensitive": false, "group": "motion.easing", "description": "Default easing" },
     { "id": "pm.motion.easing.emphasized", "type": "cubicBezier", "required": false, "modeSensitive": false, "group": "motion.easing", "description": "Expressive easing" },
+    { "id": "pm.motion.duration.reduced", "type": "duration", "required": true, "modeSensitive": false, "group": "motion.duration", "description": "Reduced-motion clamp — every motion duration collapses to this when prefers-reduced-motion is on" },
+    { "id": "pm.motion.easing.reduced", "type": "cubicBezier", "required": false, "modeSensitive": false, "group": "motion.easing", "description": "Reduced-motion easing — defaults to linear when absent" },
 
     { "id": "pm.size.control.sm", "type": "dimension", "required": false, "modeSensitive": false, "group": "size.control", "description": "Compact control height" },
     { "id": "pm.size.control.md", "type": "dimension", "required": true, "modeSensitive": false, "group": "size.control", "description": "Default control height" },
