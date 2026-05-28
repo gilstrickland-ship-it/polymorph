@@ -20,6 +20,6 @@ if (r.valid) {
 | `resolveTheme(theme, mode?)` → `ResolvedTheme` | Transitive alias resolution, mode selection (default `light`), component `defaultsFrom` fallback. |
 | `declaredModes(theme)` | Modes the theme declares. |
 | `lintTheme(resolved)` → `LintWarning[]` | Advisory: WCAG 2.1 contrast, touch-target, disabled-opacity. |
-| `contrastRatio(a, b)` | Pure WCAG 2.1 ratio (sRGB hex / `rgb()`). |
+| `contrastRatio(a, b)` | Pure WCAG 2.1 ratio. Parses CSS Color 4 forms: hex, `rgb()/rgba()`, `hsl()/hsla()`, `oklch()`, `oklab()`, `color(display-p3 …)`. Genuinely unparseable inputs (e.g. `currentColor`) throw, which the linter surfaces as a skipped check. |
 
 > Implemented in **Spec B — Core + Loaders**.
