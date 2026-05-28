@@ -33,6 +33,7 @@ export default defineConfig({
             { text: "The semantic vocabulary", link: "/guide/semantic-vocabulary" },
             { text: "Modes & component tokens", link: "/guide/modes-and-component-tokens" },
             { text: "Loaders", link: "/guide/loaders" },
+            { text: "Loader governance (signing, pinning, rollback)", link: "/guide/loader-governance" },
             { text: "Advisory lint", link: "/guide/advisory-lint" },
           ],
         },

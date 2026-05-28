@@ -25,22 +25,26 @@ const theme = await loader.load({ mode: "light" });
 ## RemoteManifestLoader
 
 The host points at a URL/CDN that serves the theme JSON. The loader fetches, validates, and
-caches. Optional integrity check (SRI or signature) is the recommended posture for production.
+caches. Production posture composes four optional checks: **integrity** (SRI hash),
+**signature** (Ed25519 detached), **version pin** (exact `contractVersion`), and
+**rollback** (fail-closed with grace) — plus ETag-conditional refresh and a pluggable audit
+hook. See [Governance](/guide/loader-governance) for the full surface; the minimal usage:
 
 ```ts
 import { RemoteManifestLoader } from "@polymorph/loaders";
 
 const loader = new RemoteManifestLoader({
   url: "https://themes.bank.example.com/v1/aurora.tokens.json",
-  cache: "browser",          // or "memory"
-  integrity: "sha384-...",   // optional
+  cacheTtlMs: 5 * 60_000,
+  integrity: "sha384-...",
 });
-const theme = await loader.load({ mode: "dark" });
+const handle = await loader.load();
+const theme = handle.resolve("dark");
 ```
 
-Theme updates without an app release where the FI's policy allows it. Cache-busting, version
-pinning, and signing are out of scope for the loader; the host wires their existing CDN
-posture.
+Theme updates land without an app release where the FI's policy allows it. Cache-busting,
+version pinning, and signing are now *in scope* for the loader (see Governance) but remain
+opt-in — orgs with their own CDN-level posture can ignore them.
 
 ## BundledLoader
 
