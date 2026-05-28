@@ -35,14 +35,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # Drift guard: regenerated artifacts (spec types/schemas + bank themes) must match what's
-      # committed. Catches "edited the manifest / theme generator but forgot to regenerate."
+      # Drift guard: regenerated artifacts (spec types/schemas + bank themes + the Tokens Studio
+      # import fixture) must match what's committed. Catches "edited the manifest or a generator
+      # but forgot to regenerate."
       - name: Verify generated artifacts are in sync
         run: |
           pnpm --filter @polymorph/spec generate
           node examples/gen-mock-bank-themes.mjs
+          node tooling/authoring/scripts/gen-tokens-studio-fixture.mjs
           if ! git diff --quiet; then
-            echo "::error::Generated artifacts are out of sync. Run \`pnpm --filter @polymorph/spec generate\` and \`node examples/gen-mock-bank-themes.mjs\`, then commit."
+            echo "::error::Generated artifacts are out of sync. Re-run the generators above and commit."
             git --no-pager diff --stat
             exit 1
           fi

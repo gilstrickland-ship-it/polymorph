@@ -2,6 +2,23 @@
   "name": "@polymorph/authoring",
   "version": "0.0.0",
   "private": true,
-  "description": "Theme authoring pipeline (sequenced): Figma / Tokens Studio import, auto-extract, interactive theme builder.",
-  "license": "Apache-2.0"
+  "description": "Theme authoring pipeline: Tokens Studio / Figma import, auto-extract, interactive theme builder.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@polymorph/spec": "workspace:*"
+  },
+  "devDependencies": {
+    "@polymorph/core": "workspace:*",
+    "@types/node": "22.10.5",
+    "vitest": "2.1.8"
+  }
 }

@@ -231,7 +231,21 @@ importers:
         specifier: 2.1.8
         version: 2.1.8(@types/node@22.10.5)
 
-  tooling/authoring: {}
+  tooling/authoring:
+    dependencies:
+      '@polymorph/spec':
+        specifier: workspace:*
+        version: link:../../packages/spec
+    devDependencies:
+      '@polymorph/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@types/node':
+        specifier: 22.10.5
+        version: 22.10.5
+      vitest:
+        specifier: 2.1.8
+        version: 2.1.8(@types/node@22.10.5)
 
 packages:
 
