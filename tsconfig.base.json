@@ -25,6 +25,7 @@
       "@polymorph/adapter-web-vue": ["packages/adapter-web-vue/src/index.ts"],
       "@polymorph/adapter-web-solid": ["packages/adapter-web-solid/src/index.ts"],
       "@polymorph/adapter-web-angular": ["packages/adapter-web-angular/src/index.ts"],
+      "@polymorph/adapter-flutter": ["packages/adapter-flutter/src/index.ts"],
       "@polymorph/conformance": ["packages/conformance/src/index.ts"],
       "@polymorph/cli": ["packages/cli/src/index.ts"],
       "@polymorph/authoring": ["tooling/authoring/src/index.ts"],

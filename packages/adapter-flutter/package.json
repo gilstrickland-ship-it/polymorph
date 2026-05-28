@@ -1,28 +1,25 @@
 {
-  "name": "@polymorph/cli",
+  "name": "@polymorph/adapter-flutter",
   "version": "0.0.0",
-  "description": "Polymorph CLI: validate / lint / resolve / transform (Dart codegen via @polymorph/adapter-flutter).",
+  "description": "Polymorph Flutter adapter — build-time codegen from a Polymorph ResolvedTheme to a Dart `PolymorphTheme` class (colors, dimensions, typography, motion, shadows + a Material ThemeData factory).",
   "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "bin": {
-    "polymorph": "./dist/cli.js"
-  },
   "files": ["dist"],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "update-goldens": "tsx scripts/update-goldens.ts"
   },
   "dependencies": {
     "@polymorph/spec": "workspace:*",
-    "@polymorph/core": "workspace:*",
-    "@polymorph/loaders": "workspace:*",
-    "@polymorph/adapter-flutter": "workspace:*"
+    "@polymorph/core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "22.10.5",
+    "tsx": "4.19.2",
     "vitest": "2.1.8"
   }
 }
