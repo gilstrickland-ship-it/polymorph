@@ -35,6 +35,18 @@ Every pairing accepts any CSS Color 4 form (`#hex`, `rgb()`, `hsl()`, `oklch()`,
 | Base motion duration | `MOTION_BASE_LONG` | `pm.motion.duration.base` > 500ms |
 | Reduced-motion clamp | `MOTION_REDUCED_EXCEEDS_SHORT` | `pm.motion.duration.reduced` > `pm.motion.duration.short` |
 
+### Protected-surface floors
+
+For component roles flagged in `protected-floors.v0.json` (today: `disclosure`), stricter
+floors apply than the AA baseline above. See [Protected surfaces](/guide/protected-surfaces)
+for the full pattern.
+
+| Family | Code | Threshold |
+|---|---|---|
+| Protected contrast | `PROTECTED_CONTRAST_LOW` | foreground vs. `pm.color.surface.base` < 7:1 |
+| Protected font-size | `PROTECTED_FONT_SIZE_SMALL` | typography `fontSize` < 14px |
+| Protected line-height | `PROTECTED_LINE_HEIGHT_TIGHT` | typography `lineHeight` < 1.5 |
+
 ### Diagnostics
 
 `CONTRAST_SKIPPED_UNPARSEABLE` surfaces when a pairing contains an unparseable colour

@@ -875,3 +875,55 @@ export const COMPONENT_ROLES: readonly ComponentRoleEntry[] = [
     ]
   }
 ] as const;
+
+export type ProtectedFloorKind = "contrast" | "fontSize" | "lineHeight";
+
+export interface ProtectedFloorRule {
+  kind: ProtectedFloorKind;
+  /** Component-role property holding the foreground (contrast rule). */
+  fgProperty?: string;
+  /** Component-role property holding a typography composite (fontSize / lineHeight rules). */
+  viaProperty?: string;
+  /** Background `pm.*` token id the contrast rule reads from (mode-resolved at lint time). */
+  bgToken?: SemanticTokenId;
+  /** Minimum value (contrast ratio, line-height). */
+  min?: number;
+  /** Minimum pixel size (font-size). */
+  minPx?: number;
+  /** The lint code that fires on violation. */
+  code: string;
+}
+
+export interface ProtectedFloor {
+  role: ComponentRole;
+  rationale?: string;
+  rules: readonly ProtectedFloorRule[];
+}
+
+export const PROTECTED_FLOORS: readonly ProtectedFloor[] = [
+  {
+    "role": "disclosure",
+    "rationale": "Legal disclosures, regulator-mandated copy, accessibility statements. WCAG SC 1.4.6 AAA-equivalent contrast (7:1), readable-default font-size (≥14px), comfortable line-height (≥1.5).",
+    "rules": [
+      {
+        "kind": "contrast",
+        "fgProperty": "foreground",
+        "bgToken": "pm.color.surface.base",
+        "min": 7,
+        "code": "PROTECTED_CONTRAST_LOW"
+      },
+      {
+        "kind": "fontSize",
+        "viaProperty": "typography",
+        "minPx": 14,
+        "code": "PROTECTED_FONT_SIZE_SMALL"
+      },
+      {
+        "kind": "lineHeight",
+        "viaProperty": "typography",
+        "min": 1.5,
+        "code": "PROTECTED_LINE_HEIGHT_TIGHT"
+      }
+    ]
+  }
+] as const;
