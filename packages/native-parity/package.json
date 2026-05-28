@@ -1,0 +1,25 @@
+{
+  "name": "@polymorph/native-parity",
+  "version": "0.0.0",
+  "description": "Parses the three native codegens (Dart / Swift / Kotlin) back into a normalized form and asserts they emit semantically identical token values for the same input.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@polymorph/spec": "workspace:*",
+    "@polymorph/adapter-flutter": "workspace:*",
+    "@polymorph/adapter-swift": "workspace:*",
+    "@polymorph/adapter-kotlin": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.5",
+    "vitest": "2.1.8"
+  }
+}

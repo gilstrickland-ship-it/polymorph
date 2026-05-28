@@ -433,6 +433,28 @@ importers:
         specifier: 2.1.8
         version: 2.1.8(@types/node@22.10.5)(happy-dom@15.11.7)
 
+  packages/native-parity:
+    dependencies:
+      '@polymorph/adapter-flutter':
+        specifier: workspace:*
+        version: link:../adapter-flutter
+      '@polymorph/adapter-kotlin':
+        specifier: workspace:*
+        version: link:../adapter-kotlin
+      '@polymorph/adapter-swift':
+        specifier: workspace:*
+        version: link:../adapter-swift
+      '@polymorph/spec':
+        specifier: workspace:*
+        version: link:../spec
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.5
+        version: 22.10.5
+      vitest:
+        specifier: 2.1.8
+        version: 2.1.8(@types/node@22.10.5)(happy-dom@15.11.7)
+
   packages/spec:
     devDependencies:
       '@types/node':

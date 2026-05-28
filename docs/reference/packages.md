@@ -36,6 +36,7 @@ board.
 |---|---|
 | `@polymorph/conformance` | Cross-adapter conformance bar: `runThemeConformance`, `checkResolvedInvariants`, `checkLoaderEquivalence`. |
 | `@polymorph/golden-web` | Pure-Node golden screenshots (satori → resvg → pixelmatch). Uploads diffs as CI artifacts. |
+| `@polymorph/native-parity` | Cross-adapter parity check for Dart / Swift / Kotlin codegens — parses each emitted source into a normalized form and asserts the three converters emit semantically identical token values. |
 
 ## Authoring
 
