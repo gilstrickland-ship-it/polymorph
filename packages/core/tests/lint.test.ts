@@ -27,11 +27,27 @@ describe("lintTheme (advisory, WCAG 2.1)", () => {
     expect(codes(resolveTheme(theme, "light"))).not.toContain("CONTRAST_TEXT_LOW");
   });
 
-  it("skips (not fails) unparseable colors", () => {
+  it("skips (not fails) genuinely unparseable colors (e.g. `currentColor`)", () => {
     const theme = specFixture("valid", "minimal-light") as any;
-    theme.pm.modes.light.color.text.body.$value = "oklch(0.7 0.1 200)";
+    theme.pm.modes.light.color.text.body.$value = "currentColor";
     theme.pm.modes.light.color.surface.base.$value = "#000000";
     expect(codes(resolveTheme(theme, "light"))).toContain("CONTRAST_SKIPPED_UNPARSEABLE");
+  });
+
+  it("evaluates modern CSS color forms (oklch / display-p3) rather than skipping", () => {
+    // adequate contrast in oklch space → no CONTRAST_TEXT_LOW, no skip
+    const ok = specFixture("valid", "minimal-light") as any;
+    ok.pm.modes.light.color.surface.base.$value = "oklch(0.12 0.02 260)"; // near-black
+    ok.pm.modes.light.color.text.body.$value = "oklch(0.97 0 0)";           // near-white
+    const okCodes = codes(resolveTheme(ok, "light"));
+    expect(okCodes).not.toContain("CONTRAST_TEXT_LOW");
+    expect(okCodes).not.toContain("CONTRAST_SKIPPED_UNPARSEABLE");
+
+    // poor contrast in display-p3 → CONTRAST_TEXT_LOW (so the new format actually flags real issues)
+    const bad = specFixture("valid", "minimal-light") as any;
+    bad.pm.modes.light.color.surface.base.$value = "color(display-p3 0.95 0.95 0.95)";
+    bad.pm.modes.light.color.text.body.$value = "color(display-p3 0.85 0.85 0.85)";
+    expect(codes(resolveTheme(bad, "light"))).toContain("CONTRAST_TEXT_LOW");
   });
 
   it("flags a too-small touch target", () => {
