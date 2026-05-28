@@ -9,8 +9,10 @@ consumes that data and re-skins itself. One SDK build renders natively across ma
 
 > Status: **v1 shipped, post-v1 in flight.** The full v1 plan (contract + core + loaders + RN
 > adapter + reference demo + conformance) has landed and merged. Web (CSS-vars + React + Vue +
-> Solid bindings), the Tokens Studio importer, and a headless golden-screenshot harness are also
-> in. **14 workspace projects** are green on every PR; see [`specs/`](./specs) for the cycle log.
+> Solid + Angular bindings), the Tokens Studio importer, a headless golden-screenshot harness,
+> and the native triad (Flutter / Swift / Kotlin build-time codegen) are also in. **19 workspace
+> projects** are green on every PR; see [`specs/`](./specs) for the cycle log. Browsable docs
+> live in [`docs/`](./docs) (Vitepress — `pnpm --filter @polymorph/docs dev`).
 
 ## Why
 
@@ -48,8 +50,12 @@ visually.
   `color(display-p3 …)`), three loaders (Inline / RemoteManifest / Bundled), and a zero-dep CLI.
 - **Adapters** — React Native (`@polymorph/adapter-react-native`) and Web with CSS custom
   properties (`@polymorph/adapter-web`). Web adapter has framework bindings for **React**
-  (built-in), **Vue 3** (`@polymorph/adapter-web-vue`), and **Solid 1.x**
-  (`@polymorph/adapter-web-solid`).
+  (built-in), **Vue 3** (`@polymorph/adapter-web-vue`), **Solid 1.x**
+  (`@polymorph/adapter-web-solid`), and **Angular 18+** (`@polymorph/adapter-web-angular`).
+  Native targets ship as build-time codegen: **Flutter / Dart** (`@polymorph/adapter-flutter`),
+  **iOS / SwiftUI** (`@polymorph/adapter-swift`), **Android / Compose**
+  (`@polymorph/adapter-kotlin`) — emit a self-contained source file, no Polymorph runtime in
+  the consumer app.
 - **The proof** — `examples/reference-sdk-onboarding` is the reference vendor SDK; the two
   mock-bank themes (`mock-bank-{aurora,borealis}`) drive it through distinct visible
   renderings, verified by `reskin.test.ts` + a static `contract-adherence.test.ts` (zero hex

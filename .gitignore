@@ -10,6 +10,10 @@ coverage/
 .nx/cache
 .nx/workspace-data
 
+# Vitepress build output
+docs/.vitepress/cache/
+docs/.vitepress/dist/
+
 .DS_Store
 *.log
 npm-debug.log*
