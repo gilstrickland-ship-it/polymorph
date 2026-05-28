@@ -2,12 +2,13 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import { validateTheme, resolveTheme, lintTheme } from "@polymorph/core";
 import { transformToDart } from "@polymorph/adapter-flutter";
+import { transformToSwift } from "@polymorph/adapter-swift";
 import type { ThemeMode } from "@polymorph/spec";
 
 const USAGE =
   "polymorph <validate|lint|resolve|transform> <file>\n" +
   "  validate/lint/resolve: [--mode <light|dark|highContrast>] [--strict] [--json]\n" +
-  "  transform: --target dart [--mode <mode>] [--class <ClassName>] [--output <path>]";
+  "  transform: --target <dart|swift> [--mode <mode>] [--class <Name>] [--output <path>]";
 
 interface Parsed {
   command?: string;
@@ -103,17 +104,20 @@ export async function run(argv: string[]): Promise<number> {
       return 0;
     }
     // transform
-    if (target !== "dart") {
-      console.error(`error: --target is required for transform; supported: dart`);
+    if (target !== "dart" && target !== "swift") {
+      console.error(`error: --target is required for transform; supported: dart, swift`);
       return 2;
     }
-    const dart = transformToDart(theme, { mode, ...(className ? { className } : {}) });
+    const source =
+      target === "dart"
+        ? transformToDart(theme, { mode, ...(className ? { className } : {}) })
+        : transformToSwift(theme, { mode, ...(className ? { enumName: className } : {}) });
     if (output) {
       mkdirSync(dirname(output), { recursive: true });
-      writeFileSync(output, dart);
-      console.log(`✓ wrote ${output} (${dart.length} bytes)`);
+      writeFileSync(output, source);
+      console.log(`✓ wrote ${output} (${source.length} bytes)`);
     } else {
-      console.log(dart);
+      console.log(source);
     }
     return 0;
   } catch (e) {

@@ -44,9 +44,10 @@ jobs:
           node examples/gen-mock-bank-themes.mjs
           node tooling/authoring/scripts/gen-tokens-studio-fixture.mjs
           # update-goldens loads @polymorph/core via tsx → needs the package's dist on disk.
-          # Build the adapter (Nx handles spec+core transitively) before invoking the script.
-          pnpm exec nx run @polymorph/adapter-flutter:build
+          # Build the adapters (Nx handles spec+core transitively) before invoking the scripts.
+          pnpm exec nx run-many -t build --projects=@polymorph/adapter-flutter,@polymorph/adapter-swift
           pnpm --filter @polymorph/adapter-flutter run update-goldens
+          pnpm --filter @polymorph/adapter-swift run update-goldens
           if ! git diff --quiet; then
             echo "::error::Generated artifacts are out of sync. Re-run the generators above and commit."
             git --no-pager diff --stat

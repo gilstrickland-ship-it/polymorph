@@ -62,5 +62,15 @@ describe("polymorph CLI", () => {
       expect(await run(["transform", invalid, "--target", "dart"])).toBe(1);
       expect(errs.join("\n")).toContain("SCHEMA_INVALID");
     });
+
+    it("--target swift emits Swift source for the requested mode", async () => {
+      const code = await run(["transform", valid, "--target", "swift", "--mode", "dark", "--class", "Probe"]);
+      expect(code).toBe(0);
+      const swift = logs.join("\n");
+      expect(swift).toContain("public enum Probe {");
+      expect(swift).toContain("import SwiftUI");
+      expect(swift).toContain("public struct PolymorphTextStyle");
+      expect(swift).toMatch(/public static let colorSurfaceBase: Color = Color\(red: [\d.]+, green: [\d.]+, blue: [\d.]+\)/);
+    });
   });
 });
