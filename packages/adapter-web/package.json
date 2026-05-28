@@ -1,0 +1,35 @@
+{
+  "name": "@polymorph/adapter-web",
+  "version": "0.0.0",
+  "description": "Polymorph web adapter: CSS custom properties + framework-agnostic core + React binding (slots, component mapping, retrofit shim, themed primitives).",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@polymorph/spec": "workspace:*",
+    "@polymorph/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "22.10.5",
+    "@types/react": "18.3.12",
+    "@types/react-test-renderer": "18.3.0",
+    "react": "18.3.1",
+    "react-test-renderer": "18.3.1",
+    "vitest": "2.1.8"
+  }
+}
