@@ -1,0 +1,97 @@
+{
+  "meta": {
+    "variableCollections": {
+      "VariableCollectionId:1:1": {
+        "id": "VariableCollectionId:1:1",
+        "name": "Polymorph",
+        "defaultModeId": "1:0",
+        "modes": [
+          { "modeId": "1:0", "name": "Light" },
+          { "modeId": "1:1", "name": "Dark" }
+        ]
+      }
+    },
+    "variables": {
+      "VariableID:primitive.blue.500": {
+        "id": "VariableID:primitive.blue.500",
+        "name": "primitive/blue/500",
+        "variableCollectionId": "VariableCollectionId:1:1",
+        "resolvedType": "COLOR",
+        "valuesByMode": {
+          "1:0": { "r": 0.122, "g": 0.361, "b": 1.0, "a": 1 },
+          "1:1": { "r": 0.122, "g": 0.361, "b": 1.0, "a": 1 }
+        }
+      },
+      "VariableID:color.surface.base": {
+        "id": "VariableID:color.surface.base",
+        "name": "color/surface/base",
+        "variableCollectionId": "VariableCollectionId:1:1",
+        "resolvedType": "COLOR",
+        "valuesByMode": {
+          "1:0": { "r": 1.0, "g": 1.0, "b": 1.0, "a": 1 },
+          "1:1": { "r": 0.043, "g": 0.106, "b": 0.169, "a": 1 }
+        }
+      },
+      "VariableID:color.text.body": {
+        "id": "VariableID:color.text.body",
+        "name": "color/text/body",
+        "variableCollectionId": "VariableCollectionId:1:1",
+        "resolvedType": "COLOR",
+        "valuesByMode": {
+          "1:0": { "r": 0.043, "g": 0.106, "b": 0.169, "a": 1 },
+          "1:1": { "r": 0.957, "g": 0.969, "b": 1.0, "a": 1 }
+        }
+      },
+      "VariableID:color.action.primary.rest": {
+        "id": "VariableID:color.action.primary.rest",
+        "name": "color/action/primary/rest",
+        "variableCollectionId": "VariableCollectionId:1:1",
+        "resolvedType": "COLOR",
+        "valuesByMode": {
+          "1:0": { "type": "VARIABLE_ALIAS", "id": "VariableID:primitive.blue.500" },
+          "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:primitive.blue.500" }
+        }
+      },
+      "VariableID:space.md": {
+        "id": "VariableID:space.md",
+        "name": "space/md",
+        "variableCollectionId": "VariableCollectionId:1:1",
+        "resolvedType": "FLOAT",
+        "valuesByMode": {
+          "1:0": 16,
+          "1:1": 16
+        }
+      },
+      "VariableID:radius.control": {
+        "id": "VariableID:radius.control",
+        "name": "radius/control",
+        "variableCollectionId": "VariableCollectionId:1:1",
+        "resolvedType": "FLOAT",
+        "valuesByMode": {
+          "1:0": 10,
+          "1:1": 10
+        }
+      },
+      "VariableID:opacity.disabled": {
+        "id": "VariableID:opacity.disabled",
+        "name": "opacity/disabled",
+        "variableCollectionId": "VariableCollectionId:1:1",
+        "resolvedType": "FLOAT",
+        "valuesByMode": {
+          "1:0": 0.4,
+          "1:1": 0.4
+        }
+      },
+      "VariableID:motion.duration.base": {
+        "id": "VariableID:motion.duration.base",
+        "name": "motion/duration/base",
+        "variableCollectionId": "VariableCollectionId:1:1",
+        "resolvedType": "FLOAT",
+        "valuesByMode": {
+          "1:0": 220,
+          "1:1": 220
+        }
+      }
+    }
+  }
+}

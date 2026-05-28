@@ -65,6 +65,7 @@ export default defineConfig({
             { text: "Vendor: SDK authors", link: "/guides/vendor" },
             { text: "FI: theme authoring", link: "/guides/fi" },
             { text: "Tokens Studio import", link: "/guides/tokens-studio" },
+            { text: "Figma Variables import", link: "/guides/figma-variables" },
           ],
         },
       ],
