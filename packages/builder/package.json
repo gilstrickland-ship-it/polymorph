@@ -1,0 +1,34 @@
+{
+  "name": "@polymorph/builder",
+  "version": "0.0.0",
+  "description": "Polymorph theme builder: headless React primitives for editing a theme contract with live validation, lint, and preview.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@polymorph/spec": "workspace:*",
+    "@polymorph/core": "workspace:*",
+    "@polymorph/adapter-web": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "@testing-library/react": "16.1.0",
+    "@testing-library/dom": "10.4.0",
+    "@types/node": "22.10.5",
+    "@types/react": "18.3.12",
+    "happy-dom": "15.11.7",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "@types/react-dom": "18.3.1",
+    "vitest": "2.1.8"
+  }
+}

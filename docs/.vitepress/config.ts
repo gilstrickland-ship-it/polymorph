@@ -35,6 +35,7 @@ export default defineConfig({
             { text: "Loaders", link: "/guide/loaders" },
             { text: "Loader governance (signing, pinning, rollback)", link: "/guide/loader-governance" },
             { text: "Reduced motion", link: "/guide/reduced-motion" },
+            { text: "Interactive theme builder", link: "/guide/builder" },
             { text: "Advisory lint", link: "/guide/advisory-lint" },
           ],
         },
