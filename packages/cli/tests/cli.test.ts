@@ -42,4 +42,25 @@ describe("polymorph CLI", () => {
     expect(await run([])).toBe(2);
     expect(await run(["validate"])).toBe(2);
   });
+
+  describe("transform", () => {
+    it("--target dart emits Dart source for the requested mode", async () => {
+      const code = await run(["transform", valid, "--target", "dart", "--mode", "light", "--class", "Probe"]);
+      expect(code).toBe(0);
+      const dart = logs.join("\n");
+      expect(dart).toContain("class Probe {");
+      expect(dart).toMatch(/static const Color colorSurfaceBase = Color\(0x[0-9A-F]{8}\);/);
+      expect(dart).toContain("static ThemeData buildThemeData()");
+    });
+
+    it("--target is required (otherwise exit 2 with a hint)", async () => {
+      expect(await run(["transform", valid])).toBe(2);
+      expect(errs.join("\n")).toContain("--target is required");
+    });
+
+    it("rejects an invalid theme (exit 1)", async () => {
+      expect(await run(["transform", invalid, "--target", "dart"])).toBe(1);
+      expect(errs.join("\n")).toContain("SCHEMA_INVALID");
+    });
+  });
 });
