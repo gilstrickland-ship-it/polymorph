@@ -19,9 +19,9 @@ describe("importTokensStudio — end-to-end against @polymorph/core", () => {
     expect(report.missing).toEqual([]);
     expect(report.unconvertible).toEqual([]);
     // Mode-sensitive ids are imported once per mode, so the event count is invariant + modes*ids.
-    expect(report.imported.length).toBe(38 + 31 * 2);
-    // …but the unique set of Polymorph ids reached is the full manifest (69).
-    expect(new Set(report.imported).size).toBe(69);
+    expect(report.imported.length).toBe(39 + 31 * 2);
+    // …but the unique set of Polymorph ids reached is the full manifest (70).
+    expect(new Set(report.imported).size).toBe(70);
   });
 
   it("produces a theme that validates against the contract", () => {

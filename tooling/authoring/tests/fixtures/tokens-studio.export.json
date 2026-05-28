@@ -183,7 +183,7 @@
           "type": "duration"
         },
         "reduced": {
-          "value": 1,
+          "value": 200,
           "type": "duration"
         }
       },
@@ -198,6 +198,15 @@
           "type": "cubicBezier"
         },
         "emphasized": {
+          "value": [
+            0.4,
+            0,
+            0.2,
+            1
+          ],
+          "type": "cubicBezier"
+        },
+        "reduced": {
           "value": [
             0.4,
             0,
