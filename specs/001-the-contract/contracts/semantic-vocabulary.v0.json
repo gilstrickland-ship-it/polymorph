@@ -1,0 +1,123 @@
+{
+  "contractVersion": "0.0.0",
+  "dtcgBaseVersion": "2025.10",
+  "namespace": "pm",
+  "description": "Polymorph semantic vocabulary v0 (proposed). Canonical source of the contract's purpose-named tokens. Each entry: id, $type, required, modeSensitive, group, description. All ids are under the reserved 'pm' namespace.",
+  "modes": { "default": "light", "supported": ["light", "dark", "highContrast"] },
+  "tokens": [
+    { "id": "pm.color.surface.base", "type": "color", "required": true, "modeSensitive": true, "group": "color.surface", "description": "Default app/page background" },
+    { "id": "pm.color.surface.raised", "type": "color", "required": true, "modeSensitive": true, "group": "color.surface", "description": "Cards, sheets above base" },
+    { "id": "pm.color.surface.sunken", "type": "color", "required": false, "modeSensitive": true, "group": "color.surface", "description": "Wells, insets below base" },
+    { "id": "pm.color.surface.overlay", "type": "color", "required": false, "modeSensitive": true, "group": "color.surface", "description": "Modal/scrim surface" },
+    { "id": "pm.color.surface.inverse", "type": "color", "required": false, "modeSensitive": true, "group": "color.surface", "description": "High-emphasis inverse surface" },
+    { "id": "pm.color.text.body", "type": "color", "required": true, "modeSensitive": true, "group": "color.text", "description": "Default body text" },
+    { "id": "pm.color.text.muted", "type": "color", "required": true, "modeSensitive": true, "group": "color.text", "description": "Secondary text" },
+    { "id": "pm.color.text.subtle", "type": "color", "required": false, "modeSensitive": true, "group": "color.text", "description": "Tertiary/placeholder-adjacent text" },
+    { "id": "pm.color.text.onAction", "type": "color", "required": true, "modeSensitive": true, "group": "color.text", "description": "Text/icon on a primary action fill" },
+    { "id": "pm.color.text.onInverse", "type": "color", "required": false, "modeSensitive": true, "group": "color.text", "description": "Text on surface.inverse" },
+    { "id": "pm.color.text.link", "type": "color", "required": true, "modeSensitive": true, "group": "color.text", "description": "Hyperlink/affordance text" },
+    { "id": "pm.color.text.disabled", "type": "color", "required": true, "modeSensitive": true, "group": "color.text", "description": "Disabled text" },
+
+    { "id": "pm.color.action.primary.rest", "type": "color", "required": true, "modeSensitive": true, "group": "color.action.primary", "description": "Primary action fill" },
+    { "id": "pm.color.action.primary.hover", "type": "color", "required": false, "modeSensitive": true, "group": "color.action.primary", "description": "Primary hover (web)" },
+    { "id": "pm.color.action.primary.pressed", "type": "color", "required": true, "modeSensitive": true, "group": "color.action.primary", "description": "Primary pressed/active" },
+    { "id": "pm.color.action.primary.disabled", "type": "color", "required": true, "modeSensitive": true, "group": "color.action.primary", "description": "Primary disabled fill" },
+    { "id": "pm.color.action.secondary.rest", "type": "color", "required": true, "modeSensitive": true, "group": "color.action.secondary", "description": "Secondary action fill/outline" },
+    { "id": "pm.color.action.secondary.pressed", "type": "color", "required": false, "modeSensitive": true, "group": "color.action.secondary", "description": "Secondary pressed" },
+    { "id": "pm.color.action.danger.rest", "type": "color", "required": true, "modeSensitive": true, "group": "color.action.danger", "description": "Destructive action fill" },
+    { "id": "pm.color.action.danger.pressed", "type": "color", "required": false, "modeSensitive": true, "group": "color.action.danger", "description": "Destructive pressed" },
+
+    { "id": "pm.color.feedback.success", "type": "color", "required": true, "modeSensitive": true, "group": "color.feedback", "description": "Success accent/text" },
+    { "id": "pm.color.feedback.warning", "type": "color", "required": true, "modeSensitive": true, "group": "color.feedback", "description": "Warning accent/text" },
+    { "id": "pm.color.feedback.error", "type": "color", "required": true, "modeSensitive": true, "group": "color.feedback", "description": "Error accent/text (validation)" },
+    { "id": "pm.color.feedback.info", "type": "color", "required": false, "modeSensitive": true, "group": "color.feedback", "description": "Informational accent/text" },
+    { "id": "pm.color.border.default", "type": "color", "required": true, "modeSensitive": true, "group": "color.border", "description": "Default control/divider border" },
+    { "id": "pm.color.border.subtle", "type": "color", "required": false, "modeSensitive": true, "group": "color.border", "description": "Low-emphasis divider" },
+    { "id": "pm.color.border.strong", "type": "color", "required": false, "modeSensitive": true, "group": "color.border", "description": "High-emphasis border" },
+    { "id": "pm.color.border.focus", "type": "color", "required": true, "modeSensitive": true, "group": "color.border", "description": "Focus-ring/active-field border" },
+
+    { "id": "pm.typography.display", "type": "typography", "required": false, "modeSensitive": false, "group": "typography", "description": "Largest hero text" },
+    { "id": "pm.typography.heading", "type": "typography", "required": true, "modeSensitive": false, "group": "typography", "description": "Section/screen heading" },
+    { "id": "pm.typography.headingSm", "type": "typography", "required": false, "modeSensitive": false, "group": "typography", "description": "Sub-heading" },
+    { "id": "pm.typography.body", "type": "typography", "required": true, "modeSensitive": false, "group": "typography", "description": "Body copy / field text" },
+    { "id": "pm.typography.bodyStrong", "type": "typography", "required": false, "modeSensitive": false, "group": "typography", "description": "Emphasized body" },
+    { "id": "pm.typography.label", "type": "typography", "required": true, "modeSensitive": false, "group": "typography", "description": "Form labels / buttons" },
+    { "id": "pm.typography.caption", "type": "typography", "required": true, "modeSensitive": false, "group": "typography", "description": "Helper/validation/disclosure text" },
+    { "id": "pm.typography.mono", "type": "typography", "required": false, "modeSensitive": false, "group": "typography", "description": "Codes, account numbers" },
+
+    { "id": "pm.space.none", "type": "dimension", "required": true, "modeSensitive": false, "group": "space", "description": "0" },
+    { "id": "pm.space.xs", "type": "dimension", "required": true, "modeSensitive": false, "group": "space", "description": "Tightest gap" },
+    { "id": "pm.space.sm", "type": "dimension", "required": true, "modeSensitive": false, "group": "space", "description": "Small gap" },
+    { "id": "pm.space.md", "type": "dimension", "required": true, "modeSensitive": false, "group": "space", "description": "Default inset/gap" },
+    { "id": "pm.space.lg", "type": "dimension", "required": true, "modeSensitive": false, "group": "space", "description": "Section spacing" },
+    { "id": "pm.space.xl", "type": "dimension", "required": true, "modeSensitive": false, "group": "space", "description": "Large spacing" },
+    { "id": "pm.space.2xl", "type": "dimension", "required": false, "modeSensitive": false, "group": "space", "description": "Extra-large spacing" },
+    { "id": "pm.space.3xl", "type": "dimension", "required": false, "modeSensitive": false, "group": "space", "description": "Hero spacing" },
+
+    { "id": "pm.radius.none", "type": "dimension", "required": true, "modeSensitive": false, "group": "radius", "description": "Square corners" },
+    { "id": "pm.radius.control", "type": "dimension", "required": true, "modeSensitive": false, "group": "radius", "description": "Inputs, buttons" },
+    { "id": "pm.radius.card", "type": "dimension", "required": true, "modeSensitive": false, "group": "radius", "description": "Cards/sheets" },
+    { "id": "pm.radius.pill", "type": "dimension", "required": false, "modeSensitive": false, "group": "radius", "description": "Pills/badges" },
+    { "id": "pm.radius.full", "type": "dimension", "required": false, "modeSensitive": false, "group": "radius", "description": "Circular" },
+
+    { "id": "pm.border.width.hairline", "type": "dimension", "required": true, "modeSensitive": false, "group": "border.width", "description": "1px-equivalent divider" },
+    { "id": "pm.border.width.thin", "type": "dimension", "required": true, "modeSensitive": false, "group": "border.width", "description": "Default control border" },
+    { "id": "pm.border.width.thick", "type": "dimension", "required": false, "modeSensitive": false, "group": "border.width", "description": "Emphasis border" },
+
+    { "id": "pm.elevation.flat", "type": "shadow", "required": true, "modeSensitive": true, "group": "elevation", "description": "No shadow" },
+    { "id": "pm.elevation.raised", "type": "shadow", "required": true, "modeSensitive": true, "group": "elevation", "description": "Cards" },
+    { "id": "pm.elevation.overlay", "type": "shadow", "required": false, "modeSensitive": true, "group": "elevation", "description": "Modals/popovers" },
+
+    { "id": "pm.opacity.disabled", "type": "number", "required": true, "modeSensitive": false, "group": "opacity", "description": "Disabled element opacity" },
+    { "id": "pm.opacity.muted", "type": "number", "required": false, "modeSensitive": false, "group": "opacity", "description": "De-emphasis" },
+    { "id": "pm.opacity.scrim", "type": "number", "required": false, "modeSensitive": false, "group": "opacity", "description": "Backdrop scrim" },
+
+    { "id": "pm.motion.duration.short", "type": "duration", "required": true, "modeSensitive": false, "group": "motion.duration", "description": "Micro-interactions" },
+    { "id": "pm.motion.duration.base", "type": "duration", "required": true, "modeSensitive": false, "group": "motion.duration", "description": "Standard transitions" },
+    { "id": "pm.motion.duration.long", "type": "duration", "required": false, "modeSensitive": false, "group": "motion.duration", "description": "Larger transitions" },
+    { "id": "pm.motion.easing.standard", "type": "cubicBezier", "required": true, "modeSensitive": false, "group": "motion.easing", "description": "Default easing" },
+    { "id": "pm.motion.easing.emphasized", "type": "cubicBezier", "required": false, "modeSensitive": false, "group": "motion.easing", "description": "Expressive easing" },
+
+    { "id": "pm.size.control.sm", "type": "dimension", "required": false, "modeSensitive": false, "group": "size.control", "description": "Compact control height" },
+    { "id": "pm.size.control.md", "type": "dimension", "required": true, "modeSensitive": false, "group": "size.control", "description": "Default control height" },
+    { "id": "pm.size.control.lg", "type": "dimension", "required": false, "modeSensitive": false, "group": "size.control", "description": "Large control height" },
+    { "id": "pm.size.touchTarget.min", "type": "dimension", "required": true, "modeSensitive": false, "group": "size.touchTarget", "description": "Min touch target (a11y advisory)" },
+    { "id": "pm.size.icon.md", "type": "dimension", "required": true, "modeSensitive": false, "group": "size.icon", "description": "Default icon size" }
+  ],
+  "componentRoles": [
+    { "role": "button.primary", "properties": [
+      { "property": "background", "defaultsFrom": "pm.color.action.primary.rest" },
+      { "property": "foreground", "defaultsFrom": "pm.color.text.onAction" },
+      { "property": "radius", "defaultsFrom": "pm.radius.control" }
+    ] },
+    { "role": "button.secondary", "properties": [
+      { "property": "background", "defaultsFrom": "pm.color.action.secondary.rest" },
+      { "property": "border", "defaultsFrom": "pm.color.action.secondary.rest" },
+      { "property": "foreground", "defaultsFrom": "pm.color.text.body" }
+    ] },
+    { "role": "button.danger", "properties": [
+      { "property": "background", "defaultsFrom": "pm.color.action.danger.rest" },
+      { "property": "foreground", "defaultsFrom": "pm.color.text.onAction" }
+    ] },
+    { "role": "input", "properties": [
+      { "property": "background", "defaultsFrom": "pm.color.surface.raised" },
+      { "property": "border", "defaultsFrom": "pm.color.border.default" },
+      { "property": "borderFocus", "defaultsFrom": "pm.color.border.focus" },
+      { "property": "foreground", "defaultsFrom": "pm.color.text.body" },
+      { "property": "radius", "defaultsFrom": "pm.radius.control" }
+    ] },
+    { "role": "card", "properties": [
+      { "property": "background", "defaultsFrom": "pm.color.surface.raised" },
+      { "property": "radius", "defaultsFrom": "pm.radius.card" },
+      { "property": "elevation", "defaultsFrom": "pm.elevation.raised" }
+    ] },
+    { "role": "stepIndicator", "properties": [
+      { "property": "activeColor", "defaultsFrom": "pm.color.action.primary.rest" },
+      { "property": "inactiveColor", "defaultsFrom": "pm.color.border.default" }
+    ] },
+    { "role": "disclosure", "properties": [
+      { "property": "foreground", "defaultsFrom": "pm.color.text.muted" },
+      { "property": "typography", "defaultsFrom": "pm.typography.caption" }
+    ] }
+  ]
+}

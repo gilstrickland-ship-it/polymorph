@@ -1,0 +1,25 @@
+{
+  "name": "@polymorph/conformance",
+  "version": "0.0.0",
+  "description": "Polymorph conformance suite: cross-adapter fixtures, assertions, golden-screenshot harness.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
+    "test": "vitest run",
+    "conformance": "vitest run"
+  },
+  "dependencies": {
+    "@polymorph/spec": "workspace:*",
+    "@polymorph/core": "workspace:*",
+    "@polymorph/loaders": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.5",
+    "vitest": "2.1.8"
+  }
+}

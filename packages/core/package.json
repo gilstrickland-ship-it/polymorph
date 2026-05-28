@@ -1,0 +1,24 @@
+{
+  "name": "@polymorph/core",
+  "version": "0.0.0",
+  "description": "Polymorph resolution core: validator, advisory a11y linter, alias resolver, mode selection.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@polymorph/spec": "workspace:*",
+    "ajv": "8.17.1",
+    "ajv-formats": "3.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.5",
+    "vitest": "2.1.8"
+  }
+}

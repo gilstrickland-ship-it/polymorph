@@ -1,0 +1,26 @@
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+.nx/cache
+.nx/workspace-data
+
+.DS_Store
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+.env
+.env.local
+.env.*.local
+
+# React Native / Expo
+.expo/
+*.keystore
+
+# Editors
+.idea/
+.vscode/*
+!.vscode/extensions.json

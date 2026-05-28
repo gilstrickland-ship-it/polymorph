@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022"],
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "baseUrl": ".",
+    "paths": {
+      "@polymorph/spec": ["packages/spec/src/index.ts"],
+      "@polymorph/core": ["packages/core/src/index.ts"],
+      "@polymorph/loaders": ["packages/loaders/src/index.ts"],
+      "@polymorph/adapter-react-native": ["packages/adapter-react-native/src/index.ts"],
+      "@polymorph/conformance": ["packages/conformance/src/index.ts"],
+      "@polymorph/cli": ["packages/cli/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}
