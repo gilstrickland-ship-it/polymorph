@@ -1,7 +1,17 @@
-// @polymorph/conformance — the cross-adapter conformance suite.
+// @polymorph/conformance — the reusable cross-adapter conformance bar.
 //
-// Implemented in Spec E: shared fixtures (themes + expected resolved maps) and assertions
-// every platform adapter must pass, plus a golden-screenshot harness. The v1 acceptance bar:
-// the reference SDK renders correctly across both mock banks with zero SDK source changes.
+// Theme/runtime conformance (validity, resolution invariants, component fallback, loader
+// equivalence) runs headlessly. Golden-screenshot conformance requires a platform renderer and
+// is provided as a harness interface (see golden.ts).
+
+export {
+  runThemeConformance,
+  checkResolvedInvariants,
+  assertConforms,
+  type ConformanceCheck,
+  type ConformanceReport,
+} from "./checks.js";
+export { checkLoaderEquivalence } from "./loader-equivalence.js";
+export { type GoldenHarness, GoldenHarnessUnavailableError, headlessGoldenHarness } from "./golden.js";
 
 export const CONFORMANCE_VERSION = "0.0.0";

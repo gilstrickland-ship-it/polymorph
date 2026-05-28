@@ -131,7 +131,24 @@ importers:
         specifier: 2.1.8
         version: 2.1.8(@types/node@22.10.5)
 
-  packages/conformance: {}
+  packages/conformance:
+    dependencies:
+      '@polymorph/core':
+        specifier: workspace:*
+        version: link:../core
+      '@polymorph/loaders':
+        specifier: workspace:*
+        version: link:../loaders
+      '@polymorph/spec':
+        specifier: workspace:*
+        version: link:../spec
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.5
+        version: 22.10.5
+      vitest:
+        specifier: 2.1.8
+        version: 2.1.8(@types/node@22.10.5)
 
   packages/core:
     dependencies:

@@ -6,9 +6,20 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist", "fixtures"],
+  "files": ["dist"],
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc --noEmit -p tsconfig.json"
+    "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
+    "test": "vitest run",
+    "conformance": "vitest run"
+  },
+  "dependencies": {
+    "@polymorph/spec": "workspace:*",
+    "@polymorph/core": "workspace:*",
+    "@polymorph/loaders": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.5",
+    "vitest": "2.1.8"
   }
 }
