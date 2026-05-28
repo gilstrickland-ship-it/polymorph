@@ -1,0 +1,34 @@
+{
+  "name": "@polymorph/adapter-web-solid",
+  "version": "0.0.0",
+  "description": "Polymorph web adapter — Solid 1.x binding. Consumes the framework-agnostic core in @polymorph/adapter-web (CSS vars, ThemeBridge, slots, mapping, retrofit) and adds a Solid ThemeProvider + composables.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@polymorph/spec": "workspace:*",
+    "@polymorph/adapter-web": "workspace:*"
+  },
+  "peerDependencies": {
+    "solid-js": ">=1.8"
+  },
+  "peerDependenciesMeta": {
+    "solid-js": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@polymorph/core": "workspace:*",
+    "@types/node": "22.10.5",
+    "happy-dom": "15.11.7",
+    "solid-js": "1.9.3",
+    "vitest": "2.1.8"
+  }
+}
