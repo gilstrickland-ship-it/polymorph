@@ -1,0 +1,35 @@
+{
+  "name": "@polymorph/adapter-web-vue",
+  "version": "0.0.0",
+  "description": "Polymorph web adapter — Vue 3 binding. Consumes the framework-agnostic core in @polymorph/adapter-web (CSS vars, ThemeBridge, slots, mapping, retrofit) and adds a Vue ThemeProvider + composables.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@polymorph/spec": "workspace:*",
+    "@polymorph/adapter-web": "workspace:*"
+  },
+  "peerDependencies": {
+    "vue": ">=3.4"
+  },
+  "peerDependenciesMeta": {
+    "vue": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@polymorph/core": "workspace:*",
+    "@types/node": "22.10.5",
+    "@vue/test-utils": "2.4.6",
+    "happy-dom": "15.11.7",
+    "vitest": "2.1.8",
+    "vue": "3.5.13"
+  }
+}

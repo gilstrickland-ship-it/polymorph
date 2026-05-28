@@ -22,6 +22,7 @@
       "@polymorph/loaders": ["packages/loaders/src/index.ts"],
       "@polymorph/adapter-react-native": ["packages/adapter-react-native/src/index.ts"],
       "@polymorph/adapter-web": ["packages/adapter-web/src/index.ts"],
+      "@polymorph/adapter-web-vue": ["packages/adapter-web-vue/src/index.ts"],
       "@polymorph/conformance": ["packages/conformance/src/index.ts"],
       "@polymorph/cli": ["packages/cli/src/index.ts"],
       "@polymorph/authoring": ["tooling/authoring/src/index.ts"],
