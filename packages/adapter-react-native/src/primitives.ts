@@ -30,6 +30,21 @@ export function Card({ children }: { children?: React.ReactNode }): React.ReactE
   );
 }
 
+type SpaceToken = "pm.space.xs" | "pm.space.sm" | "pm.space.md" | "pm.space.lg" | "pm.space.xl";
+
+/** Vertical stack with theme-driven gap (so SDKs lay out without hardcoded numbers). */
+export function Stack({
+  gap = "pm.space.md",
+  children,
+}: {
+  gap?: SpaceToken;
+  children?: React.ReactNode;
+}): React.ReactElement {
+  const t = useThemeBridge();
+  return h(View, { style: { flexDirection: "column", gap: t.dim(gap) } }, children);
+}
+
+
 export type TextVariant = "heading" | "body" | "label" | "caption";
 const VARIANT_TYPO: Record<TextVariant, "pm.typography.heading" | "pm.typography.body" | "pm.typography.label" | "pm.typography.caption"> = {
   heading: "pm.typography.heading",

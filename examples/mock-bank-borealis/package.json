@@ -3,5 +3,21 @@
   "version": "0.0.0",
   "private": true,
   "description": "Mock bank B: a distinct DTCG design-system token set + host React Native shell.",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.typecheck.json"
+  },
+  "dependencies": {
+    "@polymorph/adapter-react-native": "workspace:*",
+    "@polymorph/core": "workspace:*",
+    "@polymorph/spec": "workspace:*",
+    "@polymorph/example-reference-sdk-onboarding": "workspace:*",
+    "react": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.12"
+  }
 }

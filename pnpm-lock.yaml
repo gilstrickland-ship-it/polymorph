@@ -15,11 +15,74 @@ importers:
         specifier: 5.7.3
         version: 5.7.3
 
-  examples/mock-bank-aurora: {}
+  examples/mock-bank-aurora:
+    dependencies:
+      '@polymorph/adapter-react-native':
+        specifier: workspace:*
+        version: link:../../packages/adapter-react-native
+      '@polymorph/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@polymorph/example-reference-sdk-onboarding':
+        specifier: workspace:*
+        version: link:../reference-sdk-onboarding
+      '@polymorph/spec':
+        specifier: workspace:*
+        version: link:../../packages/spec
+      react:
+        specifier: 18.3.1
+        version: 18.3.1
+    devDependencies:
+      '@types/react':
+        specifier: 18.3.12
+        version: 18.3.12
 
-  examples/mock-bank-borealis: {}
+  examples/mock-bank-borealis:
+    dependencies:
+      '@polymorph/adapter-react-native':
+        specifier: workspace:*
+        version: link:../../packages/adapter-react-native
+      '@polymorph/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@polymorph/example-reference-sdk-onboarding':
+        specifier: workspace:*
+        version: link:../reference-sdk-onboarding
+      '@polymorph/spec':
+        specifier: workspace:*
+        version: link:../../packages/spec
+      react:
+        specifier: 18.3.1
+        version: 18.3.1
+    devDependencies:
+      '@types/react':
+        specifier: 18.3.12
+        version: 18.3.12
 
-  examples/reference-sdk-onboarding: {}
+  examples/reference-sdk-onboarding:
+    dependencies:
+      '@polymorph/adapter-react-native':
+        specifier: workspace:*
+        version: link:../../packages/adapter-react-native
+      '@polymorph/spec':
+        specifier: workspace:*
+        version: link:../../packages/spec
+      react:
+        specifier: 18.3.1
+        version: 18.3.1
+    devDependencies:
+      '@polymorph/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@types/node':
+        specifier: 22.10.5
+        version: 22.10.5
+      '@types/react':
+        specifier: 18.3.12
+        version: 18.3.12
+      vitest:
+        specifier: 2.1.8
+        version: 2.1.8(@types/node@22.10.5)
 
   packages/adapter-react-native:
     dependencies:
