@@ -44,7 +44,7 @@ Three increasingly hands-off options:
 |---|---|
 | **Hand-author DTCG JSON** | You already maintain DTCG tokens. Direct, no transforms. |
 | **Tokens Studio import** | Your design tokens live in Figma via Tokens Studio. See [the importer guide](/guides/tokens-studio). |
-| **Auto-extract from Figma Variables** | (Roadmap) Map Figma Variables → DTCG directly. |
+| **Figma Variables import** | Your design tokens live in Figma Variables (the native surface). See [the importer guide](/guides/figma-variables). Covers color / dimension / number / duration — typography and shadows need a separate source. |
 
 All three paths produce the same DTCG-shaped output. The vendor SDK doesn't know or care
 which path you took.
