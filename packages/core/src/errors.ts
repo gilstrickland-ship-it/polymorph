@@ -17,8 +17,15 @@ export interface ValidationResult {
 export type LintCode =
   | "CONTRAST_TEXT_LOW"
   | "CONTRAST_ON_ACTION_LOW"
+  | "CONTRAST_ON_INVERSE_LOW"
+  | "CONTRAST_FEEDBACK_LOW"
+  | "DISABLED_TEXT_LOW"
+  | "FOCUS_RING_LOW"
+  | "BORDER_DEFAULT_LOW"
+  | "COMPONENT_CONTRAST_LOW"
   | "TOUCH_TARGET_SMALL"
   | "DISABLED_OPACITY_HIGH"
+  | "MOTION_BASE_LONG"
   | "CONTRAST_SKIPPED_UNPARSEABLE";
 
 /** Advisory only — never thrown, never blocks (Constitution Principle VI). */
