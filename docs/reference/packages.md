@@ -42,7 +42,8 @@ board.
 
 | Package | Role |
 |---|---|
-| `@polymorph/authoring` | Tokens Studio importer (single- and multi-file formats). |
+| `@polymorph/authoring` | Tokens Studio importer + Figma Variables importer + Figma Styles importer (text + effects). |
+| `@polymorph/builder` | Headless React primitives for theme editing — `useThemeEditor`, typed token fields, lint panel, unstyled orchestrator. |
 
 ## Examples
 
