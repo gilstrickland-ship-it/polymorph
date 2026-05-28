@@ -72,5 +72,15 @@ describe("polymorph CLI", () => {
       expect(swift).toContain("public struct PolymorphTextStyle");
       expect(swift).toMatch(/public static let colorSurfaceBase: Color = Color\(red: [\d.]+, green: [\d.]+, blue: [\d.]+\)/);
     });
+
+    it("--target kotlin emits Kotlin source for the requested mode", async () => {
+      const code = await run(["transform", valid, "--target", "kotlin", "--mode", "light", "--class", "Probe"]);
+      expect(code).toBe(0);
+      const kt = logs.join("\n");
+      expect(kt).toContain("object Probe {");
+      expect(kt).toContain("import androidx.compose.ui.graphics.Color");
+      expect(kt).toContain("data class PolymorphTextStyle");
+      expect(kt).toMatch(/val colorSurfaceBase: Color = Color\(0x[0-9A-F]{8}\)/);
+    });
   });
 });

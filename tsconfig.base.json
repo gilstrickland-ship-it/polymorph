@@ -27,6 +27,7 @@
       "@polymorph/adapter-web-angular": ["packages/adapter-web-angular/src/index.ts"],
       "@polymorph/adapter-flutter": ["packages/adapter-flutter/src/index.ts"],
       "@polymorph/adapter-swift": ["packages/adapter-swift/src/index.ts"],
+      "@polymorph/adapter-kotlin": ["packages/adapter-kotlin/src/index.ts"],
       "@polymorph/conformance": ["packages/conformance/src/index.ts"],
       "@polymorph/cli": ["packages/cli/src/index.ts"],
       "@polymorph/authoring": ["tooling/authoring/src/index.ts"],

@@ -3,12 +3,13 @@ import { dirname } from "node:path";
 import { validateTheme, resolveTheme, lintTheme } from "@polymorph/core";
 import { transformToDart } from "@polymorph/adapter-flutter";
 import { transformToSwift } from "@polymorph/adapter-swift";
+import { transformToKotlin } from "@polymorph/adapter-kotlin";
 import type { ThemeMode } from "@polymorph/spec";
 
 const USAGE =
   "polymorph <validate|lint|resolve|transform> <file>\n" +
   "  validate/lint/resolve: [--mode <light|dark|highContrast>] [--strict] [--json]\n" +
-  "  transform: --target <dart|swift> [--mode <mode>] [--class <Name>] [--output <path>]";
+  "  transform: --target <dart|swift|kotlin> [--mode <mode>] [--class <Name>] [--output <path>]";
 
 interface Parsed {
   command?: string;
@@ -104,14 +105,16 @@ export async function run(argv: string[]): Promise<number> {
       return 0;
     }
     // transform
-    if (target !== "dart" && target !== "swift") {
-      console.error(`error: --target is required for transform; supported: dart, swift`);
+    if (target !== "dart" && target !== "swift" && target !== "kotlin") {
+      console.error(`error: --target is required for transform; supported: dart, swift, kotlin`);
       return 2;
     }
     const source =
       target === "dart"
         ? transformToDart(theme, { mode, ...(className ? { className } : {}) })
-        : transformToSwift(theme, { mode, ...(className ? { enumName: className } : {}) });
+        : target === "swift"
+          ? transformToSwift(theme, { mode, ...(className ? { enumName: className } : {}) })
+          : transformToKotlin(theme, { mode, ...(className ? { objectName: className } : {}) });
     if (output) {
       mkdirSync(dirname(output), { recursive: true });
       writeFileSync(output, source);
