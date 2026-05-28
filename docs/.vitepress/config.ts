@@ -66,6 +66,7 @@ export default defineConfig({
             { text: "FI: theme authoring", link: "/guides/fi" },
             { text: "Tokens Studio import", link: "/guides/tokens-studio" },
             { text: "Figma Variables import", link: "/guides/figma-variables" },
+            { text: "Figma Styles import (text + effects)", link: "/guides/figma-styles" },
           ],
         },
       ],

@@ -1,0 +1,89 @@
+{
+  "textStyles": {
+    "Heading / Display": {
+      "fontFamily": "Inter",
+      "fontWeight": 700,
+      "fontSize": 32,
+      "lineHeightPx": 40,
+      "letterSpacing": -0.5
+    },
+    "Heading / H1": {
+      "fontFamily": "Inter",
+      "fontWeight": 600,
+      "fontSize": 24,
+      "lineHeightPx": 32,
+      "letterSpacing": 0
+    },
+    "Body / Default": {
+      "fontFamily": "Inter",
+      "fontWeight": 400,
+      "fontSize": 16,
+      "lineHeightPercent": 140,
+      "letterSpacing": 0
+    },
+    "Body / Strong": {
+      "fontFamily": "Inter",
+      "fontWeight": 600,
+      "fontSize": 16,
+      "lineHeightPercent": 140
+    },
+    "Label / Default": {
+      "fontFamily": "Inter",
+      "fontWeight": 500,
+      "fontSize": 14,
+      "lineHeightPx": 20
+    },
+    "Caption / Default": {
+      "fontFamily": "Inter",
+      "fontWeight": 400,
+      "fontSize": 12,
+      "lineHeightPx": 16
+    },
+    "Mono / Default": {
+      "fontFamily": "JetBrains Mono",
+      "fontWeight": 400,
+      "fontSize": 14,
+      "lineHeightPx": 20
+    }
+  },
+  "effectStyles": {
+    "Elevation / Flat": [],
+    "Elevation / Raised": [
+      {
+        "type": "DROP_SHADOW",
+        "color": { "r": 0, "g": 0, "b": 0, "a": 0.08 },
+        "offset": { "x": 0, "y": 1 },
+        "radius": 2
+      },
+      {
+        "type": "DROP_SHADOW",
+        "color": { "r": 0, "g": 0, "b": 0, "a": 0.04 },
+        "offset": { "x": 0, "y": 2 },
+        "radius": 4
+      }
+    ],
+    "Elevation / Overlay": [
+      {
+        "type": "DROP_SHADOW",
+        "color": { "r": 0, "g": 0, "b": 0, "a": 0.16 },
+        "offset": { "x": 0, "y": 8 },
+        "radius": 24
+      }
+    ],
+    "Inner / Inset": [
+      {
+        "type": "INNER_SHADOW",
+        "color": { "r": 0, "g": 0, "b": 0, "a": 0.1 },
+        "offset": { "x": 0, "y": 1 },
+        "radius": 2
+      }
+    ],
+    "Blur / Background": [
+      {
+        "type": "BACKGROUND_BLUR",
+        "radius": 12,
+        "visible": true
+      }
+    ]
+  }
+}

@@ -48,9 +48,10 @@ which contract token. The importer reports missing or unconvertible ids back to 
 | `FLOAT` | `dimension` (→ `{ value, unit: "px" }`), `number`, `duration` (→ `{ value, unit: "ms" }`) |
 | `STRING` / `BOOLEAN` | — not currently routed; report as `unconvertible` |
 
-The Figma Variables API doesn't carry composites — **typography**, **shadow**, and
-**cubicBezier** can't be imported through this path. Author those tokens by hand (or via
-Tokens Studio); only color / dimension / number / duration flow through here.
+The Figma Variables API doesn't carry composites — **typography** and **shadow** come from
+Figma Text Styles + Effect Styles via the companion [`importFigmaStyles`](/guides/figma-styles)
+path. **`cubicBezier`** isn't a Figma surface at all; author by hand or import from Tokens
+Studio.
 
 ## Aliases
 
