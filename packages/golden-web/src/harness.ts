@@ -38,7 +38,10 @@ export function createWebGoldenHarness(opts: WebHarnessOptions): GoldenHarness {
       }
       return await renderScenarioToPng(p.scenario, p.theme, p.mode ?? "light");
     },
-    async compare(name: string, actual: Uint8Array): Promise<{ match: boolean; diffRatio: number }> {
+    async compare(
+      name: string,
+      actual: Uint8Array,
+    ): Promise<{ match: boolean; diffRatio: number; diffPng?: Uint8Array }> {
       const path = join(opts.baselineDir, `${name}.png`);
       const actualBuf = Buffer.from(actual);
       if (!existsSync(path)) {
@@ -55,7 +58,11 @@ export function createWebGoldenHarness(opts: WebHarnessOptions): GoldenHarness {
         writeFileSync(path, actualBuf);
         return { match: true, diffRatio: result.diffRatio };
       }
-      return { match: result.match, diffRatio: result.diffRatio };
+      // When the diff exceeded the threshold, surface the visualization so CI / reviewers can
+      // see what changed without re-rendering locally.
+      return result.diffPng
+        ? { match: result.match, diffRatio: result.diffRatio, diffPng: result.diffPng }
+        : { match: result.match, diffRatio: result.diffRatio };
     },
   };
 }
