@@ -5,6 +5,7 @@
 // dotted path), produce a Polymorph theme that `@polymorph/core.validateTheme` accepts.
 
 export { importTokensStudio, lintMapping, type ImportResult, type ImportReport } from "./tokens-studio.js";
+export { consolidateTokensStudioFiles, loadTokensStudioFromDirectory } from "./multi-file.js";
 export {
   convertToDtcg,
   parseDimension,
