@@ -131,6 +131,25 @@ importers:
         specifier: 2.1.8
         version: 2.1.8(@types/node@22.10.5)(happy-dom@15.11.7)
 
+  packages/adapter-swift:
+    dependencies:
+      '@polymorph/core':
+        specifier: workspace:*
+        version: link:../core
+      '@polymorph/spec':
+        specifier: workspace:*
+        version: link:../spec
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.5
+        version: 22.10.5
+      tsx:
+        specifier: 4.19.2
+        version: 4.19.2
+      vitest:
+        specifier: 2.1.8
+        version: 2.1.8(@types/node@22.10.5)(happy-dom@15.11.7)
+
   packages/adapter-web:
     dependencies:
       '@polymorph/core':
@@ -263,6 +282,9 @@ importers:
       '@polymorph/adapter-flutter':
         specifier: workspace:*
         version: link:../adapter-flutter
+      '@polymorph/adapter-swift':
+        specifier: workspace:*
+        version: link:../adapter-swift
       '@polymorph/core':
         specifier: workspace:*
         version: link:../core

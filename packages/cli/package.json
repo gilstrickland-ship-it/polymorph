@@ -1,7 +1,7 @@
 {
   "name": "@polymorph/cli",
   "version": "0.0.0",
-  "description": "Polymorph CLI: validate / lint / resolve / transform (Dart codegen via @polymorph/adapter-flutter).",
+  "description": "Polymorph CLI: validate / lint / resolve / transform (Dart codegen via @polymorph/adapter-flutter; Swift codegen via @polymorph/adapter-swift).",
   "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -19,7 +19,8 @@
     "@polymorph/spec": "workspace:*",
     "@polymorph/core": "workspace:*",
     "@polymorph/loaders": "workspace:*",
-    "@polymorph/adapter-flutter": "workspace:*"
+    "@polymorph/adapter-flutter": "workspace:*",
+    "@polymorph/adapter-swift": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "22.10.5",
