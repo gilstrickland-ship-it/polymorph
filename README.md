@@ -9,8 +9,9 @@ consumes that data and re-skins itself. One SDK build renders natively across ma
 
 > Status: **v1 shipped, post-v1 in flight.** The full v1 plan (contract + core + loaders + RN
 > adapter + reference demo + conformance) has landed and merged. Web (CSS-vars + React + Vue +
-> Solid + Angular bindings), the Tokens Studio importer, a headless golden-screenshot harness,
-> and the native triad (Flutter / Swift / Kotlin build-time codegen) are also in. **19 workspace
+> Solid + Angular bindings), Tokens Studio + Figma Variables importers, a headless
+> golden-screenshot harness, the native triad (Flutter / Swift / Kotlin build-time codegen),
+> and a cross-adapter parity check for the three native codegens are also in. **20 workspace
 > projects** are green on every PR; see [`specs/`](./specs) for the cycle log. Browsable docs
 > live in [`docs/`](./docs) (Vitepress — `pnpm --filter @polymorph/docs dev`).
 
