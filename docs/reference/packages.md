@@ -1,7 +1,8 @@
 # Workspace packages
 
-The monorepo is **18 packages + examples** under pnpm workspaces + Nx. Apache-2.0 across the
-board.
+The monorepo is **17 packages + docs site + examples** under pnpm workspaces + Nx —
+**21 Nx projects** total (every package + the docs + the three examples). Apache-2.0
+across the board.
 
 ## Contract + runtime
 

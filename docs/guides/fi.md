@@ -38,7 +38,7 @@ out-of-range numbers (e.g. opacity > 1).
 
 ## Authoring paths
 
-Three increasingly hands-off options:
+Four increasingly hands-off options:
 
 | Path | When to use |
 |---|---|
@@ -47,8 +47,15 @@ Three increasingly hands-off options:
 | **Figma Variables import** | Your design tokens live in Figma Variables (the native surface). See [the importer guide](/guides/figma-variables). Covers color / dimension / number / duration. |
 | **Figma Styles import** | Your typography + effects live in Figma Text Styles + Effect Styles. See [the importer guide](/guides/figma-styles). Composes with Figma Variables for a fully Figma-native authoring posture. |
 
-All three paths produce the same DTCG-shaped output. The vendor SDK doesn't know or care
+All four paths produce the same DTCG-shaped output. The vendor SDK doesn't know or care
 which path you took.
+
+### Visual editing
+
+If your team prefers a visual editor over hand-editing JSON, `@polymorph/builder` ships
+headless React primitives — `useThemeEditor` hook, typed token fields, accessible lint
+panel, unstyled `ThemeEditorRoot` orchestrator. Drop it into your internal tooling and
+style it to match. See [Interactive theme builder](/guide/builder).
 
 ## Modes strategy
 
@@ -78,7 +85,9 @@ the SDK:
 
 - **Inline** — bundle the JSON into your existing app and pass it at SDK init. Simplest.
 - **RemoteManifest** — host the JSON on your CDN; the SDK fetches at runtime. Theme updates
-  without an app release.
+  without an app release. Production posture composes SRI integrity + Ed25519 signature +
+  version pin + fail-closed rollback + ETag refresh + a typed audit hook — see
+  [Loader governance](/guide/loader-governance).
 - **Bundled** — publish a versioned `@your-bank/polymorph-theme` package and import it.
 
 See [Loaders](/guide/loaders) for the API shape.

@@ -19,16 +19,16 @@ hero:
 features:
   - title: Contract-first
     details: SDKs code against a stable W3C DTCG-extended semantic vocabulary — never against any FI's primitive palette or component names. Adaptation is data, not code.
-  - title: Three loaders
-    details: Inline, RemoteManifest, Bundled — same validated `ResolvedTheme`. Theme updates without an app release where the policy allows it.
+  - title: Loader governance
+    details: Inline, RemoteManifest, Bundled. The remote loader composes SRI integrity + Ed25519 signature + version pin + fail-closed rollback + ETag refresh + a typed audit hook.
   - title: Web + native
     details: React, Vue, Solid, Angular, React Native, Flutter (Dart), iOS (Swift), Android (Kotlin / Compose). Native targets are build-time codegen — no Polymorph runtime in the host app.
   - title: Conformance + goldens
-    details: One cross-adapter conformance bar; per-adapter golden-screenshot harness with CI drift artifacts. Catches divergence before it ships.
-  - title: Authoring
-    details: Hand-author DTCG, or import Tokens Studio (single- and multi-file) exports. Validate / lint / resolve / transform via the zero-dep CLI.
-  - title: Advisory a11y
-    details: Built-in WCAG 2.1 contrast linting across `#hex`, `rgb()`, `hsl()`, `oklch()`, `oklab()`, `color(display-p3 …)`. Hosts own final compliance.
+    details: Cross-adapter conformance bar, per-adapter golden-screenshot harness, cross-codegen parity check for the three native targets. Catches divergence before it ships.
+  - title: Three importers + a builder
+    details: Hand-author DTCG, or import Tokens Studio, Figma Variables, and Figma Text/Effect Styles. `@polymorph/builder` ships headless React primitives for a visual theme editor.
+  - title: Advisory a11y + protected surfaces
+    details: WCAG 2.1 contrast linting across every CSS Color 4 form, motion-reduce clamp tokens with a CSS `@media` emitter, stricter floors for regulator-mandated copy (legal disclosures). Hosts own final compliance.
 ---
 
 ## The thesis, verified

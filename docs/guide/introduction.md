@@ -61,4 +61,15 @@ dependency on the consumer side), compiled by the consumer's platform build.
 ## Accessibility posture
 
 **Advisory.** `pnpm polymorph lint` flags WCAG 2.1 contrast issues across every CSS Color 4
-form and surface-vs-text pair. Hosts own final compliance; the linter exists to fail loud.
+form and surface-vs-text pair. Three rule families compose on top:
+
+- **Motion-reduce** — a `pm.motion.duration.reduced` clamp token + `applyReducedMotion`
+  runtime transform. The Web adapter emits a sibling `@media (prefers-reduced-motion: reduce)`
+  block by default. See [Reduced motion](/guide/reduced-motion).
+- **Protected surfaces** — stricter floors (contrast 7:1, font-size ≥14px, line-height
+  ≥1.5) for component roles flagged in `protected-floors.v0.json` (today: `disclosure`,
+  for legal / regulator-mandated copy). See [Protected surfaces](/guide/protected-surfaces).
+- **Touch / opacity / motion duration** — touch-target ≥44px, disabled opacity ≤0.6,
+  base motion ≤500ms.
+
+Hosts own final compliance; the linter exists to fail loud.
