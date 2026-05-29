@@ -9,11 +9,15 @@ consumes that data and re-skins itself. One SDK build renders natively across ma
 
 > Status: **v1 shipped, post-v1 in flight.** The full v1 plan (contract + core + loaders + RN
 > adapter + reference demo + conformance) has landed and merged. Web (CSS-vars + React + Vue +
-> Solid + Angular bindings), Tokens Studio + Figma Variables importers, a headless
-> golden-screenshot harness, the native triad (Flutter / Swift / Kotlin build-time codegen),
-> and a cross-adapter parity check for the three native codegens are also in. **20 workspace
-> projects** are green on every PR; see [`specs/`](./specs) for the cycle log. Browsable docs
-> live in [`docs/`](./docs) (Vitepress — `pnpm --filter @polymorph/docs dev`).
+> Solid + Angular bindings), three importers (Tokens Studio + Figma Variables + Figma Text /
+> Effect Styles), a headless golden-screenshot harness, the native triad (Flutter / Swift /
+> Kotlin build-time codegen), a cross-adapter parity check for the three native codegens, a
+> production-grade `RemoteManifestLoader` (SRI integrity + Ed25519 signature + version pin +
+> rollback + ETag refresh + audit hook), reduced-motion clamp tokens with a CSS `@media`
+> emitter, headless React theme-builder primitives (`@polymorph/builder`), and protected-surface
+> floors for regulated content are also in. **21 workspace projects** are green on every PR;
+> see [`specs/`](./specs) for the cycle log. Browsable docs live in [`docs/`](./docs) (Vitepress —
+> `pnpm --filter @polymorph/docs dev`).
 
 ## Why
 
@@ -43,20 +47,28 @@ hatch, and optional 1:1 **component mapping** as a power feature.
 The thesis is proven: **same SDK, two banks, zero SDK source changes**, verified headlessly +
 visually.
 
-- **The contract** (`@polymorph/spec`) — DTCG-2025.10-based schema, 68-token vocabulary
-  (41 required), reserved `pm.*` namespace, modes via parallel per-mode token sets.
+- **The contract** (`@polymorph/spec`) — DTCG-2025.10-based schema, **70-token vocabulary
+  (42 required)**, reserved `pm.*` namespace, modes via parallel per-mode token sets,
+  reduced-motion clamp (`pm.motion.duration.reduced`), and a separate
+  `protected-floors.v0.json` manifest for regulated-content floors.
 - **The runtime** (`@polymorph/core`, `/loaders`, `/cli`) — validate (schema + graph), resolve
   (alias chains + mode selection + component fallback → neutral `ResolvedTheme`), advisory
   WCAG 2.1 lint (handles `#hex` / `rgb()` / `hsl()` / `oklch()` / `oklab()` /
-  `color(display-p3 …)`), three loaders (Inline / RemoteManifest / Bundled), and a zero-dep CLI.
+  `color(display-p3 …)`, plus motion-reduce + protected-surface rule families),
+  `applyReducedMotion` transform, three loaders (Inline / RemoteManifest / Bundled), and a
+  zero-dep CLI.
+- **Remote-manifest governance** — `RemoteManifestLoader` ships opt-in SRI integrity,
+  Ed25519 detached signature (with rotation), exact-`contractVersion` pin, fail-closed
+  rollback to the last good theme, ETag-conditional refresh, and a typed audit event
+  stream. WebCrypto-based (universal across Node / browser / Bun / Deno / workers).
 - **Adapters** — React Native (`@polymorph/adapter-react-native`) and Web with CSS custom
-  properties (`@polymorph/adapter-web`). Web adapter has framework bindings for **React**
-  (built-in), **Vue 3** (`@polymorph/adapter-web-vue`), **Solid 1.x**
-  (`@polymorph/adapter-web-solid`), and **Angular 18+** (`@polymorph/adapter-web-angular`).
-  Native targets ship as build-time codegen: **Flutter / Dart** (`@polymorph/adapter-flutter`),
-  **iOS / SwiftUI** (`@polymorph/adapter-swift`), **Android / Compose**
-  (`@polymorph/adapter-kotlin`) — emit a self-contained source file, no Polymorph runtime in
-  the consumer app.
+  properties (`@polymorph/adapter-web`, with a `@media (prefers-reduced-motion: reduce)`
+  emitter). Web adapter has framework bindings for **React** (built-in), **Vue 3**
+  (`@polymorph/adapter-web-vue`), **Solid 1.x** (`@polymorph/adapter-web-solid`), and
+  **Angular 18+** (`@polymorph/adapter-web-angular`). Native targets ship as build-time
+  codegen: **Flutter / Dart** (`@polymorph/adapter-flutter`), **iOS / SwiftUI**
+  (`@polymorph/adapter-swift`), **Android / Compose** (`@polymorph/adapter-kotlin`) — emit a
+  self-contained source file, no Polymorph runtime in the consumer app.
 - **The proof** — `examples/reference-sdk-onboarding` is the reference vendor SDK; the two
   mock-bank themes (`mock-bank-{aurora,borealis}`) drive it through distinct visible
   renderings, verified by `reskin.test.ts` + a static `contract-adherence.test.ts` (zero hex
@@ -65,8 +77,16 @@ visually.
   (`runThemeConformance`, `checkResolvedInvariants`, `checkLoaderEquivalence`); the headless
   `@polymorph/golden-web` (satori → resvg → pixelmatch, no browser binary) captures and diffs
   baselines per scenario × bank × mode. Failing diffs upload as CI artifacts.
-- **Authoring pipeline** — `@polymorph/authoring` imports both the single-file consolidated and
-  multi-file Tokens Studio export formats into a Polymorph theme that `validateTheme` accepts.
+  `@polymorph/native-parity` parses each emitted Dart / Swift / Kotlin source into a
+  normalized form and asserts the three converters emit semantically identical token values.
+- **Authoring pipeline** — `@polymorph/authoring` ships **three importers**: Tokens Studio
+  (single- + multi-file), Figma Variables, and Figma Styles (text + effects). Each produces
+  a Polymorph theme that `validateTheme` accepts; the importers compose for orgs whose
+  tokens live entirely in Figma.
+- **Theme builder** — `@polymorph/builder` ships headless React primitives for a visual
+  theme editor: `useThemeEditor` state hook (dirty tracking + live lint), typed token
+  fields (color / dimension / duration / number / cubicBezier), accessible `LintPanel`,
+  unstyled `ThemeEditorRoot` orchestrator. Visual chrome stays the host's job.
 - **CI** — GitHub Actions runs `nx run-many -t build typecheck test conformance` on every PR
   with a drift guard that fails on un-regenerated artifacts.
 
@@ -74,20 +94,27 @@ visually.
 
 | Path | Role |
 |---|---|
-| `packages/spec` | DTCG-extended contract — manifest, JSON Schema, TS types, `ResolvedTheme` shape |
-| `packages/core` | Validator (schema + graph), alias resolver, mode selection, WCAG 2.1 lint |
-| `packages/loaders` | `ThemeLoader` + Inline / RemoteManifest / Bundled loaders |
-| `packages/cli` | Zero-dep `polymorph validate / lint / resolve` |
+| `packages/spec` | DTCG-extended contract — manifest, `protected-floors.v0.json`, JSON Schema, TS types, `ResolvedTheme` shape, reduced-motion tokens |
+| `packages/core` | Validator (schema + graph), alias resolver, mode selection, WCAG 2.1 + motion-reduce + protected-floor lint, `applyReducedMotion` |
+| `packages/loaders` | `ThemeLoader` + Inline / RemoteManifest (SRI + signature + version pin + rollback + ETag + audit) / Bundled |
+| `packages/cli` | Zero-dep `polymorph validate / lint / resolve / transform` |
 | `packages/adapter-react-native` | RN adapter: `ThemeProvider`, hooks, slots, mapping, retrofit shim, themed primitives |
-| `packages/adapter-web` | Framework-agnostic web core (CSS vars + bridge) + React binding |
+| `packages/adapter-web` | Framework-agnostic web core (CSS vars + bridge + `@media (prefers-reduced-motion)` emitter) + React binding |
 | `packages/adapter-web-vue` | Vue 3 binding for the web core |
 | `packages/adapter-web-solid` | Solid 1.x binding for the web core |
+| `packages/adapter-web-angular` | Angular 18+ binding (standalone components + signals) |
+| `packages/adapter-flutter` | Build-time Dart codegen. No app-side runtime |
+| `packages/adapter-swift` | Build-time Swift / SwiftUI codegen |
+| `packages/adapter-kotlin` | Build-time Kotlin / Compose codegen |
 | `packages/conformance` | Cross-adapter assertions + `GoldenHarness` interface |
 | `packages/golden-web` | Pure-Node golden-screenshot harness (satori + resvg) implementing `GoldenHarness` |
-| `tooling/authoring` | Tokens Studio importer (single- and multi-file consolidated exports) |
+| `packages/native-parity` | Cross-adapter parity check for the three native codegens |
+| `packages/builder` | Headless React primitives for theme editing — `useThemeEditor`, typed token fields, lint panel, unstyled orchestrator |
+| `tooling/authoring` | Three importers: Tokens Studio (single + multi-file), Figma Variables, Figma Styles (text + effects) |
 | `examples/reference-sdk-onboarding` | Reference vendor SDK — account-opening wizard coded against the contract only |
 | `examples/mock-bank-{aurora,borealis}` | Two distinct DTCG token sets + host shells; differ only by the theme import |
-| `specs/` | Spec Kit cycle log (one directory per spec: `spec.md`, `plan.md`, `research.md`, `contracts/`, `tasks.md`) |
+| `docs/` | This site (Vitepress) |
+| `specs/` | Spec Kit cycle log (one directory per spec: `spec.md`, `tasks.md`, etc.) |
 
 ## Toolchain
 
