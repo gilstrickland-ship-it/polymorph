@@ -6,7 +6,9 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
@@ -21,5 +23,17 @@
     "@types/node": "22.10.5",
     "tsx": "4.19.2",
     "vitest": "2.1.8"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gilstrickland-ship-it/polymorph.git",
+    "directory": "packages/adapter-flutter"
+  },
+  "homepage": "https://github.com/gilstrickland-ship-it/polymorph#readme",
+  "bugs": {
+    "url": "https://github.com/gilstrickland-ship-it/polymorph/issues"
   }
 }

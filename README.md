@@ -124,9 +124,52 @@ visually.
 | `docs/` | This site (Vitepress) |
 | `specs/` | Spec Kit cycle log (one directory per spec: `spec.md`, `tasks.md`, etc.) |
 
-## Toolchain
+## Installation (for hosts adopting Polymorph)
 
-pnpm workspaces + [Nx](https://nx.dev). Tested with Node 22.
+Once a host application (vendor SDK or FI portal) adopts Polymorph, they install only the
+packages they need. The contract + runtime is small; adapters are picked per platform.
+
+```bash
+# Always: the contract types + runtime + loaders + CLI
+npm install @polymorph/spec @polymorph/core @polymorph/loaders
+npm install --save-dev @polymorph/cli
+
+# Pick the adapter(s) you ship against
+npm install @polymorph/adapter-web                # React (built-in) + framework-agnostic CSS-vars core
+npm install @polymorph/adapter-web-vue            # Vue 3 binding
+npm install @polymorph/adapter-web-solid          # Solid 1.x
+npm install @polymorph/adapter-web-angular        # Angular 18+
+npm install @polymorph/adapter-react-native       # React Native
+# Native build-time codegen — used at build time, no runtime dependency
+npm install --save-dev @polymorph/adapter-flutter @polymorph/adapter-swift @polymorph/adapter-kotlin
+
+# Optional authoring + editing
+npm install --save-dev @polymorph/authoring       # Tokens Studio / Figma Variables / Figma Styles importers
+npm install @polymorph/builder                    # Headless React theme-editor primitives
+
+# Optional CI gates
+npm install --save-dev @polymorph/conformance @polymorph/native-parity
+```
+
+Once installed, the CLI is invocable directly:
+
+```bash
+npx polymorph validate path/to/theme.tokens.json
+npx polymorph lint path/to/theme.tokens.json --mode dark --strict
+npx polymorph resolve path/to/theme.tokens.json --mode dark
+npx polymorph init --output theme.tokens.json --modes light,dark
+npx polymorph migrate theme.tokens.json --output theme.next.tokens.json
+npx polymorph diff a.json b.json
+npx polymorph transform theme.tokens.json --target dart --output lib/theme.dart
+```
+
+See [`docs/reference/cli.md`](docs/reference/cli.md) for the full command surface and
+[`docs/guides/`](docs/guides/) for the vendor / FI / SDK integration walkthroughs.
+
+## Toolchain (for contributors)
+
+pnpm workspaces + [Nx](https://nx.dev). Tested with Node 22. See
+[`CONTRIBUTING.md`](CONTRIBUTING.md) for the full contributor guide.
 
 ```bash
 pnpm install
@@ -147,6 +190,21 @@ directory per cycle under [`specs/`](./specs). Each directory contains `spec.md`
 shipped and why).
 
 Project principles live in [`.specify/memory/constitution.md`](./.specify/memory/constitution.md).
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the development loop, spec-driven workflow,
+and PR-shape guidance.
+
+## Security
+
+Use the private disclosure path documented in [SECURITY.md](./SECURITY.md). Do not open
+public issues for vulnerabilities.
+
+## Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md). Pre-1.0 cycle-by-cycle history lives in
+[`specs/`](./specs).
 
 ## License
 

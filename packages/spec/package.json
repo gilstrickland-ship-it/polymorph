@@ -14,7 +14,11 @@
     "./schema/*": "./schema/*",
     "./manifest/*": "./manifest/*"
   },
-  "files": ["dist", "schema", "manifest"],
+  "files": [
+    "dist",
+    "schema",
+    "manifest"
+  ],
   "scripts": {
     "generate": "tsx scripts/generate.ts",
     "build": "tsc -p tsconfig.json",
@@ -28,5 +32,17 @@
     "ajv-formats": "3.0.1",
     "tsx": "4.19.2",
     "vitest": "2.1.8"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gilstrickland-ship-it/polymorph.git",
+    "directory": "packages/spec"
+  },
+  "homepage": "https://github.com/gilstrickland-ship-it/polymorph#readme",
+  "bugs": {
+    "url": "https://github.com/gilstrickland-ship-it/polymorph/issues"
   }
 }

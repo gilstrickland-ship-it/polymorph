@@ -6,7 +6,9 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
@@ -41,5 +43,17 @@
     "tslib": "2.8.1",
     "vitest": "2.1.8",
     "zone.js": "0.14.10"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gilstrickland-ship-it/polymorph.git",
+    "directory": "packages/adapter-web-angular"
+  },
+  "homepage": "https://github.com/gilstrickland-ship-it/polymorph#readme",
+  "bugs": {
+    "url": "https://github.com/gilstrickland-ship-it/polymorph/issues"
   }
 }
