@@ -1,17 +1,16 @@
 # Workspace packages
 
-The monorepo is **17 packages + docs site + examples** under pnpm workspaces + Nx —
-**21 Nx projects** total (every package + the docs + the three examples). Apache-2.0
-across the board.
+The monorepo is **17 packages + docs site + 4 examples** under pnpm workspaces + Nx —
+**22 Nx projects** total. Apache-2.0 across the board.
 
 ## Contract + runtime
 
 | Package | Role |
 |---|---|
 | `@polymorph/spec` | DTCG-extended contract — manifest, generated JSON schema, TS types, `ResolvedTheme` shape. |
-| `@polymorph/core` | Validator (schema + alias graph), alias resolver, mode selection, advisory WCAG 2.1 lint, `parseColor`. |
+| `@polymorph/core` | Validator (schema + alias graph), alias resolver, mode selection, advisory WCAG 2.1 + motion-reduce + protected-floor lint, `applyReducedMotion`, project-local **policy packs** (`lintWithPolicies`), `parseColor`. |
 | `@polymorph/loaders` | `ThemeLoader` interface + Inline / RemoteManifest / Bundled implementations. |
-| `@polymorph/cli` | Zero-dep CLI: `validate` / `lint` / `resolve` / `transform`. |
+| `@polymorph/cli` | Zero-dep CLI: `validate` / `lint` / `resolve` / `transform` / `init` / `diff` / `migrate`. |
 
 ## Web adapters
 
