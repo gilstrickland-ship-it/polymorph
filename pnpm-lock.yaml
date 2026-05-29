@@ -565,6 +565,49 @@ importers:
         specifier: 2.1.8
         version: 2.1.8(@types/node@22.10.5)(happy-dom@15.11.7)
 
+  tests/integration-primer:
+    dependencies:
+      '@polymorph/adapter-flutter':
+        specifier: workspace:*
+        version: link:../../packages/adapter-flutter
+      '@polymorph/adapter-kotlin':
+        specifier: workspace:*
+        version: link:../../packages/adapter-kotlin
+      '@polymorph/adapter-swift':
+        specifier: workspace:*
+        version: link:../../packages/adapter-swift
+      '@polymorph/adapter-web':
+        specifier: workspace:*
+        version: link:../../packages/adapter-web
+      '@polymorph/cli':
+        specifier: workspace:*
+        version: link:../../packages/cli
+      '@polymorph/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@polymorph/loaders':
+        specifier: workspace:*
+        version: link:../../packages/loaders
+      '@polymorph/native-parity':
+        specifier: workspace:*
+        version: link:../../packages/native-parity
+      '@polymorph/spec':
+        specifier: workspace:*
+        version: link:../../packages/spec
+    devDependencies:
+      '@primer/primitives':
+        specifier: 11.9.0
+        version: 11.9.0
+      '@types/node':
+        specifier: 22.10.5
+        version: 22.10.5
+      tsx:
+        specifier: 4.19.2
+        version: 4.19.2
+      vitest:
+        specifier: 2.1.8
+        version: 2.1.8(@types/node@22.10.5)(happy-dom@15.11.7)
+
   tooling/authoring:
     dependencies:
       '@polymorph/spec':
@@ -1124,6 +1167,9 @@ packages:
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
+
+  '@primer/primitives@11.9.0':
+    resolution: {integrity: sha512-yESOalhd7s7S3unV1V32v3Z0RszXiiz6pzy6hVI9xpdTh1q1Gt8vyDFxRlqIvuwc5ZaO1+gYQTDbjxb4nWBzMw==}
 
   '@resvg/resvg-js-android-arm-eabi@2.6.2':
     resolution: {integrity: sha512-FrJibrAk6v29eabIPgcTUMPXiEz8ssrAk7TXxsiZzww9UTQ1Z5KAbFJs+Z0Ez+VZTYgnE5IQJqBcoSiMebtPHA==}
@@ -3087,6 +3133,8 @@ snapshots:
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
+
+  '@primer/primitives@11.9.0': {}
 
   '@resvg/resvg-js-android-arm-eabi@2.6.2':
     optional: true

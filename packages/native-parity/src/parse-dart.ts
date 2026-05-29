@@ -53,7 +53,9 @@ function parseCubic(literal: string): NormalizedValue | null {
 }
 
 function parseTypography(literal: string): NormalizedValue | null {
-  const family = literal.match(/fontFamily:\s*'([^']*)'/);
+  // Handle escaped single-quotes inside the family — Dart uses `'` for string literals
+  // and escapes embedded `'` as `\'`; same pattern as the Swift / Kotlin parsers.
+  const family = literal.match(/fontFamily:\s*'((?:\\.|[^'\\])*)'/);
   const weight = literal.match(FONT_WEIGHT_RE);
   const size = literal.match(/fontSize:\s*([\d.]+)/);
   const height = literal.match(/height:\s*([\d.]+)/);
@@ -61,7 +63,7 @@ function parseTypography(literal: string): NormalizedValue | null {
   if (!family || !weight || !size || !height || !tracking) return null;
   return {
     kind: "typography",
-    family: family[1]!,
+    family: family[1]!.replace(/\\(.)/g, "$1"),
     weight: Number(weight[1]!),
     fontSizePx: Number(size[1]!),
     lineHeight: Number(height[1]!),
