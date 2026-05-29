@@ -119,6 +119,26 @@ Procedure:
 5. Add lint coverage if the new token has accessibility implications.
 6. Open a spec under `specs/`.
 
+## Documentation & the wiki
+
+The Vitepress site under `docs/` is the primary documentation. The repo's **GitHub wiki**
+hosts the step-by-step tutorials and the integration-test reports; its canonical source
+lives in `wiki/` and is mirrored to the wiki automatically.
+
+- **Editing**: change the Markdown under `wiki/` in a normal PR. Internal links use
+  GitHub-wiki style (bare page names, no `.md` — e.g. `[Install](Tutorial-01-Install-And-Validate)`)
+  because that's what resolves once published. Those bare links 404 in the in-repo file
+  browser by design; read them on the published wiki.
+- **Publishing**: the [`publish-wiki`](.github/workflows/publish-wiki.yml) workflow mirrors
+  `wiki/` → the GitHub wiki on every push to `main` that touches `wiki/**`. No manual step.
+- **One-time wiki initialisation (required once per repo)**: GitHub stores the wiki as a
+  separate `…​.wiki.git` repo that does not exist until the wiki has at least one page.
+  Before the workflow can run, a maintainer must create the first page once via the GitHub
+  UI: **Repo → Wiki → "Create the first page" → Save** (any content — the workflow
+  overwrites it). After that, publishing is fully automated.
+- **Manual fallback**: `scripts/publish-wiki.sh` does the same sync from a local machine
+  with wiki push access (`--dry-run` to preview). Use it if you need to publish outside CI.
+
 ## Reporting bugs
 
 GitHub Issues. Include:

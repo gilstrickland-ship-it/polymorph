@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 # Publish the contents of wiki/ to the GitHub wiki repo.
 #
-# Why this script: GitHub wikis are git-backed but at a separate URL
-# (<repo>.wiki.git). We can't push to it from arbitrary sandboxes (the integration
-# environment's git proxy doesn't route to the wiki repo), so we hold the wiki
-# source in-repo under wiki/ and let the maintainer publish from a machine with
-# real GitHub credentials.
+# Primary path is CI: .github/workflows/publish-wiki.yml mirrors wiki/ to the GitHub
+# wiki on every push to main. This script is the MANUAL FALLBACK for publishing from a
+# local machine — useful when you can't wait for CI, or when the sandbox/CI that produced
+# the wiki content can't reach the wiki repo.
+#
+# Why a separate publish step at all: GitHub wikis are git-backed but at a separate URL
+# (<repo>.wiki.git), which some environments' git proxies don't route to. We hold the wiki
+# source in-repo under wiki/ (reviewed in normal PRs) and mirror it to the wiki repo.
 #
 # Usage:
 #   ./scripts/publish-wiki.sh                # publish to the canonical wiki repo
