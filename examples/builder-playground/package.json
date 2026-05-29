@@ -1,0 +1,32 @@
+{
+  "name": "@polymorph/example-builder-playground",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Builder playground: composes @polymorph/builder with the web adapter's themed primitives so the FI sees their token edits reflected live in a real component showcase.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@polymorph/adapter-web": "workspace:*",
+    "@polymorph/builder": "workspace:*",
+    "@polymorph/core": "workspace:*",
+    "@polymorph/spec": "workspace:*",
+    "@polymorph/example-mock-bank-aurora": "workspace:*",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "10.4.0",
+    "@testing-library/react": "16.1.0",
+    "@types/node": "22.10.5",
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "happy-dom": "15.11.7",
+    "vitest": "2.1.8"
+  }
+}

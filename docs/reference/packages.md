@@ -53,6 +53,7 @@ across the board.
 | `examples/reference-sdk-onboarding` | Reference vendor SDK — account-opening wizard coded against the contract only. |
 | `examples/mock-bank-aurora` | Mock bank A — distinct theme + host shell. |
 | `examples/mock-bank-borealis` | Mock bank B — distinct theme + host shell. |
+| `examples/builder-playground` | `@polymorph/builder` composed with `@polymorph/adapter-web` — Aurora theme edited live against a real component showcase. |
 
 ## Docs
 
