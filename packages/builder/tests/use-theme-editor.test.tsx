@@ -94,3 +94,45 @@ describe("useThemeEditor", () => {
     expect(JSON.stringify(exported)).not.toContain('"#ff00ff"');
   });
 });
+
+describe("setComponentProperty — writes under pm.<role>.<property> + flows through resolveTheme", () => {
+  it("authors the override at the path the resolver reads from", () => {
+    const { result } = renderHook(() => useThemeEditor(aurora));
+    act(() =>
+      result.current.setComponentProperty("button.primary", "background", {
+        $type: "color",
+        $value: "#abcdef",
+      }),
+    );
+    // The override lives under `pm.button.primary.background` (NOT `pm.components.button.primary.background`).
+    const working = result.current.state.working as any;
+    expect(working.pm.button.primary.background.$value).toBe("#abcdef");
+  });
+
+  it("dirties the editor and surfaces under changedComponentPaths (not changedTokenIds)", () => {
+    const { result } = renderHook(() => useThemeEditor(aurora));
+    act(() =>
+      result.current.setComponentProperty("button.primary", "background", {
+        $type: "color",
+        $value: "#abcdef",
+      }),
+    );
+    const { state } = result.current;
+    expect(state.dirty).toBe(true);
+    expect(state.changedComponentPaths.has("button.primary.background")).toBe(true);
+    expect(state.changedTokenIds.size).toBe(0);
+  });
+
+  it("supports single-segment role names (e.g. `card`, `disclosure`)", () => {
+    const { result } = renderHook(() => useThemeEditor(aurora));
+    act(() =>
+      result.current.setComponentProperty("card", "background", {
+        $type: "color",
+        $value: "#102030",
+      }),
+    );
+    const working = result.current.state.working as any;
+    expect(working.pm.card.background.$value).toBe("#102030");
+    expect(result.current.state.changedComponentPaths.has("card.background")).toBe(true);
+  });
+});

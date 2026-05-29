@@ -7,6 +7,7 @@ export { lintTheme, lintAllModes } from "./lint.js";
 export {
   definePolicyPack,
   lintWithPolicies,
+  lintAllModesWithPolicies,
   filterWarnings,
   warning,
   type PolicyPack,

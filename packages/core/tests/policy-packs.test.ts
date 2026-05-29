@@ -6,6 +6,7 @@ import {
   resolveTheme,
   definePolicyPack,
   lintWithPolicies,
+  lintAllModesWithPolicies,
   filterWarnings,
   warning,
 } from "../src/index.js";
@@ -86,6 +87,42 @@ describe("lintWithPolicies — built-in + custom rules compose", () => {
     // Subsequent rules in the same pack still run after one throws.
     expect(all.some((w) => w.code === "AFTER_THROW")).toBe(true);
   });
+
+  it("POLICY_RULE_ERROR omits measured/threshold (they have no meaning for this code)", () => {
+    const pack = definePolicyPack({
+      name: "t/x",
+      version: "0",
+      rules: [
+        () => {
+          throw new Error("nope");
+        },
+      ],
+    });
+    const err = lintWithPolicies(rt, [pack]).find((w) => w.code === "POLICY_RULE_ERROR");
+    expect(err).toBeDefined();
+    expect(err?.measured).toBeUndefined();
+    expect(err?.threshold).toBeUndefined();
+  });
+});
+
+describe("warning() — measured/threshold are optional", () => {
+  it("omits both fields when neither is supplied", () => {
+    const w = warning("ACME_DRIFT", "primary drifted", ["pm.color.action.primary.rest"]);
+    expect(w.measured).toBeUndefined();
+    expect(w.threshold).toBeUndefined();
+  });
+
+  it("carries both fields when supplied", () => {
+    const w = warning("ACME_FLOOR", "below floor", ["pm.x"], 1.2, 4.5);
+    expect(w.measured).toBe(1.2);
+    expect(w.threshold).toBe(4.5);
+  });
+
+  it("carries only `measured` when only it is supplied", () => {
+    const w = warning("ACME_X", "msg", [], 0.4);
+    expect(w.measured).toBe(0.4);
+    expect(w.threshold).toBeUndefined();
+  });
 });
 
 describe("filterWarnings — CI gating helper", () => {
@@ -158,6 +195,39 @@ describe("Realistic pack — locale-specific large-text floor", () => {
     const builtinCodes = new Set(builtinOnly.map((w) => w.code));
     for (const code of allBuiltinCodes) {
       expect(builtinCodes.has(code)).toBe(true);
+    }
+  });
+});
+
+describe("lintAllModesWithPolicies — symmetry with lintAllModes", () => {
+  const pack = definePolicyPack({
+    name: "test/per-mode",
+    version: "0",
+    rules: [(rt) => [warning("MARK_MODE", `seen in ${rt.mode}`, [], 0, 0)]],
+  });
+
+  it("returns one entry per declared mode", () => {
+    const result = lintAllModesWithPolicies(aurora, [pack]);
+    const modes = result.map((r) => r.mode);
+    expect(modes).toContain("light");
+    expect(modes).toContain("dark");
+  });
+
+  it("each entry's warnings include the pack's emit + the built-in set", () => {
+    const result = lintAllModesWithPolicies(aurora, [pack]);
+    for (const { warnings } of result) {
+      // Pack rule fires under every mode.
+      expect(warnings.some((w) => w.code === "MARK_MODE")).toBe(true);
+      // Built-in warnings also present (aurora has known advisory warnings under both modes).
+      expect(warnings.some((w) => w.code !== "MARK_MODE")).toBe(true);
+    }
+  });
+
+  it("works with an empty pack array (≡ lintAllModes)", () => {
+    const result = lintAllModesWithPolicies(aurora);
+    expect(result.length).toBeGreaterThan(0);
+    for (const { warnings } of result) {
+      expect(warnings.every((w) => w.code !== "MARK_MODE")).toBe(true);
     }
   });
 });

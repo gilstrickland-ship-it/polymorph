@@ -19,9 +19,10 @@
 //  - Read outside the resolved-theme snapshot (no I/O, no filesystem, no network — packs
 //    are pure value-in / warnings-out functions).
 
-import type { ResolvedTheme } from "@polymorph/spec";
+import type { ResolvedTheme, ThemeMode } from "@polymorph/spec";
 import type { LintWarning } from "./errors.js";
 import { lintTheme } from "./lint.js";
+import { declaredModes, resolveTheme } from "./resolve.js";
 
 /** A single rule belonging to a policy pack. Pure: `(rt) → warnings`. */
 export type PolicyRule = (rt: ResolvedTheme) => LintWarning[];
@@ -61,8 +62,6 @@ export function lintWithPolicies(rt: ResolvedTheme, packs: PolicyPack[] = []): L
           code: "POLICY_RULE_ERROR",
           message: `policy pack '${pack.name}' (v${pack.version}) rule threw: ${(e as Error).message}`,
           tokenIds: [],
-          measured: 0,
-          threshold: 0,
         });
       }
     }
@@ -92,13 +91,33 @@ export function filterWarnings(
 /**
  * Convenience builder for a single warning. Trims boilerplate at the rule-author site —
  * packs typically emit one warning per offending token, and this keeps the call-site terse.
+ * `measured` / `threshold` are optional; omit them for codes that don't carry a numeric
+ * pair (e.g. `ACME_PRIMARY_DRIFT`).
  */
 export function warning(
   code: string,
   message: string,
   tokenIds: string[] = [],
-  measured = 0,
-  threshold = 0,
+  measured?: number,
+  threshold?: number,
 ): LintWarning {
-  return { code, message, tokenIds, measured, threshold };
+  const out: LintWarning = { code, message, tokenIds };
+  if (measured !== undefined) out.measured = measured;
+  if (threshold !== undefined) out.threshold = threshold;
+  return out;
+}
+
+/**
+ * Like `lintAllModes`, but composes project-local policy packs on top of the built-in
+ * lint for every declared mode. Useful as a one-line CI gate.
+ */
+export function lintAllModesWithPolicies(
+  theme: unknown,
+  packs: PolicyPack[] = [],
+): { mode: ThemeMode; warnings: LintWarning[] }[] {
+  const modes = declaredModes(theme);
+  return modes.map((mode) => ({
+    mode,
+    warnings: lintWithPolicies(resolveTheme(theme, mode), packs),
+  }));
 }

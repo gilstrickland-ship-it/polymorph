@@ -48,6 +48,16 @@ const rt = resolveTheme(theme, "light");
 const warnings = lintWithPolicies(rt, [brandGuard]);
 ```
 
+For multi-mode CI gates, `lintAllModesWithPolicies(theme, packs)` parallels the built-in
+`lintAllModes` — returns one `{ mode, warnings }` entry per declared mode:
+
+```ts
+import { lintAllModesWithPolicies } from "@polymorph/core";
+
+const perMode = lintAllModesWithPolicies(theme, [brandGuard]);
+// [{ mode: "light", warnings: [...] }, { mode: "dark", warnings: [...] }]
+```
+
 The result is the **built-in warning set followed by every pack's warnings, in pack-array
 order, in rule-array order within each pack**. CI can compare diffs deterministically;
 editors (`@polymorph/builder`) can style FI-namespaced rows independently.
@@ -61,12 +71,19 @@ A rule is a pure `(rt: ResolvedTheme) → LintWarning[]` function:
 | `code` | FI-namespaced (e.g. `BANK_*`, `ACME_*`). Any string passes — the built-in `LintCode` union narrows for autocomplete on built-in rules only. |
 | `message` | Free-text. Surfaced in `LintPanel`, CLI output, audit logs. |
 | `tokenIds` | The `pm.*` ids the rule touched. Lets editors scroll-to-warning. |
-| `measured` / `threshold` | Optional numeric pair. Lets the lint panel show "X above Y" UI. |
+| `measured` / `threshold` | Optional numeric pair. Omit for codes that don't carry a numeric pair (`ACME_PRIMARY_DRIFT` etc.); set both when the lint panel should show "X above Y" UI. |
 
-Use the `warning()` helper to keep call-sites terse:
+Use the `warning()` helper to keep call-sites terse — `measured` / `threshold` are
+optional:
 
 ```ts
-warning("ACME_PRIMARY_DRIFT", "pm.color... drifted", ["pm.color.action.primary.rest"], 0, 0);
+// Code without a numeric pair.
+warning("ACME_PRIMARY_DRIFT", "pm.color.action.primary.rest drifted from brand", [
+  "pm.color.action.primary.rest",
+]);
+
+// Code that carries one — surfaces "1.2 below 4.5" in the lint panel.
+warning("ACME_FLOOR", "below floor", ["pm.x"], 1.2, 4.5);
 ```
 
 ## What rules can / can't do
