@@ -484,6 +484,12 @@ importers:
       '@polymorph/adapter-swift':
         specifier: workspace:*
         version: link:../adapter-swift
+      '@polymorph/adapter-web':
+        specifier: workspace:*
+        version: link:../adapter-web
+      '@polymorph/core':
+        specifier: workspace:*
+        version: link:../core
       '@polymorph/spec':
         specifier: workspace:*
         version: link:../spec

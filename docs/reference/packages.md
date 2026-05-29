@@ -37,7 +37,7 @@ across the board.
 |---|---|
 | `@polymorph/conformance` | Cross-adapter conformance bar: `runThemeConformance`, `checkResolvedInvariants`, `checkLoaderEquivalence`. |
 | `@polymorph/golden-web` | Pure-Node golden screenshots (satori → resvg → pixelmatch). Uploads diffs as CI artifacts. |
-| `@polymorph/native-parity` | Cross-adapter parity check for Dart / Swift / Kotlin codegens — parses each emitted source into a normalized form and asserts the three converters emit semantically identical token values. |
+| `@polymorph/native-parity` | Cross-adapter runtime parity: parses every adapter (Web CSS vars + Dart / Swift / Kotlin) into a normalised form and asserts equivalence against a baseline computed directly from `resolveTheme`. |
 
 ## Authoring
 

@@ -37,6 +37,7 @@ export default defineConfig({
             { text: "Reduced motion", link: "/guide/reduced-motion" },
             { text: "Interactive theme builder", link: "/guide/builder" },
             { text: "Protected surfaces (legal / regulated copy)", link: "/guide/protected-surfaces" },
+            { text: "Cross-adapter runtime parity", link: "/guide/runtime-parity" },
             { text: "Advisory lint", link: "/guide/advisory-lint" },
           ],
         },
