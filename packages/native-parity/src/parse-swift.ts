@@ -62,7 +62,11 @@ function parseCubic(literal: string): NormalizedValue | null {
 }
 
 function parseTypography(literal: string): NormalizedValue | null {
-  const family = literal.match(/font:\s*Font\.custom\("([^"]*)"/);
+  // Handle escaped quotes inside the family string — Swift codegen emits `\"`-escaped
+  // quotes for font families that contain them (e.g. GitHub Primer's stack:
+  // `"Mona Sans VF", -apple-system, "Segoe UI", …`). Caught by the Primer integration
+  // test; the previous regex stopped at the first quote and captured only the prefix.
+  const family = literal.match(/font:\s*Font\.custom\("((?:\\.|[^"\\])*)"/);
   const size = literal.match(/fontSize:\s*([\d.]+)/);
   const weightTok = literal.match(/weight:\s*(\.\w+)/);
   const height = literal.match(/lineHeight:\s*([\d.]+)/);
@@ -72,7 +76,8 @@ function parseTypography(literal: string): NormalizedValue | null {
   if (weight === undefined) return null;
   return {
     kind: "typography",
-    family: family[1]!,
+    // Unescape so the captured family matches the input to `transformToSwift`.
+    family: family[1]!.replace(/\\(.)/g, "$1"),
     weight,
     fontSizePx: Number(size[1]!),
     lineHeight: Number(height[1]!),

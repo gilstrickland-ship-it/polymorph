@@ -1,0 +1,32 @@
+{
+  "name": "@polymorph/integration-primer",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Integration test: ingest @primer/primitives (GitHub's real published design tokens) through Polymorph's contract, exercise every shipped spec (018–030) against the resulting theme, and emit findings.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
+    "test": "vitest run",
+    "report": "tsx ./src/generate-report.ts"
+  },
+  "dependencies": {
+    "@polymorph/spec": "workspace:*",
+    "@polymorph/core": "workspace:*",
+    "@polymorph/loaders": "workspace:*",
+    "@polymorph/cli": "workspace:*",
+    "@polymorph/adapter-web": "workspace:*",
+    "@polymorph/adapter-flutter": "workspace:*",
+    "@polymorph/adapter-swift": "workspace:*",
+    "@polymorph/adapter-kotlin": "workspace:*",
+    "@polymorph/native-parity": "workspace:*"
+  },
+  "devDependencies": {
+    "@primer/primitives": "11.9.0",
+    "@types/node": "22.10.5",
+    "tsx": "4.19.2",
+    "vitest": "2.1.8"
+  }
+}

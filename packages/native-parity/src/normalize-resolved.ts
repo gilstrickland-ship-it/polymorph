@@ -152,15 +152,32 @@ function normalizeTypography(v: unknown): NormalizedValue | null {
   if (typeof weight !== "number") return null;
   if (!fontSize || typeof fontSize.value !== "number") return null;
   if (typeof lineHeight !== "number") return null;
-  const letterSpacingPx = ls && typeof ls.value === "number" ? ls.value : 0;
+  // Normalize rem/em → px (×16) so a theme authored in rem (e.g. GitHub Primer's
+  // typography) parity-matches an adapter output authored in px. Discovered via Primer
+  // integration test; previously only the standalone `dimension` token kind handled this.
+  const fontSizePx = toPx(fontSize);
+  const letterSpacingPx = ls && typeof ls.value === "number" ? toPx(ls) : 0;
   return {
     kind: "typography",
     family,
     weight,
-    fontSizePx: fontSize.value,
+    fontSizePx,
     lineHeight,
     letterSpacingPx,
   };
+}
+
+function toPx(v: Record<string, unknown>): number {
+  const n = v.value as number;
+  switch (v.unit) {
+    case "px":
+      return n;
+    case "rem":
+    case "em":
+      return n * 16;
+    default:
+      return n;
+  }
 }
 
 function normalizeShadow(v: unknown): NormalizedValue | null {

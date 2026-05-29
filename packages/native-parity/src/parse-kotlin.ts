@@ -51,7 +51,9 @@ function parseCubic(literal: string): NormalizedValue | null {
 }
 
 function parseTypography(literal: string): NormalizedValue | null {
-  const family = literal.match(/fontFamily\s*=\s*"([^"]*)"/);
+  // Handle escaped quotes inside the family string — same shape as Swift; codegen emits
+  // `\"`-escaped quotes for families containing `"` (e.g. GitHub Primer's stack).
+  const family = literal.match(/fontFamily\s*=\s*"((?:\\.|[^"\\])*)"/);
   const size = literal.match(/fontSize\s*=\s*([\d.]+)f\.sp/);
   const weight = literal.match(/fontWeight\s*=\s*FontWeight\.W(\d+)/);
   const height = literal.match(/lineHeight\s*=\s*([\d.]+)f/);
@@ -59,7 +61,7 @@ function parseTypography(literal: string): NormalizedValue | null {
   if (!family || !size || !weight || !height || !tracking) return null;
   return {
     kind: "typography",
-    family: family[1]!,
+    family: family[1]!.replace(/\\(.)/g, "$1"),
     weight: Number(weight[1]!),
     fontSizePx: Number(size[1]!),
     lineHeight: Number(height[1]!),
