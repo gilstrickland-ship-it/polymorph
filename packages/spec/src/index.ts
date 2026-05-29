@@ -19,10 +19,14 @@ export {
   MODE_SENSITIVE_TOKEN_IDS,
   TOKENS,
   COMPONENT_ROLES,
+  PROTECTED_FLOORS,
   DEFAULT_MODE,
   SUPPORTED_MODES,
   type ManifestTokenEntry,
   type ComponentRoleEntry,
+  type ProtectedFloor,
+  type ProtectedFloorRule,
+  type ProtectedFloorKind,
 } from "./generated/contract-ids.js";
 
 // Schemas embedded as objects (generated) — for JS consumers like @polymorph/core.

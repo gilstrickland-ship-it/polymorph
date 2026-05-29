@@ -27,6 +27,9 @@ export type LintCode =
   | "DISABLED_OPACITY_HIGH"
   | "MOTION_BASE_LONG"
   | "MOTION_REDUCED_EXCEEDS_SHORT"
+  | "PROTECTED_CONTRAST_LOW"
+  | "PROTECTED_FONT_SIZE_SMALL"
+  | "PROTECTED_LINE_HEIGHT_TIGHT"
   | "CONTRAST_SKIPPED_UNPARSEABLE";
 
 /** Advisory only — never thrown, never blocks (Constitution Principle VI). */

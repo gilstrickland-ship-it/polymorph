@@ -39,6 +39,28 @@ const manifest: Manifest = JSON.parse(
   readFileSync(join(pkgRoot, "manifest", "semantic-vocabulary.v0.json"), "utf8"),
 );
 
+interface ProtectedFloorRule {
+  kind: "contrast" | "fontSize" | "lineHeight";
+  fgProperty?: string;
+  viaProperty?: string;
+  bgToken?: string;
+  min?: number;
+  minPx?: number;
+  code: string;
+}
+interface ProtectedFloor {
+  role: string;
+  rationale?: string;
+  rules: ProtectedFloorRule[];
+}
+interface ProtectedManifest {
+  version: string;
+  floors: ProtectedFloor[];
+}
+const protectedManifest: ProtectedManifest = JSON.parse(
+  readFileSync(join(pkgRoot, "manifest", "protected-floors.v0.json"), "utf8"),
+);
+
 const DTCG = "https://polymorph.dev/schema/dtcg-types.schema.json#/$defs/";
 const typeRef = (t: string) => ({ $ref: DTCG + t });
 
@@ -224,6 +246,36 @@ export const TOKENS: readonly ManifestTokenEntry[] = ${JSON.stringify(
 
 export const COMPONENT_ROLES: readonly ComponentRoleEntry[] = ${JSON.stringify(
   manifest.componentRoles.map((r) => ({ role: r.role, properties: r.properties })),
+  null,
+  2,
+)} as const;
+
+export type ProtectedFloorKind = "contrast" | "fontSize" | "lineHeight";
+
+export interface ProtectedFloorRule {
+  kind: ProtectedFloorKind;
+  /** Component-role property holding the foreground (contrast rule). */
+  fgProperty?: string;
+  /** Component-role property holding a typography composite (fontSize / lineHeight rules). */
+  viaProperty?: string;
+  /** Background \`pm.*\` token id the contrast rule reads from (mode-resolved at lint time). */
+  bgToken?: SemanticTokenId;
+  /** Minimum value (contrast ratio, line-height). */
+  min?: number;
+  /** Minimum pixel size (font-size). */
+  minPx?: number;
+  /** The lint code that fires on violation. */
+  code: string;
+}
+
+export interface ProtectedFloor {
+  role: ComponentRole;
+  rationale?: string;
+  rules: readonly ProtectedFloorRule[];
+}
+
+export const PROTECTED_FLOORS: readonly ProtectedFloor[] = ${JSON.stringify(
+  protectedManifest.floors,
   null,
   2,
 )} as const;

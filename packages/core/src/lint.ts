@@ -1,4 +1,4 @@
-import { TOKENS, COMPONENT_ROLES, type ThemeMode } from "@polymorph/spec";
+import { TOKENS, COMPONENT_ROLES, PROTECTED_FLOORS, type ThemeMode } from "@polymorph/spec";
 import type { LintWarning, LintCode } from "./errors.js";
 import { contrastRatio } from "./contrast.js";
 import { resolveTheme } from "./resolve.js";
@@ -235,6 +235,82 @@ function durationMs(v: unknown): number | null {
   return d.unit === "s" ? d.value * 1000 : d.value;
 }
 
+function fontSizePx(typography: unknown): number | null {
+  if (!typography || typeof typography !== "object") return null;
+  const fs = (typography as Record<string, unknown>).fontSize;
+  if (!fs || typeof fs !== "object") return null;
+  const o = fs as Record<string, unknown>;
+  if (typeof o.value !== "number" || o.unit !== "px") return null;
+  return o.value;
+}
+function lineHeightMultiplier(typography: unknown): number | null {
+  if (!typography || typeof typography !== "object") return null;
+  const lh = (typography as Record<string, unknown>).lineHeight;
+  return typeof lh === "number" ? lh : null;
+}
+
+/**
+ * Protected-content floors. For component roles flagged in `protected-floors.v0.json`
+ * (today: `disclosure` for legal/regulator-mandated copy), every floor rule runs against
+ * the resolved override-applied component property and emits an advisory warning when the
+ * value sits below the floor.
+ *
+ * The floors are deliberately stricter than the WCAG AA baseline used elsewhere — protected
+ * surfaces are the contract's promise to the FI's compliance team that no theme can soften
+ * a legal disclosure into illegibility. They're advisory like every other rule (never
+ * thrown, never blocking), but FIs typically gate CI on the entire warning set.
+ */
+function lintProtectedFloors(rt: RT, out: LintWarning[]): void {
+  for (const floor of PROTECTED_FLOORS) {
+    const role = floor.role;
+    const roleProps = (rt.components as Record<string, Record<string, unknown> | undefined>)[role];
+    if (!roleProps) continue;
+    for (const rule of floor.rules) {
+      if (rule.kind === "contrast" && rule.fgProperty && rule.bgToken && rule.min !== undefined) {
+        const fg = roleProps[rule.fgProperty];
+        const bg = valueAt(rt, rule.bgToken);
+        const pair = evaluatePair(fg, bg);
+        if (pair.ratio === null) continue;
+        if (pair.ratio < rule.min) {
+          out.push({
+            code: rule.code as LintCode,
+            message: `protected role ${role}: ${rule.fgProperty} on ${rule.bgToken} has contrast ${round2(pair.ratio)}:1, below the ${rule.min}:1 protected floor`,
+            tokenIds: [`${role}.${rule.fgProperty}`, rule.bgToken],
+            measured: round2(pair.ratio),
+            threshold: rule.min,
+          });
+        }
+      } else if (rule.kind === "fontSize" && rule.viaProperty && rule.minPx !== undefined) {
+        const typo = roleProps[rule.viaProperty];
+        const px = fontSizePx(typo);
+        if (px === null) continue;
+        if (px < rule.minPx) {
+          out.push({
+            code: rule.code as LintCode,
+            message: `protected role ${role}: ${rule.viaProperty}.fontSize is ${px}px, below the ${rule.minPx}px protected floor`,
+            tokenIds: [`${role}.${rule.viaProperty}`],
+            measured: px,
+            threshold: rule.minPx,
+          });
+        }
+      } else if (rule.kind === "lineHeight" && rule.viaProperty && rule.min !== undefined) {
+        const typo = roleProps[rule.viaProperty];
+        const lh = lineHeightMultiplier(typo);
+        if (lh === null) continue;
+        if (lh < rule.min) {
+          out.push({
+            code: rule.code as LintCode,
+            message: `protected role ${role}: ${rule.viaProperty}.lineHeight is ${lh}, below the ${rule.min} protected floor`,
+            tokenIds: [`${role}.${rule.viaProperty}`],
+            measured: lh,
+            threshold: rule.min,
+          });
+        }
+      }
+    }
+  }
+}
+
 function lintReducedMotionClamp(rt: RT, out: LintWarning[]): void {
   // The reduced-motion clamp is meant to be the FASTEST available motion. If the FI authored
   // a "reduced" duration that's longer than `pm.motion.duration.short`, the clamp can actually
@@ -284,6 +360,7 @@ export function lintTheme(rt: RT): LintWarning[] {
   lintDisabledOpacity(rt, out);
   lintMotionDuration(rt, out);
   lintReducedMotionClamp(rt, out);
+  lintProtectedFloors(rt, out);
   return out;
 }
 

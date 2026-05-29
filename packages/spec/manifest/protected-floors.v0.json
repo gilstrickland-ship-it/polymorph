@@ -1,0 +1,32 @@
+{
+  "$schema": "https://polymorph.dev/schema/protected-floors.v0.schema.json",
+  "version": "v0",
+  "description": "Regulated-content floors. For component roles that hold protected copy (legal disclosures, regulator-mandated text, accessibility statements), the lint enforces stricter floors than the WCAG AA baseline used elsewhere. A theme that ships an FI-facing brand cannot soften a legal disclosure into illegibility — the floors are the contract's promise to the FI's compliance team.",
+  "floors": [
+    {
+      "role": "disclosure",
+      "rationale": "Legal disclosures, regulator-mandated copy, accessibility statements. WCAG SC 1.4.6 AAA-equivalent contrast (7:1), readable-default font-size (≥14px), comfortable line-height (≥1.5).",
+      "rules": [
+        {
+          "kind": "contrast",
+          "fgProperty": "foreground",
+          "bgToken": "pm.color.surface.base",
+          "min": 7.0,
+          "code": "PROTECTED_CONTRAST_LOW"
+        },
+        {
+          "kind": "fontSize",
+          "viaProperty": "typography",
+          "minPx": 14,
+          "code": "PROTECTED_FONT_SIZE_SMALL"
+        },
+        {
+          "kind": "lineHeight",
+          "viaProperty": "typography",
+          "min": 1.5,
+          "code": "PROTECTED_LINE_HEIGHT_TIGHT"
+        }
+      ]
+    }
+  ]
+}
