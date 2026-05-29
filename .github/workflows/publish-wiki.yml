@@ -1,0 +1,84 @@
+name: Publish Wiki
+
+# Sync the in-repo `wiki/` directory to the repository's GitHub wiki
+# (https://github.com/gilstrickland-ship-it/polymorph/wiki).
+#
+# Why this exists: the wiki is a SEPARATE git repo (`<repo>.wiki.git`). We keep the
+# canonical source under `wiki/` in the main repo so it's reviewed in normal PRs, and
+# this workflow mirrors it into the wiki on every merge to main. The in-wiki link style
+# (bare page names, no `.md`) is correct once published here — which is why the source
+# uses it.
+#
+# One-time prerequisite: the wiki repo doesn't exist until the wiki is initialised. Create
+# any first page via the GitHub UI (Repo → Wiki → "Create the first page" → Save). After
+# that, this workflow clones + overwrites it on each run. See CONTRIBUTING.md.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "wiki/**"
+      - ".github/workflows/publish-wiki.yml"
+  workflow_dispatch: {}
+
+# The default GITHUB_TOKEN can push to the wiki when granted `contents: write`
+# (the wiki shares the repository's `contents` permission scope).
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-wiki
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Sync wiki/ → GitHub wiki
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Sync wiki/ to the GitHub wiki
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          if [ ! -d wiki ] || [ -z "$(ls -A wiki 2>/dev/null)" ]; then
+            echo "::error::wiki/ directory is missing or empty — nothing to publish."
+            exit 1
+          fi
+
+          WIKI_REMOTE="https://x-access-token:${GH_TOKEN}@github.com/${REPO}.wiki.git"
+          WORK="$(mktemp -d)"
+
+          # The wiki repo only exists once the wiki has been initialised through the UI.
+          if ! git clone --quiet "$WIKI_REMOTE" "$WORK"; then
+            echo "::error::Could not clone ${REPO}.wiki.git."
+            echo "::error::Initialise the wiki once via the GitHub UI (Repo → Wiki → Create the first page), then re-run this workflow."
+            exit 1
+          fi
+
+          # Mirror wiki/ into the wiki working tree. --delete removes pages no longer in
+          # wiki/; --exclude '.git' protects the wiki repo's history.
+          rsync -a --delete --exclude='.git' wiki/ "$WORK/"
+
+          cd "$WORK"
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "Wiki already in sync — nothing to publish."
+            exit 0
+          fi
+
+          git add -A
+          git commit -m "docs(wiki): sync from wiki/ @ ${SHA}"
+          # `git push` honours the upstream tracking set by `git clone`, so this targets
+          # the wiki's default branch regardless of whether it's `master` or `main`.
+          git push
+
+          echo "✓ Wiki published — https://github.com/${REPO}/wiki"
