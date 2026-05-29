@@ -16,11 +16,12 @@ grows, the checks grow with it.
 |---|---|---|---|
 | Body / muted / link text on any surface | `CONTRAST_TEXT_LOW` | 4.5 (SC 1.4.3) | every `color.text` × every `color.surface.{base,raised,sunken,overlay}` |
 | Disabled text on any surface | `DISABLED_TEXT_LOW` | 3.0 (AA Large) | `text.disabled` × every named surface |
-| Text on actionable backgrounds | `CONTRAST_ON_ACTION_LOW` | 4.5 | `text.onAction` × every `action.{primary,secondary,danger}.{rest,hover,pressed}` |
+| Text on actionable backgrounds (rest state) | `CONTRAST_ON_ACTION_LOW` | 4.5 | `text.onAction` × every `action.{primary,secondary,danger}.rest` (extended-reading surface) |
+| Text on actionable backgrounds (hover/pressed) | `CONTRAST_ON_ACTION_LOW` | 3.0 (AA Large + SC 1.4.11) | `text.onAction` × every `action.*.{hover,pressed}` — transient state-change indicators get the lower threshold per WCAG SC 1.4.3 / 1.4.11 |
 | Inverse-surface text | `CONTRAST_ON_INVERSE_LOW` | 4.5 | `text.onInverse` × `surface.inverse` |
 | Feedback accents as text | `CONTRAST_FEEDBACK_LOW` | 4.5 | each `feedback.{success,warning,error,info}` × `surface.base` |
 | Focus ring visibility | `FOCUS_RING_LOW` | 3.0 (SC 1.4.11) | `border.focus` × `surface.base` |
-| Default border visibility | `BORDER_DEFAULT_LOW` | 3.0 (SC 1.4.11) | `border.default` × `surface.base` |
+| Default border visibility | `BORDER_DEFAULT_LOW` | 3.0 (SC 1.4.11) | `border.default` × `surface.base` — **skipped when the manifest marks the token `accessibility: "decorative"`** (the default for `border.default` + `border.subtle`, which design systems intentionally ship as decorative hairlines below 3:1) |
 | Component fg/bg | `COMPONENT_CONTRAST_LOW` | 4.5 (fg) / 3.0 (border-only) | per role: `<role>.foreground` × `<role>.background`, or `<role>.border` × `<role>.background` |
 
 Every pairing accepts any CSS Color 4 form (`#hex`, `rgb()`, `hsl()`, `oklch()`, `oklab()`,

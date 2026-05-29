@@ -97,6 +97,8 @@ export interface ManifestTokenEntry {
   required: boolean;
   modeSensitive: boolean;
   group: string;
+  /** Optional accessibility annotation. `decorative` tokens skip non-text contrast checks. */
+  accessibility?: "informational" | "decorative";
 }
 
 export interface ComponentRoleEntry {
@@ -439,14 +441,16 @@ export const TOKENS: readonly ManifestTokenEntry[] = [
     "type": "color",
     "required": true,
     "modeSensitive": true,
-    "group": "color.border"
+    "group": "color.border",
+    "accessibility": "decorative"
   },
   {
     "id": "pm.color.border.subtle",
     "type": "color",
     "required": false,
     "modeSensitive": true,
-    "group": "color.border"
+    "group": "color.border",
+    "accessibility": "decorative"
   },
   {
     "id": "pm.color.border.strong",

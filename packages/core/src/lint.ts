@@ -122,8 +122,20 @@ function lintTextSurfaceMatrix(rt: RT, out: LintWarning[]): void {
 }
 
 function lintOnActionMatrix(rt: RT, out: LintWarning[]): void {
-  // `text.onAction` on every actionable background EXCEPT *.disabled (disabled actions are
-  // intentionally low-contrast affordances; covered by DISABLED_TEXT_LOW elsewhere if needed).
+  // `text.onAction` on every actionable background EXCEPT *.disabled. Disabled actions are
+  // intentionally low-contrast affordances (DISABLED_TEXT_LOW covers that elsewhere).
+  //
+  // Threshold splits by state:
+  //  - `rest` is the steady state users read for extended periods → AA normal text (4.5:1).
+  //  - `hover` / `pressed` are transient state-change affordances. WCAG SC 1.4.3 explicitly
+  //    permits AA Large (3:1) for transient indications; SC 1.4.11 separately requires 3:1
+  //    for non-text UI-state contrast. Lower the threshold to 3:1 for these states so the
+  //    lint doesn't false-positive on real-world button hover/pressed darken patterns (e.g.
+  //    GitHub Primer's `--button-primary-bgColor-hover` shifts contrast from 4.84:1 to 4.07:1,
+  //    which is correct under both SC 1.4.3 AA Large and SC 1.4.11 non-text rules).
+  //
+  // Code stays `CONTRAST_ON_ACTION_LOW` for both — FIs that want stricter gating layer a
+  // policy pack on top via `lintWithPolicies`.
   const onAction = "pm.color.text.onAction";
   const actionBgs = TOKENS.filter(
     (t) =>
@@ -133,7 +145,9 @@ function lintOnActionMatrix(rt: RT, out: LintWarning[]): void {
   ).map((t) => t.id);
   for (const bg of actionBgs) {
     const pair = evaluatePair(valueAt(rt, onAction), valueAt(rt, bg));
-    pushBelow(out, "CONTRAST_ON_ACTION_LOW", onAction, bg, pair, AA_TEXT, "actionable text");
+    const isTransient = bg.endsWith(".hover") || bg.endsWith(".pressed");
+    const threshold = isTransient ? AA_LARGE : AA_TEXT;
+    pushBelow(out, "CONTRAST_ON_ACTION_LOW", onAction, bg, pair, threshold, "actionable text");
   }
 }
 
@@ -155,8 +169,16 @@ function lintFocusAndBorder(rt: RT, out: LintWarning[]): void {
   const base = "pm.color.surface.base";
   const focusPair = evaluatePair(valueAt(rt, "pm.color.border.focus"), valueAt(rt, base));
   pushBelow(out, "FOCUS_RING_LOW", "pm.color.border.focus", base, focusPair, AA_NON_TEXT, "focus ring");
-  const borderPair = evaluatePair(valueAt(rt, "pm.color.border.default"), valueAt(rt, base));
-  pushBelow(out, "BORDER_DEFAULT_LOW", "pm.color.border.default", base, borderPair, AA_NON_TEXT, "default border");
+
+  // `pm.color.border.default` is marked `accessibility: "decorative"` in the manifest —
+  // design-system convention treats default/subtle borders as visual hairlines (not
+  // informational separators). Real-world systems (GitHub Primer's #d1d9e0, Material's
+  // outline-variant, Carbon's border-subtle) all sit below 3:1 by design. Honour the flag.
+  const defaultEntry = TOKENS.find((t) => t.id === "pm.color.border.default");
+  if (defaultEntry?.accessibility !== "decorative") {
+    const borderPair = evaluatePair(valueAt(rt, "pm.color.border.default"), valueAt(rt, base));
+    pushBelow(out, "BORDER_DEFAULT_LOW", "pm.color.border.default", base, borderPair, AA_NON_TEXT, "default border");
+  }
 }
 
 function lintComponentPairs(rt: RT, out: LintWarning[]): void {

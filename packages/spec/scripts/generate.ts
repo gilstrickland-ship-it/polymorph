@@ -21,6 +21,13 @@ interface TokenEntry {
   modeSensitive: boolean;
   group: string;
   description?: string;
+  /**
+   * Optional accessibility annotation read by the advisory lint. `decorative` tokens skip
+   * non-text contrast checks — design-system convention treats default/subtle borders as
+   * visual hairlines, not informational separators. `informational` (or absent) keeps the
+   * default 3:1 floor.
+   */
+  accessibility?: "informational" | "decorative";
 }
 interface RoleEntry {
   role: string;
@@ -212,6 +219,8 @@ export interface ManifestTokenEntry {
   required: boolean;
   modeSensitive: boolean;
   group: string;
+  /** Optional accessibility annotation. \`decorative\` tokens skip non-text contrast checks. */
+  accessibility?: "informational" | "decorative";
 }
 
 export interface ComponentRoleEntry {
@@ -239,7 +248,17 @@ ${arr(modeSensitiveIds)}
 ];
 
 export const TOKENS: readonly ManifestTokenEntry[] = ${JSON.stringify(
-  manifest.tokens.map((t) => ({ id: t.id, type: t.type, required: t.required, modeSensitive: t.modeSensitive, group: t.group })),
+  manifest.tokens.map((t) => {
+    const out: Record<string, unknown> = {
+      id: t.id,
+      type: t.type,
+      required: t.required,
+      modeSensitive: t.modeSensitive,
+      group: t.group,
+    };
+    if (t.accessibility !== undefined) out.accessibility = t.accessibility;
+    return out;
+  }),
   null,
   2,
 )} as const;

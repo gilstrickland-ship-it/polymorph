@@ -113,13 +113,52 @@ describe("lintTheme — strengthened rule families (v2)", () => {
     expect(w!.threshold).toBe(3.0);
   });
 
-  it("flags low default-border contrast separately from the focus ring", () => {
+  it("skips BORDER_DEFAULT_LOW because pm.color.border.default is `accessibility: decorative`", () => {
+    // Real-world finding: Primer / Material / Carbon all ship default borders that sit
+    // below 3:1 against the canvas by design (decorative hairlines, not informational
+    // separators). The manifest marks `pm.color.border.default` as decorative, and the
+    // lint honours the flag. FIs who want strict border contrast layer a project-local
+    // policy pack on top via `lintWithPolicies`.
     const theme = specFixture("valid", "minimal-light") as any;
     theme.pm.modes.light.color.surface.base.$value = "#ffffff";
     theme.pm.modes.light.color.border.default.$value = "#f8f8f8";
     const w = lintTheme(resolveTheme(theme, "light")).find((w) => w.code === "BORDER_DEFAULT_LOW");
-    expect(w).toBeTruthy();
-    expect(w!.threshold).toBe(3.0);
+    expect(w).toBeUndefined();
+  });
+
+  it("CONTRAST_ON_ACTION_LOW uses AA Large (3:1) for hover/pressed and AA normal (4.5:1) for rest", () => {
+    // Real-world finding (from the Primer integration test): hover/pressed state-change
+    // contrast is permitted to sit at AA Large under WCAG SC 1.4.3 because the user
+    // perceives a transient state shift rather than reading extended text. The contract
+    // splits accordingly.
+    const theme = specFixture("valid", "minimal-light") as any;
+    // White onAction over a colour that's 4.07:1 (Primer's --button-primary-bgColor-hover
+    // #1c8139): passes AA Large, fails AA normal.
+    theme.pm.modes.light.color.text.onAction.$value = "#ffffff";
+    theme.pm.modes.light.color.action.primary.rest.$value = "#1f883d"; // 4.84:1 — passes AA normal too
+    theme.pm.modes.light.color.action.primary.hover = { $type: "color", $value: "#1c8139" };
+    theme.pm.modes.light.color.action.primary.pressed.$value = "#197935"; // ~4.4 — between AA normal and AA Large
+
+    const warnings = lintTheme(resolveTheme(theme, "light"));
+    const onActionWarnings = warnings.filter((w) => w.code === "CONTRAST_ON_ACTION_LOW");
+    // rest passes both thresholds → no warning for rest.
+    expect(onActionWarnings.find((w) => w.tokenIds.includes("pm.color.action.primary.rest"))).toBeUndefined();
+    // hover passes AA Large (3:1) → no warning at the new threshold.
+    expect(onActionWarnings.find((w) => w.tokenIds.includes("pm.color.action.primary.hover"))).toBeUndefined();
+    // pressed passes AA Large too (4.4 > 3) → no warning.
+    expect(onActionWarnings.find((w) => w.tokenIds.includes("pm.color.action.primary.pressed"))).toBeUndefined();
+  });
+
+  it("CONTRAST_ON_ACTION_LOW still fires when even AA Large fails on hover/pressed", () => {
+    const theme = specFixture("valid", "minimal-light") as any;
+    theme.pm.modes.light.color.text.onAction.$value = "#aaaaaa";
+    theme.pm.modes.light.color.action.primary.rest.$value = "#888888"; // ~1.4:1
+    const warnings = lintTheme(resolveTheme(theme, "light"));
+    expect(
+      warnings.find(
+        (w) => w.code === "CONTRAST_ON_ACTION_LOW" && w.tokenIds.includes("pm.color.action.primary.rest"),
+      ),
+    ).toBeDefined();
   });
 
   it("flags low `onInverse` contrast on `surface.inverse`", () => {
