@@ -1,7 +1,7 @@
 {
   "name": "@polymorph/native-parity",
   "version": "0.0.0",
-  "description": "Parses the three native codegens (Dart / Swift / Kotlin) back into a normalized form and asserts they emit semantically identical token values for the same input.",
+  "description": "Parses every adapter (Web CSS vars + Dart / Swift / Kotlin) back into a normalized form and asserts cross-adapter parity against the core resolved theme.",
   "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -14,6 +14,8 @@
   },
   "dependencies": {
     "@polymorph/spec": "workspace:*",
+    "@polymorph/core": "workspace:*",
+    "@polymorph/adapter-web": "workspace:*",
     "@polymorph/adapter-flutter": "workspace:*",
     "@polymorph/adapter-swift": "workspace:*",
     "@polymorph/adapter-kotlin": "workspace:*"
