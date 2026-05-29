@@ -11,11 +11,13 @@ consumes that data and re-skins itself. One SDK build renders natively across ma
 > adapter + reference demo + conformance) has landed and merged. Web (CSS-vars + React + Vue +
 > Solid + Angular bindings), three importers (Tokens Studio + Figma Variables + Figma Text /
 > Effect Styles), a headless golden-screenshot harness, the native triad (Flutter / Swift /
-> Kotlin build-time codegen), a cross-adapter parity check for the three native codegens, a
-> production-grade `RemoteManifestLoader` (SRI integrity + Ed25519 signature + version pin +
-> rollback + ETag refresh + audit hook), reduced-motion clamp tokens with a CSS `@media`
-> emitter, headless React theme-builder primitives (`@polymorph/builder`), and protected-surface
-> floors for regulated content are also in. **21 workspace projects** are green on every PR;
+> Kotlin build-time codegen), cross-adapter **runtime parity** against the core resolved
+> baseline (Web CSS + Dart + Swift + Kotlin), a production-grade `RemoteManifestLoader` (SRI
+> integrity + Ed25519 signature + version pin + rollback + ETag refresh + audit hook),
+> reduced-motion clamp tokens with a CSS `@media` emitter, headless React theme-builder
+> primitives (`@polymorph/builder`) + a working-visual playground example, protected-surface
+> floors for regulated content, project-local lint **policy packs**, and `polymorph init / diff
+> / migrate` authoring commands are all in. **22 workspace projects** are green on every PR;
 > see [`specs/`](./specs) for the cycle log. Browsable docs live in [`docs/`](./docs) (Vitepress —
 > `pnpm --filter @polymorph/docs dev`).
 
@@ -55,8 +57,10 @@ visually.
   (alias chains + mode selection + component fallback → neutral `ResolvedTheme`), advisory
   WCAG 2.1 lint (handles `#hex` / `rgb()` / `hsl()` / `oklch()` / `oklab()` /
   `color(display-p3 …)`, plus motion-reduce + protected-surface rule families),
-  `applyReducedMotion` transform, three loaders (Inline / RemoteManifest / Bundled), and a
-  zero-dep CLI.
+  `applyReducedMotion` transform, project-local lint **policy packs** (`lintWithPolicies`
+  composes built-in + FI-supplied rules), three loaders (Inline / RemoteManifest / Bundled),
+  and a zero-dep CLI shipping `validate` / `lint` / `resolve` / `transform` / `init` /
+  `diff` / `migrate`.
 - **Remote-manifest governance** — `RemoteManifestLoader` ships opt-in SRI integrity,
   Ed25519 detached signature (with rotation), exact-`contractVersion` pin, fail-closed
   rollback to the last good theme, ETag-conditional refresh, and a typed audit event
@@ -77,8 +81,10 @@ visually.
   (`runThemeConformance`, `checkResolvedInvariants`, `checkLoaderEquivalence`); the headless
   `@polymorph/golden-web` (satori → resvg → pixelmatch, no browser binary) captures and diffs
   baselines per scenario × bank × mode. Failing diffs upload as CI artifacts.
-  `@polymorph/native-parity` parses each emitted Dart / Swift / Kotlin source into a
-  normalized form and asserts the three converters emit semantically identical token values.
+  `@polymorph/native-parity` parses **every adapter** (Web CSS vars + Dart + Swift + Kotlin)
+  into a normalized form and asserts each agrees with a baseline computed directly from
+  `resolveTheme` — catches "all adapters wrong the same way" before any rendered snapshot
+  does.
 - **Authoring pipeline** — `@polymorph/authoring` ships **three importers**: Tokens Studio
   (single- + multi-file), Figma Variables, and Figma Styles (text + effects). Each produces
   a Polymorph theme that `validateTheme` accepts; the importers compose for orgs whose
@@ -86,7 +92,8 @@ visually.
 - **Theme builder** — `@polymorph/builder` ships headless React primitives for a visual
   theme editor: `useThemeEditor` state hook (dirty tracking + live lint), typed token
   fields (color / dimension / duration / number / cubicBezier), accessible `LintPanel`,
-  unstyled `ThemeEditorRoot` orchestrator. Visual chrome stays the host's job.
+  unstyled `ThemeEditorRoot` orchestrator. Visual chrome stays the host's job. A working
+  composition with the Web adapter's themed primitives lives in `examples/builder-playground`.
 - **CI** — GitHub Actions runs `nx run-many -t build typecheck test conformance` on every PR
   with a drift guard that fails on un-regenerated artifacts.
 
@@ -95,9 +102,9 @@ visually.
 | Path | Role |
 |---|---|
 | `packages/spec` | DTCG-extended contract — manifest, `protected-floors.v0.json`, JSON Schema, TS types, `ResolvedTheme` shape, reduced-motion tokens |
-| `packages/core` | Validator (schema + graph), alias resolver, mode selection, WCAG 2.1 + motion-reduce + protected-floor lint, `applyReducedMotion` |
+| `packages/core` | Validator (schema + graph), alias resolver, mode selection, WCAG 2.1 + motion-reduce + protected-floor lint, `applyReducedMotion`, policy-pack composition |
 | `packages/loaders` | `ThemeLoader` + Inline / RemoteManifest (SRI + signature + version pin + rollback + ETag + audit) / Bundled |
-| `packages/cli` | Zero-dep `polymorph validate / lint / resolve / transform` |
+| `packages/cli` | Zero-dep `polymorph validate / lint / resolve / transform / init / diff / migrate` |
 | `packages/adapter-react-native` | RN adapter: `ThemeProvider`, hooks, slots, mapping, retrofit shim, themed primitives |
 | `packages/adapter-web` | Framework-agnostic web core (CSS vars + bridge + `@media (prefers-reduced-motion)` emitter) + React binding |
 | `packages/adapter-web-vue` | Vue 3 binding for the web core |
@@ -108,11 +115,12 @@ visually.
 | `packages/adapter-kotlin` | Build-time Kotlin / Compose codegen |
 | `packages/conformance` | Cross-adapter assertions + `GoldenHarness` interface |
 | `packages/golden-web` | Pure-Node golden-screenshot harness (satori + resvg) implementing `GoldenHarness` |
-| `packages/native-parity` | Cross-adapter parity check for the three native codegens |
+| `packages/native-parity` | Cross-adapter **runtime parity** — Web CSS + Dart + Swift + Kotlin all normalized + diffed against a baseline computed directly from `resolveTheme` |
 | `packages/builder` | Headless React primitives for theme editing — `useThemeEditor`, typed token fields, lint panel, unstyled orchestrator |
 | `tooling/authoring` | Three importers: Tokens Studio (single + multi-file), Figma Variables, Figma Styles (text + effects) |
 | `examples/reference-sdk-onboarding` | Reference vendor SDK — account-opening wizard coded against the contract only |
 | `examples/mock-bank-{aurora,borealis}` | Two distinct DTCG token sets + host shells; differ only by the theme import |
+| `examples/builder-playground` | `@polymorph/builder` composed with `@polymorph/adapter-web` — Aurora theme edited live against a real component showcase |
 | `docs/` | This site (Vitepress) |
 | `specs/` | Spec Kit cycle log (one directory per spec: `spec.md`, `tasks.md`, etc.) |
 

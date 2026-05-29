@@ -72,4 +72,8 @@ form and surface-vs-text pair. Three rule families compose on top:
 - **Touch / opacity / motion duration** — touch-target ≥44px, disabled opacity ≤0.6,
   base motion ≤500ms.
 
+Beyond the built-in set, FIs add **project-local policy packs** that compose with
+`lintTheme` via `lintWithPolicies(rt, packs)` — brand-guard rules, locale-specific
+floors, internal compliance adds. See [Project-local policy packs](/guide/policy-packs).
+
 Hosts own final compliance; the linter exists to fail loud.
