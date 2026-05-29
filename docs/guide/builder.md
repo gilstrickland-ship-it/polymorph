@@ -129,6 +129,21 @@ re-renders on every edit.
 For sophisticated UIs (drag-drop reordering, multi-section grouping, search), skip
 `ThemeEditorRoot` and compose the hook + fields + panel directly.
 
+## Worked example
+
+`examples/builder-playground` ships a complete composition: `<ThemeEditorRoot>` against
+Aurora's theme + a `renderPreview` slot that mounts `<ThemeProvider>` + a small showcase
+built from the Web adapter's themed primitives (`<Card>`, `<Field>`, `<PrimaryButton>`,
+`<StepIndicator>`). It's the end-to-end "is the wiring right?" canary — when a token edit
+in the editor lands, the showcase re-renders against the working theme with no extra
+plumbing.
+
+The integration test (`tests/integration.test.tsx`) asserts the editor toolbar mounts,
+the showcase renders inside the preview slot, every exposed token id appears as an
+editable row, editing a token marks the row changed + flips the dirty indicator, and
+switching modes propagates through. Same pattern as the existing mock-bank tests — a
+single workspace package, typechecked + tested, no Vite SPA needed.
+
 ## What it doesn't ship
 
 - **Visual chrome / theming for the builder UI itself.** Every component emits accessible
