@@ -4,9 +4,20 @@ The `polymorph` CLI is the zero-dep entry point. Once `pnpm install` has run in 
 invoke it via `pnpm polymorph <command>` or `pnpm exec polymorph <command>`.
 
 ```text
-polymorph <validate|lint|resolve|transform> <file>
-  validate/lint/resolve: [--mode <light|dark|highContrast>] [--strict] [--json]
-  transform: --target <dart|swift|kotlin> [--mode <mode>] [--class <Name>] [--output <path>]
+polymorph <command> [options]
+  validate <file>                      schema + alias-graph check
+  lint <file>                          advisory WCAG / motion / protected checks
+  resolve <file>                       print the resolved theme as JSON
+  transform <file>                     emit native source for a target
+  init                                 scaffold a minimal valid theme
+  diff <before> <after>                structural diff between two themes
+  migrate <file>                       fill in missing required tokens + bump contractVersion
+
+  shared:        [--mode <light|dark|highContrast>] [--json]
+  lint:          [--strict]
+  transform:     --target <dart|swift|kotlin> [--class <Name>] [--output <path>]
+  init/migrate:  [--output <path>]
+  init:          [--modes <comma-separated>]
 ```
 
 ## Exit codes
@@ -73,16 +84,52 @@ pnpm polymorph transform aurora.tokens.json \
 The `--class` flag re-maps target-appropriately: Dart `class` name, Swift `enum` name, Kotlin
 `object` name.
 
+### `init`
+
+Scaffolds a minimal **valid** theme synthesised from the live manifest. Every required
+token is present with a placeholder value (intentionally identical colours so the lint
+visibly warns — that's the signal for "go customise this"). `--modes` populates the
+mode-sensitive set under each listed mode.
+
+```bash
+pnpm polymorph init                              # print to stdout
+pnpm polymorph init --output theme.tokens.json   # write to file
+pnpm polymorph init --modes light,dark           # populate both modes
+```
+
+### `diff <before> <after>`
+
+Structural diff between two theme files. Walks the `pm.*` subtree and reports added /
+removed / changed authored tokens by dotted path. Exits `0` on identity, `1` on any
+change — useful as a CI gate against an approved baseline.
+
+```bash
+pnpm polymorph diff aurora.tokens.json aurora.next.tokens.json
+pnpm polymorph diff a.json b.json --json    # machine-readable
+```
+
+### `migrate <file>`
+
+Conservative theme upgrade: fills in any required tokens introduced since the file was
+authored (with placeholder values), bumps `contractVersion`. Never rewrites the user's
+authored values, never removes tokens. Use `--output` to write the migrated theme.
+
+```bash
+pnpm polymorph migrate aurora.tokens.json --output aurora.upgraded.tokens.json
+pnpm polymorph migrate aurora.tokens.json --json    # report-only, no rewrite
+```
+
 ## Common flags
 
 | Flag | Default | Notes |
 |---|---|---|
 | `--mode <name>` | `light` | `light` / `dark` / `highContrast`. |
+| `--modes <list>` | `light` | `init`: comma-separated list of modes to populate. |
 | `--strict` | off | `lint`: exit 1 on any warning. |
-| `--json` | off | `validate` / `lint`: machine-readable output. |
+| `--json` | off | `validate` / `lint` / `diff` / `migrate`: machine-readable output. |
 | `--target <id>` | (required for `transform`) | `dart` / `swift` / `kotlin`. |
 | `--class <Name>` | adapter-specific default | Top-level identifier in the emitted source. |
-| `--output <path>` | stdout | `transform`: write to a path (parent dirs created). |
+| `--output <path>` | stdout | `transform` / `init` / `migrate`: write to a path (parent dirs created). |
 
 ## In-process API
 
