@@ -32,9 +32,18 @@ export type LintCode =
   | "PROTECTED_LINE_HEIGHT_TIGHT"
   | "CONTRAST_SKIPPED_UNPARSEABLE";
 
+/**
+ * A `LintCode` value emitted by a built-in rule (the union below) OR a project-local
+ * policy pack (any other string). Built-in rule code points are exhaustively listed for
+ * TypeScript narrowing; FI-supplied codes pass through as plain strings — a string literal
+ * that doesn't match the built-in union is just as valid at runtime, and the
+ * `definePolicyPack` helper accepts any code shape.
+ */
+export type CustomLintCode = string & { __pmCustomLintCode?: never };
+
 /** Advisory only — never thrown, never blocks (Constitution Principle VI). */
 export interface LintWarning {
-  code: LintCode;
+  code: LintCode | CustomLintCode;
   message: string;
   tokenIds: string[];
   measured: number;

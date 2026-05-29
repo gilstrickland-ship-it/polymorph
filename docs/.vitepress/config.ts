@@ -38,6 +38,7 @@ export default defineConfig({
             { text: "Interactive theme builder", link: "/guide/builder" },
             { text: "Protected surfaces (legal / regulated copy)", link: "/guide/protected-surfaces" },
             { text: "Cross-adapter runtime parity", link: "/guide/runtime-parity" },
+            { text: "Project-local policy packs", link: "/guide/policy-packs" },
             { text: "Advisory lint", link: "/guide/advisory-lint" },
           ],
         },
