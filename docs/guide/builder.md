@@ -47,6 +47,7 @@ function MyEditor({ initialTheme }) {
 | `mode` | The mode `lintTheme` + `resolveTheme` run against. |
 | `dirty` | `true` iff any token value differs from baseline. |
 | `changedTokenIds` | `Set<SemanticTokenId>` — every token whose authored value differs. |
+| `changedComponentPaths` | `Set<string>` — every `${role}.${property}` whose component override differs (e.g. `"button.primary.background"`). Distinct from token ids because role/property paths aren't `SemanticTokenId`s. |
 | `validation` | `{ valid, errors }` from `validateTheme`. |
 | `warnings` | `LintWarning[]` from `lintTheme(resolveTheme(working, mode))`. Empty when validation fails. |
 
@@ -55,7 +56,7 @@ function MyEditor({ initialTheme }) {
 | Action | Effect |
 |---|---|
 | `setTokenValue(id, $type, value)` | Write the authored value. Mode-sensitive ids land under `pm.modes.<mode>`; mode-invariant ids land under `pm.*` — the hook detects which by probing the baseline structure. |
-| `setComponentProperty(role, property, value)` | Set a component-role override. |
+| `setComponentProperty(role, property, value)` | Set a component-role override. Writes under `pm.<role>.<property>` (the path the resolver reads from), so `resolveTheme` picks it up on the next render. |
 | `setMode(mode)` | Switch the preview / lint mode. |
 | `reset()` | Revert every edit. |
 | `commit()` | Snapshot working as the new baseline. |

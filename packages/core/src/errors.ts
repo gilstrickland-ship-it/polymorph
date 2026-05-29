@@ -30,6 +30,7 @@ export type LintCode =
   | "PROTECTED_CONTRAST_LOW"
   | "PROTECTED_FONT_SIZE_SMALL"
   | "PROTECTED_LINE_HEIGHT_TIGHT"
+  | "POLICY_RULE_ERROR"
   | "CONTRAST_SKIPPED_UNPARSEABLE";
 
 /**
@@ -41,13 +42,18 @@ export type LintCode =
  */
 export type CustomLintCode = string & { __pmCustomLintCode?: never };
 
-/** Advisory only — never thrown, never blocks (Constitution Principle VI). */
+/**
+ * Advisory only — never thrown, never blocks (Constitution Principle VI). `measured` /
+ * `threshold` are optional: many policy-pack codes (and `POLICY_RULE_ERROR`) don't carry
+ * a numeric pair. Built-in rules that DO measure a value still emit both for the lint
+ * panel's "X above Y" presentation.
+ */
 export interface LintWarning {
   code: LintCode | CustomLintCode;
   message: string;
   tokenIds: string[];
-  measured: number;
-  threshold: number;
+  measured?: number;
+  threshold?: number;
 }
 
 export class ResolveError extends Error {

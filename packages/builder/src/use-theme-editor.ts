@@ -1,6 +1,10 @@
 import { useCallback, useMemo, useReducer } from "react";
 import { validateTheme, resolveTheme, lintTheme, type LintWarning, type ValidationError } from "@polymorph/core";
-import type { SemanticTokenId, ThemeMode } from "@polymorph/spec";
+import { COMPONENT_ROLES, type SemanticTokenId, type ThemeMode } from "@polymorph/spec";
+
+// Component-role top-level segments (e.g. "button", "input", "card", "disclosure"). Used
+// by `diffPaths` to split `pm.<x>.…` paths into token-id vs. component-override sets.
+const COMPONENT_ROLE_TOPS = new Set(COMPONENT_ROLES.map((r) => r.role.split(".")[0]!));
 
 /**
  * Snapshot of the editor's state. The `working` theme is what the editor mutates; `baseline`
@@ -13,8 +17,15 @@ export interface ThemeEditorState {
   working: unknown;
   mode: ThemeMode;
   dirty: boolean;
-  /** Set of `pm.*` ids whose authored value differs from baseline. */
+  /** Set of `pm.*` token ids whose authored value differs from baseline. */
   changedTokenIds: ReadonlySet<SemanticTokenId>;
+  /**
+   * Set of `${role}.${property}` paths whose component override differs from baseline
+   * (e.g. `"button.primary.background"`). Distinct from `changedTokenIds` because
+   * component-property paths aren't `SemanticTokenId`s — they're free-form overrides per
+   * the contract's role/property schema.
+   */
+  changedComponentPaths: ReadonlySet<string>;
   validation: { valid: boolean; errors: ValidationError[] };
   /** Lint warnings against the resolved theme at the current mode. */
   warnings: LintWarning[];
@@ -120,8 +131,13 @@ function reducer(s: Internal, a: Action): Internal {
       return { ...s, working: next };
     }
     case "setComponentProperty": {
+      // Component overrides authored under `pm.<role>.<property>` per the contract schema —
+      // matches `resolveTheme`'s lookup (`index.get('pm.' + role + '.' + property)`). A
+      // role can be dotted (`button.primary`); split it into segments so the path nests
+      // correctly.
       const next = clone(s.working) as Record<string, unknown>;
-      setPath(next, ["pm", "components", a.role, a.property], a.value);
+      const roleSegs = a.role.split(".");
+      setPath(next, ["pm", ...roleSegs, a.property], a.value);
       return { ...s, working: next };
     }
     case "setMode":
@@ -138,22 +154,34 @@ function reducer(s: Internal, a: Action): Internal {
 /**
  * Compare baseline and working at every `pm.*` path the contract knows about. Diff is by
  * structural equality of authored value, not resolved value. Mode-sensitive ids are diffed
- * once per declared mode and the union is returned.
+ * once per declared mode and the union is returned. Splits the changed paths into the
+ * `tokens` set (token ids) and `componentPaths` set (`role.property` strings), driven by
+ * whether the path's leading segment matches a declared component-role top.
  */
-function diffTokens(baseline: unknown, working: unknown, modes: ThemeMode[]): Set<SemanticTokenId> {
-  const out = new Set<SemanticTokenId>();
-  // The naive approach: walk every `pm.*` node in the working theme and check if its
-  // authored value differs from baseline at the same path. We bypass importing TOKENS to
-  // keep this hook independent of contract-version drift.
+function diffPaths(
+  baseline: unknown,
+  working: unknown,
+  modes: ThemeMode[],
+): { tokens: Set<SemanticTokenId>; componentPaths: Set<string> } {
+  const tokens = new Set<SemanticTokenId>();
+  const componentPaths = new Set<string>();
   walk(working, [], (path, node) => {
     if (!isAuthoredToken(node)) return;
     const baselineAt = getPath(baseline, path);
-    if (!deepEqual(baselineAt, node)) {
-      const id = pathToId(path, modes);
-      if (id) out.add(id as SemanticTokenId);
+    if (deepEqual(baselineAt, node)) return;
+    if (path[0] !== "pm" || path.length < 2) return;
+    // Component-override path: `pm.<role-top>...`. The role can be dotted (`button.primary`),
+    // so the property is everything after the role segments. The schema gives roles a
+    // closed set of tops; anything past the role is the property name.
+    if (COMPONENT_ROLE_TOPS.has(path[1]!)) {
+      const compPath = path.slice(1).join(".");
+      componentPaths.add(compPath);
+      return;
     }
+    const id = pathToId(path, modes);
+    if (id) tokens.add(id as SemanticTokenId);
   });
-  return out;
+  return { tokens, componentPaths };
 }
 
 function walk(
@@ -220,13 +248,18 @@ export function useThemeEditor(initial: unknown, initialMode: ThemeMode = "light
       }
     }
     const modes = ["light", "dark", "highContrast"] as ThemeMode[];
-    const changedTokenIds = diffTokens(internal.baseline, internal.working, modes);
+    const { tokens: changedTokenIds, componentPaths: changedComponentPaths } = diffPaths(
+      internal.baseline,
+      internal.working,
+      modes,
+    );
     return {
       baseline: internal.baseline,
       working: internal.working,
       mode: internal.mode,
-      dirty: changedTokenIds.size > 0,
+      dirty: changedTokenIds.size > 0 || changedComponentPaths.size > 0,
       changedTokenIds,
+      changedComponentPaths,
       validation,
       warnings,
     };

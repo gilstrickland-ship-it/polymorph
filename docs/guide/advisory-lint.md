@@ -53,6 +53,11 @@ for the full pattern.
 (`currentColor`, gradients, unsupported colour spaces). The pair is reported but doesn't
 fail; an FI can decide whether unevaluated pairings are tolerable.
 
+`POLICY_RULE_ERROR` surfaces when a project-local [policy pack](/guide/policy-packs)
+rule throws — the runtime catches the error, emits a typed warning carrying the pack
+name + version + error message, and continues. The lint pipeline never aborts mid-stream.
+The code omits `measured` / `threshold` because they have no meaning for a thrown rule.
+
 ## Behaviour
 
 By default `polymorph lint` exits `0` even when warnings fire — the linter is **advisory**.
