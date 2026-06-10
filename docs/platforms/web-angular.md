@@ -29,7 +29,7 @@ export class AppComponent { resolved = /* resolveTheme(..., "light") */; }
 
 | Helper | Returns |
 |---|---|
-| `injectTheme()` | accessor → `{ resolved, bridge, scopeClassName } \| null` |
+| `injectTheme()` | accessor → `{ theme, bridge, slots, components, scope } \| null` |
 | `injectResolvedTheme()` | accessor → `ResolvedTheme \| null` |
 | `injectSlot(name, fallback)` | accessor → host override or `fallback` |
 | `injectThemedComponent(role, fallback)` | accessor → host component or `fallback` |

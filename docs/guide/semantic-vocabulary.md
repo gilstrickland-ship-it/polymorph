@@ -1,7 +1,7 @@
 # The semantic vocabulary
 
 The semantic vocabulary is the **contract**. SDKs target it and nothing below it. FIs supply
-values for it (directly, or via aliases from their own primitives). 68 tokens; 41 required.
+values for it (directly, or via aliases from their own primitives). 70 tokens; 42 required.
 
 > Authoritative source: [`packages/spec/manifest/semantic-vocabulary.v0.json`](https://github.com/gilstrickland-ship-it/polymorph/blob/main/packages/spec/manifest/semantic-vocabulary.v0.json).
 > The TypeScript types and JSON schema are generated from it.

@@ -26,7 +26,7 @@ export default function App() {
 
 | Hook | Returns |
 |---|---|
-| `useTheme()` | `{ resolved, mode }` |
+| `useTheme()` | `{ theme, bridge, slots, components }` |
 | `useResolvedTheme()` | the `ResolvedTheme` only |
 | `useSlot(name, fallback)` | host override or `fallback` |
 | `useThemedComponent(role, fallback)` | host component for `role`, or `fallback` |
@@ -47,16 +47,18 @@ literals.
 
 ## Retrofit shim
 
-`useStyledTokens()` returns a flat snapshot keyed by token id; useful when integrating with an
-existing styled component library:
+`toTokenMap(resolvedTheme)` returns a flat `pm.* → value` snapshot of the **raw** resolved
+values (a dimension stays `{ value, unit }`) — useful for feeding an existing SDK's own theme
+object. For building React Native styles, use the bridge, which converts to RN-native types
+(`color()` → string, `dim()` → number):
 
 ```tsx
-const t = useStyledTokens();
+const { bridge } = useTheme();
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: t["pm.color.surface.raised"],
-    padding: t["pm.space.md"],
-    borderRadius: t["pm.radius.card"],
+    backgroundColor: bridge.color("pm.color.surface.raised"),
+    padding: bridge.dim("pm.space.md"),
+    borderRadius: bridge.dim("pm.radius.card"),
   },
 });
 ```

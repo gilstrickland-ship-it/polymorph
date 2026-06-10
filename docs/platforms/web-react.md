@@ -17,8 +17,8 @@ function App({ theme }) {
 }
 
 function Onboarding() {
-  const { resolved, scopeClassName } = useTheme();
-  return <main className={scopeClassName}>...</main>;
+  const { theme, scope } = useTheme();
+  return <main className={scope}>...</main>;
 }
 ```
 
@@ -26,7 +26,7 @@ function Onboarding() {
 
 | Hook | Returns |
 |---|---|
-| `useTheme()` | `{ resolved, bridge, scopeClassName }` |
+| `useTheme()` | `{ theme, bridge, slots, components, scope }` |
 | `useResolvedTheme()` | the `ResolvedTheme` only |
 | `useSlot(name, fallback)` | the host's `<PrimaryButton>` override, or `fallback` |
 | `useThemedComponent(role, fallback)` | the host's component for `role`, or `fallback` |
