@@ -25,4 +25,6 @@ polymorph migrate <file>                  # fill missing required tokens + bump 
 Shared flags: `--mode <light\|dark\|highContrast>`, `--strict`, `--json`; `transform` adds `--target`, `--class`, `--output`. The library entry point exports
 `run(argv): Promise<number>` for in-process use.
 
-> Implemented in **Spec B — Core + Loaders**.
+> `validate` / `lint` / `resolve` implemented in **Spec B — Core + Loaders**; `transform`
+> added with the native adapters (specs 014–016); `init` / `diff` / `migrate` in
+> **spec 028 — Authoring CLI Commands**.
