@@ -118,3 +118,33 @@ describe("per-type Kotlin converters", () => {
     expect(arr).toMatch(/PolymorphShadow\(.*\),\n {4}PolymorphShadow\(/s);
   });
 });
+
+describe("escaping + identifier hardening", () => {
+  const typo = (fontFamily: string) =>
+    typographyToKotlin({
+      fontFamily,
+      fontWeight: 400,
+      fontSize: { value: 16, unit: "px" },
+      lineHeight: 1.5,
+      letterSpacing: { value: 0, unit: "px" },
+    });
+
+  it("escapes Kotlin string-template + literal metacharacters in fontFamily", () => {
+    expect(typo("Inter${evil()}")).toContain('fontFamily = "Inter\\${evil()}"');
+    expect(typo('Say "hi"')).toContain('fontFamily = "Say \\"hi\\""');
+    expect(typo("Back\\slash")).toContain('fontFamily = "Back\\\\slash"');
+  });
+
+  it("escapes control characters so the literal cannot be terminated", () => {
+    const out = typo("a" + String.fromCharCode(10) + "b")!;
+    const famLine = out.split("\n").find((l) => l.includes("fontFamily = "))!;
+    expect(famLine).toContain("a" + "\\" + "u000ab");
+  });
+
+  it("rejects object/package names that are not plain identifiers", () => {
+    const theme = banks[0].theme;
+    expect(() => transformToKotlin(theme, { objectName: "Evil {}" })).toThrow(/identifier/);
+    expect(() => transformToKotlin(theme, { packageName: "com.x;drop" })).toThrow(/identifier/);
+    expect(transformToKotlin(theme, { objectName: "Ok_1" })).toContain("object Ok_1");
+  });
+});

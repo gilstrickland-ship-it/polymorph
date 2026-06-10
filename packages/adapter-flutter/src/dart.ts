@@ -21,6 +21,20 @@ function camelJoin(parts: string[]): string {
 
 // --- value-to-Dart helpers ---------------------------------------------------
 
+/**
+ * Escape a theme-supplied string for a single-quoted Dart string literal. Order matters:
+ * backslash first, then quote, then `$` — an unescaped `${…}` (or `$ident`) would be compiled
+ * as Dart string interpolation, i.e. arbitrary code injected into the generated source.
+ * Control characters are emitted as unicode escapes so they cannot terminate the literal.
+ */
+export function escapeDartString(s: string): string {
+  return s
+    .replace(/\\/g, "\\\\")
+    .replace(/'/g, "\\'")
+    .replace(/\$/g, "\\$")
+    .replace(/[\u0000-\u001f\u007f]/g, (c) => `\\u{${c.charCodeAt(0).toString(16)}}`);
+}
+
 const dartDouble = (n: number): string => (Number.isInteger(n) ? `${n}.0` : `${n}`);
 
 /** Convert any CSS Color 4 form parseable by `@polymorph/core.parseColor` to `Color(0xAARRGGBB)`. */
@@ -87,7 +101,7 @@ export function typographyToDart(value: unknown): string | null {
   if (family === null || weight === null || size === null || height === null || tracking === null) return null;
   return [
     "TextStyle(",
-    `      fontFamily: '${family.replace(/'/g, "\\'")}',`,
+    `      fontFamily: '${escapeDartString(family)}',`,
     `      fontWeight: FontWeight.w${weight},`,
     `      fontSize: ${size},`,
     `      height: ${height},`,

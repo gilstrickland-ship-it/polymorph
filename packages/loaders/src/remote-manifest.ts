@@ -324,9 +324,10 @@ export class RemoteManifestLoader implements ThemeLoader {
 }
 
 /**
- * Accept the `.sig` blob in either base64 (compact, single-line) or raw bytes. Raw isn't
- * great for HTTP transport (binary in a text/plain response is ambiguous); base64 is the
- * dominant pattern in the wild.
+ * Decode the `.sig` blob, which must be base64 (compact, single-line — the dominant pattern
+ * in the wild). Raw bytes are not supported: binary cannot round-trip through the text-based
+ * fetch shape, and a malformed blob makes `atob` throw, which the caller treats as a
+ * signature verification failure (fail closed).
  */
 function decodeSignature(text: string): Uint8Array {
   const trimmed = text.trim();

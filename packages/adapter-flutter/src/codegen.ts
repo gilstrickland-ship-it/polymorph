@@ -32,8 +32,8 @@ export interface TransformOptions {
  */
 export function transformToDart(theme: unknown, options: TransformOptions = {}): string {
   const mode = options.mode ?? "light";
-  const className = options.className ?? "PolymorphTheme";
-  const brightness = options.brightness ?? mode === "dark" ? "dark" : "light";
+  const className = assertDartIdentifier(options.className ?? "PolymorphTheme");
+  const brightness = options.brightness ?? (mode === "dark" ? "dark" : "light");
   const rt = resolveTheme(theme, mode);
   return emit(rt, className, brightness, mode);
 }
@@ -43,9 +43,17 @@ export function emitDartFromResolved(
   resolved: ResolvedTheme,
   options: TransformOptions = {},
 ): string {
-  const className = options.className ?? "PolymorphTheme";
-  const brightness = options.brightness ?? resolved.mode === "dark" ? "dark" : "light";
+  const className = assertDartIdentifier(options.className ?? "PolymorphTheme");
+  const brightness = options.brightness ?? (resolved.mode === "dark" ? "dark" : "light");
   return emit(resolved, className, brightness, resolved.mode);
+}
+
+/** The class name is spliced verbatim into Dart source — only accept a plain identifier. */
+function assertDartIdentifier(name: string): string {
+  if (!/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(name)) {
+    throw new Error(`invalid Dart class name: ${JSON.stringify(name)}`);
+  }
+  return name;
 }
 
 // --- emitter -----------------------------------------------------------------

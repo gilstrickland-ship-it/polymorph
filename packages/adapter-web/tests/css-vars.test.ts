@@ -95,3 +95,39 @@ describe("toCssVariables / toCssVariablesString (over a real resolved theme)", (
     expect(toCssVariablesString(rt).startsWith(":root {")).toBe(true);
   });
 });
+
+describe("toCssEntries — declaration-breakout hardening", () => {
+  it("drops color values that could escape the declaration", () => {
+    expect(toCssEntries("pm.color.text.body", "color", "#fff; background: url(https://evil.example)")).toEqual([]);
+    expect(toCssEntries("pm.color.text.body", "color", "red } body { display: none")).toEqual([]);
+    expect(toCssEntries("pm.color.text.body", "color", "red" + String.fromCharCode(10) + "}")).toEqual([]);
+  });
+
+  it("drops dimension strings with structural characters", () => {
+    expect(toCssEntries("pm.space.md", "dimension", "16px;color:red")).toEqual([]);
+  });
+
+  it("drops unsafe typography sub-values but keeps the safe ones", () => {
+    const entries = toCssEntries("pm.typography.body", "typography", {
+      fontFamily: "Inter; }",
+      fontWeight: 400,
+      fontSize: { value: 16, unit: "px" },
+      lineHeight: 1.4,
+      letterSpacing: { value: 0, unit: "px" },
+    });
+    const map = Object.fromEntries(entries);
+    expect(map["--pm-typography-body-font-family"]).toBeUndefined();
+    expect(map["--pm-typography-body-font-size"]).toBe("16px");
+  });
+
+  it("drops shadow entries whose color smuggles structural characters", () => {
+    const value = {
+      color: "#000;}",
+      offsetX: { value: 0, unit: "px" },
+      offsetY: { value: 1, unit: "px" },
+      blur: { value: 2, unit: "px" },
+      spread: { value: 0, unit: "px" },
+    };
+    expect(toCssEntries("pm.elevation.raised", "shadow", value)).toEqual([]);
+  });
+});

@@ -25,7 +25,7 @@ const resolved = /* resolveTheme(auroraTheme, "light") */;
 
 | Composable | Returns |
 |---|---|
-| `useTheme()` | reactive `{ resolved, bridge, scopeClassName }` |
+| `useTheme()` | reactive `{ theme, bridge, slots, components, scope }` |
 | `useResolvedTheme()` | reactive `ResolvedTheme` |
 | `useSlot(name, fallback)` | the host's override component, or `fallback` |
 | `useThemedComponent(role, fallback)` | host component for `role`, or `fallback` |

@@ -31,15 +31,23 @@ export interface TransformOptions {
  */
 export function transformToSwift(theme: unknown, options: TransformOptions = {}): string {
   const mode = options.mode ?? "light";
-  const enumName = options.enumName ?? "PolymorphTheme";
+  const enumName = assertSwiftIdentifier(options.enumName ?? "PolymorphTheme");
   const rt = resolveTheme(theme, mode);
   return emit(rt, enumName, mode);
 }
 
 /** Lower-level: emit from an already-resolved theme (skip the resolve step). */
 export function emitSwiftFromResolved(resolved: ResolvedTheme, options: TransformOptions = {}): string {
-  const enumName = options.enumName ?? "PolymorphTheme";
+  const enumName = assertSwiftIdentifier(options.enumName ?? "PolymorphTheme");
   return emit(resolved, enumName, resolved.mode);
+}
+
+/** The enum name is spliced verbatim into Swift source — only accept a plain identifier. */
+function assertSwiftIdentifier(name: string): string {
+  if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(name)) {
+    throw new Error(`invalid Swift enum name: ${JSON.stringify(name)}`);
+  }
+  return name;
 }
 
 // --- emitter -----------------------------------------------------------------

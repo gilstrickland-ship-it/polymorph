@@ -118,3 +118,30 @@ describe("per-type Swift converters", () => {
     expect(arr).toMatch(/PolymorphShadow\(.*\),\n {6}PolymorphShadow\(/s);
   });
 });
+
+describe("escaping + identifier hardening", () => {
+  const typo = (fontFamily: string) =>
+    typographyToSwift({
+      fontFamily,
+      fontWeight: 400,
+      fontSize: { value: 16, unit: "px" },
+      lineHeight: 1.5,
+      letterSpacing: { value: 0, unit: "px" },
+    });
+
+  it("escapes interpolation-capable backslashes + quotes in fontFamily", () => {
+    expect(typo("Inter\\(evil())")).toContain('Font.custom("Inter\\\\(evil())"');
+    expect(typo('Say "hi"')).toContain('Font.custom("Say \\"hi\\""');
+  });
+
+  it("escapes control characters so the literal cannot be terminated", () => {
+    const out = typo("a" + String.fromCharCode(10) + "b")!;
+    const fontLine = out.split("\n").find((l) => l.includes("Font.custom"))!;
+    expect(fontLine).toContain("a" + "\\" + "u{a}b");
+  });
+
+  it("rejects enum names that are not plain identifiers", () => {
+    expect(() => transformToSwift(banks[0].theme, { enumName: "Evil {}" })).toThrow(/enum name/);
+    expect(transformToSwift(banks[0].theme, { enumName: "Ok_1" })).toContain("enum Ok_1");
+  });
+});

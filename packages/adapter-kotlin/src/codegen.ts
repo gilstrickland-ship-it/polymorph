@@ -32,17 +32,30 @@ export interface TransformOptions {
  */
 export function transformToKotlin(theme: unknown, options: TransformOptions = {}): string {
   const mode = options.mode ?? "light";
-  const objectName = options.objectName ?? "PolymorphTheme";
-  const packageName = options.packageName ?? "polymorph.theme";
+  const objectName = assertKotlinIdentifier(options.objectName ?? "PolymorphTheme");
+  const packageName = assertKotlinPackage(options.packageName ?? "polymorph.theme");
   const rt = resolveTheme(theme, mode);
   return emit(rt, objectName, packageName, mode);
 }
 
 /** Lower-level: emit from an already-resolved theme (skip the resolve step). */
 export function emitKotlinFromResolved(resolved: ResolvedTheme, options: TransformOptions = {}): string {
-  const objectName = options.objectName ?? "PolymorphTheme";
-  const packageName = options.packageName ?? "polymorph.theme";
+  const objectName = assertKotlinIdentifier(options.objectName ?? "PolymorphTheme");
+  const packageName = assertKotlinPackage(options.packageName ?? "polymorph.theme");
   return emit(resolved, objectName, packageName, resolved.mode);
+}
+
+/** Object + package names are spliced verbatim into Kotlin source — only accept plain identifiers. */
+function assertKotlinIdentifier(name: string): string {
+  if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(name)) {
+    throw new Error(`invalid Kotlin identifier: ${JSON.stringify(name)}`);
+  }
+  return name;
+}
+
+function assertKotlinPackage(pkg: string): string {
+  for (const segment of pkg.split(".")) assertKotlinIdentifier(segment);
+  return pkg;
 }
 
 // --- emitter -----------------------------------------------------------------

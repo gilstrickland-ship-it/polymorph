@@ -21,7 +21,7 @@ render(() => (
 
 | Composable | Returns |
 |---|---|
-| `useTheme()` | accessor returning `{ resolved, bridge, scopeClassName }` |
+| `useTheme()` | accessor returning `{ theme, bridge, slots, components, scope }` |
 | `useResolvedTheme()` | accessor returning the `ResolvedTheme` |
 | `useSlot(name, fallback)` | accessor returning the host override or `fallback` |
 | `useThemedComponent(role, fallback)` | accessor returning host component or `fallback` |

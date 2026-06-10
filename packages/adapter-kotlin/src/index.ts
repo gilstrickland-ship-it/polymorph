@@ -6,6 +6,7 @@
 
 export { transformToKotlin, emitKotlinFromResolved, type TransformOptions } from "./codegen.js";
 export {
+  escapeKotlinString,
   idToKotlinName,
   componentPropKotlinName,
   colorToKotlin,
