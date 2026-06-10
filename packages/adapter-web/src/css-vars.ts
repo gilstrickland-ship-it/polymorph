@@ -11,11 +11,25 @@ export function toCssVarName(id: SemanticTokenId): string {
   return `--${id.replace(/\./g, "-")}`;
 }
 
+/**
+ * Theme-supplied strings end up inside a stylesheet, and the theme may come from a remote
+ * loader — a value must not be able to terminate the declaration or block it is emitted into
+ * (`;`, `{`, `}`), open markup (`<`), or smuggle control characters. Unsafe values are dropped,
+ * the same way any other unrepresentable value is.
+ */
+const safeCssValue = (v: string): string | null => {
+  for (let i = 0; i < v.length; i++) {
+    const c = v.charCodeAt(i);
+    if (c < 0x20 || c === 0x7f) return null;
+  }
+  return /[;{}<]/.test(v) ? null : v;
+};
+
 const dim = (v: unknown): string | null => {
-  if (typeof v === "string") return v;
+  if (typeof v === "string") return safeCssValue(v);
   if (v && typeof v === "object" && "value" in v && "unit" in v) {
     const o = v as { value: number; unit: string };
-    return `${o.value}${o.unit}`;
+    return safeCssValue(`${o.value}${o.unit}`);
   }
   return null;
 };
@@ -33,7 +47,7 @@ function shadowToCss(v: unknown): string | null {
   const sp = dim(s.spread);
   if (!ox || !oy || !bl || !sp || typeof s.color !== "string") return null;
   const inset = s.inset === true ? "inset " : "";
-  return `${inset}${ox} ${oy} ${bl} ${sp} ${s.color}`;
+  return safeCssValue(`${inset}${ox} ${oy} ${bl} ${sp} ${s.color}`);
 }
 
 /**
@@ -44,8 +58,10 @@ export function toCssEntries(id: SemanticTokenId, $type: string, value: unknown)
   const name = toCssVarName(id);
 
   switch ($type) {
-    case "color":
-      return typeof value === "string" ? [[name, value]] : [];
+    case "color": {
+      const c = typeof value === "string" ? safeCssValue(value) : null;
+      return c !== null ? [[name, c]] : [];
+    }
     case "dimension":
     case "duration": {
       const d = dim(value);
@@ -71,10 +87,13 @@ export function toCssEntries(id: SemanticTokenId, $type: string, value: unknown)
       const fs = dim(o.fontSize);
       const lh = o.lineHeight;
       const ls = dim(o.letterSpacing);
-      if (typeof ff === "string") out.push([`${name}-font-family`, ff]);
-      if (typeof fw === "string" || typeof fw === "number") out.push([`${name}-font-weight`, String(fw)]);
+      const ffSafe = typeof ff === "string" ? safeCssValue(ff) : null;
+      if (ffSafe !== null) out.push([`${name}-font-family`, ffSafe]);
+      const fwSafe = typeof fw === "string" || typeof fw === "number" ? safeCssValue(String(fw)) : null;
+      if (fwSafe !== null) out.push([`${name}-font-weight`, fwSafe]);
       if (fs !== null) out.push([`${name}-font-size`, fs]);
-      if (typeof lh === "number" || typeof lh === "string") out.push([`${name}-line-height`, String(lh)]);
+      const lhSafe = typeof lh === "number" || typeof lh === "string" ? safeCssValue(String(lh)) : null;
+      if (lhSafe !== null) out.push([`${name}-line-height`, lhSafe]);
       if (ls !== null) out.push([`${name}-letter-spacing`, ls]);
       return out;
     }

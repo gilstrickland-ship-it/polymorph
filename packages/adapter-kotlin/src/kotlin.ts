@@ -21,6 +21,20 @@ function camelJoin(parts: string[]): string {
 
 // --- value-to-Kotlin helpers -------------------------------------------------
 
+/**
+ * Escape a theme-supplied string for a double-quoted Kotlin string literal. Order matters:
+ * backslash first, then quote, then `$` — an unescaped `${…}` would be compiled as a Kotlin
+ * string template, i.e. arbitrary code injected into the generated source. Control characters
+ * are emitted as unicode escapes so they cannot terminate the literal.
+ */
+export function escapeKotlinString(s: string): string {
+  return s
+    .replace(/\\/g, "\\\\")
+    .replace(/"/g, '\\"')
+    .replace(/\$/g, "\\$")
+    .replace(/[\u0000-\u001f\u007f]/g, (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, "0")}`);
+}
+
 /** Kotlin `Float` literals always carry an `f` suffix. */
 const kotlinFloat = (n: number): string => `${Number.isInteger(n) ? `${n}.0` : `${n}`}f`;
 
@@ -108,7 +122,7 @@ export function typographyToKotlin(value: unknown): string | null {
   if (family === null || weight === null || size === null || lineHeight === null || tracking === null) return null;
   return [
     "PolymorphTextStyle(",
-    `    fontFamily = "${family.replace(/"/g, '\\"')}",`,
+    `    fontFamily = "${escapeKotlinString(family)}",`,
     `    fontSize = ${size},`,
     `    fontWeight = ${weight},`,
     `    lineHeight = ${lineHeight},`,

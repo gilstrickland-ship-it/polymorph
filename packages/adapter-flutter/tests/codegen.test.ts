@@ -118,3 +118,42 @@ describe("per-type Dart converters", () => {
     expect(arr).toMatch(/BoxShadow\(.*\),\n {6}BoxShadow\(/s);
   });
 });
+
+describe("escaping, identifier + brightness hardening", () => {
+  const typo = (fontFamily: string) =>
+    typographyToDart({
+      fontFamily,
+      fontWeight: 400,
+      fontSize: { value: 16, unit: "px" },
+      lineHeight: 1.5,
+      letterSpacing: { value: 0, unit: "px" },
+    });
+
+  it("escapes Dart interpolation + literal metacharacters in fontFamily", () => {
+    expect(typo("Inter${evil()}")).toContain("fontFamily: 'Inter\\${evil()}'");
+    expect(typo("O'Neil")).toContain("fontFamily: 'O\\'Neil'");
+    expect(typo("Back\\slash")).toContain("fontFamily: 'Back\\\\slash'");
+  });
+
+  it("escapes control characters so the literal cannot be terminated", () => {
+    const out = typo("a" + String.fromCharCode(10) + "b")!;
+    const famLine = out.split("\n").find((l) => l.includes("fontFamily: "))!;
+    expect(famLine).toContain("a" + "\\" + "u{a}b");
+  });
+
+  it("rejects class names that are not plain identifiers", () => {
+    expect(() => transformToDart(banks[0].theme, { className: "Evil {}" })).toThrow(/class name/);
+  });
+
+  it("honors an explicit brightness override regardless of mode", () => {
+    expect(transformToDart(banks[0].theme, { mode: "dark", brightness: "light" })).toContain(
+      "brightness: Brightness.light",
+    );
+    expect(transformToDart(banks[0].theme, { mode: "light", brightness: "light" })).toContain(
+      "brightness: Brightness.light",
+    );
+    expect(transformToDart(banks[0].theme, { mode: "light", brightness: "dark" })).toContain(
+      "brightness: Brightness.dark",
+    );
+  });
+});

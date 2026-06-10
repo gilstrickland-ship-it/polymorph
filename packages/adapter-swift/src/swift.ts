@@ -21,6 +21,19 @@ function camelJoin(parts: string[]): string {
 
 // --- value-to-Swift helpers --------------------------------------------------
 
+/**
+ * Escape a theme-supplied string for a double-quoted Swift string literal. Backslash must be
+ * escaped first — an unescaped `\(…)` would be compiled as Swift string interpolation, i.e.
+ * arbitrary code injected into the generated source. Control characters are emitted as
+ * unicode escapes so they cannot terminate the literal.
+ */
+export function escapeSwiftString(s: string): string {
+  return s
+    .replace(/\\/g, "\\\\")
+    .replace(/"/g, '\\"')
+    .replace(/[\u0000-\u001f\u007f]/g, (c) => `\\u{${c.charCodeAt(0).toString(16)}}`);
+}
+
 /** Swift `Double` literals always carry an explicit decimal so the compiler infers `Double`. */
 const swiftDouble = (n: number): string => (Number.isInteger(n) ? `${n}.0` : `${n}`);
 
@@ -106,7 +119,7 @@ export function typographyToSwift(value: unknown): string | null {
   if (family === null || weight === null || size === null || lineHeight === null || tracking === null) return null;
   return [
     "PolymorphTextStyle(",
-    `      font: Font.custom("${family.replace(/"/g, '\\"')}", size: ${size}),`,
+    `      font: Font.custom("${escapeSwiftString(family)}", size: ${size}),`,
     `      fontSize: ${size},`,
     `      weight: ${weight},`,
     `      lineHeight: ${lineHeight},`,

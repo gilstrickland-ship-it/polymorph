@@ -5,6 +5,7 @@
 
 export { transformToDart, emitDartFromResolved, type TransformOptions } from "./codegen.js";
 export {
+  escapeDartString,
   idToDartName,
   componentPropDartName,
   colorToDart,

@@ -5,6 +5,7 @@
 
 export { transformToSwift, emitSwiftFromResolved, type TransformOptions } from "./codegen.js";
 export {
+  escapeSwiftString,
   idToSwiftName,
   componentPropSwiftName,
   colorToSwift,
